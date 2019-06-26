@@ -1,0 +1,111 @@
+[structure]
+prim = POSCAR
+sym_tol = 1E-3
+## Either text file containing 3x3 matrix, or 9 numbers for the same matrix
+#epsilon_inf = 2 0 0   0 2 0   0 0 2
+### Either text file containing n_atom matrices, or n_atom*9 numbers for the same matrices
+#born_charge = 1 0 0  0 1 0  0 0 1    -1 0 0  0 -1 0  0 0 -1
+
+#######################################################################
+[model]
+model_type = LD
+cluster_in = clusters.out
+cluster_out = clusters.out
+symC_in = Cmat.mtx
+symC_out = Cmat.mtx
+max_order = 4
+fractional_distance = False
+cluster_diameter = 10.8 6.1 5.0
+## Be VERY careful with these! Do not change unless you understand it. Bond distance cutoff is adjustable
+cluster_filter = lambda cls: ((cls.order_uniq<=2) or (cls.bond_counts(2.9) >=2)) and cls.is_small_in('fcc333/sc.txt')
+
+[training]
+interface = VASP
+corr_type = f
+corr_in = Amat.mtx
+corr_out = Amat.mtx
+fval_in = fval.txt
+fval_out = fval.txt
+supercell1 = fcc333/SPOSCAR fcc333/dir*0.01
+
+
+
+#######################################################################
+[fitting]
+solution_in = solution_all
+solution_out = sol_2nd
+nsubset = 5
+holdsize = 0.09
+## 1 FPC 2 FPC sparse 3 split 4 sparse split
+## 5 split+ right preconditioning 6 sparse split + r preconditioning
+## 101 Bayesian CS
+method = 5
+
+# For weight of L1 or L2 regularization
+mulist =  1E-5 1E-7 1E-9 1E-11
+maxIter = 300
+tolerance = 1E-6
+subsetsize = 0.85
+lambda = 0.5
+uscale_list = 0.03
+
+submodel1 = harmonic 0 1 2
+
+[phonon]
+##  -1 (disabled,default), 0 (dipole)
+#nac= 0
+
+## dispersion
+qpoint_fractional = False
+# 'Auto' or something like "[[10,  [0,0,0],'\\Gamma', [0.5,0.5,0.5], 'X', [0.5,0.5,0], 'K']]"
+wavevector = [[25,  [0,0,0],'\Gamma', [0,0.5,0.5], 'X'], [25, [1,0.5,0.5], 'X', [0.75,0.375,0.375], 'K', [0,0,0], '\Gamma', [0.5, 0.5, 0.5], 'L']]
+#wavevector = Auto
+## THz, meV, eV, cm
+unit = THz
+
+## num. of grid points, 3 integers
+dos_grid = 15 15 15
+## Num. of points in DOS
+nE_dos = 400
+## 0 (Gaussian), 1 (Lorentzian), -1 (tetrahedron method)
+ismear= -1
+## width in THz of Gaussian/Lorentzian smearing
+epsilon = 0.05
+pdos = True
+
+
+## debye velocity averaging
+#debye_t_qfrac = 0.03
+#debye_t_v_intgrid = 40 40
+
+## quasi-harmonic thermal properties (requires dos_grid)
+## Temperature in K: begin end increment
+thermal_T_range = 50 800 50
+thermal_out = thermal_out.txt
+
+## export structures to supercells
+#supercell = 2 0 0    0 2 0    0 0 2
+## temperature in K: start, end, increment
+#snapshot_T_range = 100 800 100
+## list of [kp1, kp2, kp3, index_band]
+#modes = 0.125 0.125 0.25 0   0.125 0.125 0.25 1  0.125 0.125 0.25 2
+## amplitude in Angstrom
+#mode_amplitude = 0 0.03
+
+
+[export_potential]
+#save_pot_cell0 = fcc333  -3 3 3   3 -3 3     3 3 -3
+#save_pot_cell1 = prim111 1 0 0   0 1 0    0 0 1 
+#combine_improper = false
+## first 3 integers for size of supercell for which Hessian/2nd order FCs are exported, then order of FCs
+export_shengbte = 5 5 5 2 3 4
+
+
+[prediction]
+interface = VASP
+corr_type = f
+corr_in = Amat_pred.mtx
+corr_out = Amat_pred.mtx
+fval_in = fval_pred.txt
+fval_out = fval_pred.txt
+supercell0 = 1 fcc222/POSCAR fcc222/traj*

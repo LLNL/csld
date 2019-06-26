@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: csld
+Version: 1.0
+Summary: CSLD
+Home-page: https://to-be-determined
+Author: Fei Zhou
+Author-email: fei.fzhou@gmail.com
+License: MIT
+Description: Compressive sensing lattice dynamics
+Platform: any

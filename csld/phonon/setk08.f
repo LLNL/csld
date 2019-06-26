@@ -1,0 +1,106 @@
+      SUBROUTINE SETK08(NA,NC,A,C,PTK,NPTK,IDEF,NTET,NKMAX,NTMAX)
+C     SET THE K-POINTS IN THE 1/16TH OF THE BRILLOUIN ZONE FOR A
+C     SIMPLE TETRAGONAL LATTICE WITH PARAMETERS A, C
+C     SYMMETRY IS D4H
+      IMPLICIT REAL*8(A-H,O-Z)
+      REAL*4 AVOL
+      DIMENSION PTK(4,NKMAX),IDEF(5,NTMAX)
+      EQUIVALENCE (IVOL,AVOL)
+      PI = 3.141592653589793238D0
+      IF(NA.LE.0.OR.NC.LE.0) GOTO 97
+      IF(A.LE.0.0D0 .OR. C.LE.0.0D0) GOTO 98
+      NPTK = (NA+1)*(NA+2)*(NC+1)/2
+      IF(NPTK.GT.NKMAX) STOP '*** <SETK08> NPTK EXCEEDS NKMAX ***'
+      NTET = 3*NC*NA**2
+      IF(NTET.GT.NTMAX) STOP '*** <SETK08> NTET EXCEEDS NTMAX ***'
+C *** SET THE K-POINTS
+      AK=PI/A/NA
+      CK=PI/C/NC
+      WRITE(6,100) NPTK,NTET,NA*AK,NA*AK,NC*CK
+      W = 2.0D0/(NA*NA*NC)
+      NPTK=0
+      DO 1 I=0,NA,1
+      DO 1 J=0,I,1
+      DO 1 K=0,NC,1
+C        NPTK = I*(I+1)/2*NZ1 + J*NZ1 + K+1
+      WK = W
+      IF(I.EQ.0) WK = WK/2.0D0
+      IF(J.EQ.0) WK = WK/2.0D0
+      IF(J.EQ.I) WK = WK/2.0D0
+      IF(I.EQ.NA) WK = WK/2.0D0
+      IF(J.EQ.NA) WK = WK/2.0D0
+      IF(K.EQ.0 .OR. K.EQ.NC) WK = WK/2.0D0
+      NPTK=NPTK+1
+      PTK(1,NPTK)=I*AK
+      PTK(2,NPTK)=J*AK
+      PTK(3,NPTK)=K*CK
+      PTK(4,NPTK)=WK
+    1 CONTINUE
+C *** DEFINE THE TETRAHEDRA
+      NZ1=NC+1
+      NTET=0
+      I7=0
+      I=0
+    4 IX=(I+1)*NZ1
+      J = 0
+    5 K=0
+      I7=I*IX/2+J*NZ1
+    6 I7=I7+1
+      I6=I7+IX
+      I2=I6+NZ1
+      I1=I2+1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I1
+      I8=I7+1
+      I5=I6+1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I1
+      IF(J.EQ.I) GOTO 7
+      I3=I7+NZ1
+      I4=I3+1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I1
+    7 K=K+1
+      IF(K.LT.NC) GOTO 6
+      J=J+1
+      IF(J.LE.I) GOTO 5
+      I=I+1
+      IF(I.LT.NA) GOTO 4
+      AVOL=1.D0/DFLOAT(NTET)
+      DO 15 IT=1,NTET
+   15 IDEF(5,IT)=IVOL
+      RETURN
+   97 WRITE(6,101)
+      GOTO 99
+   98 WRITE(6,102)
+   99 STOP
+  100 FORMAT(' SAMPLING THE 16TH PART OF A SQUARE-BASED PRISM'/
+     .1X,I5,' K-POINTS',I7,' TETRAHEDRA'/
+     .' KXMAX =',D11.4,'  KYMAX =',D11.4,'  KZMAX =',D11.4)
+  101 FORMAT(' *** <SETK08> NA OR NC IS NOT A POSITIVE INTEGER ***')
+  102 FORMAT(' *** <SETK08> A AND C MUST BE POSITIVE ***')
+      END

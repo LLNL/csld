@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+
+import numpy as np
+import sys
+import scipy
+import argparse
+from cssolve.csfit import csfit, predict_holdout
+
+
+try:
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_pdf import PdfPages
+except ImportError:
+    print("WARNING: cannot import pyplot; plotting disabled")
+    plt = None
+    pass
+
+import logging
+logger = logging.getLogger(__name__)
+
+debug_level = 1
+
+def init_cmdline_settingfile():
+    """
+    Parse command line options
+    :return: options
+    """
+    task_help = """Solve Ax=b
+    """
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", '--file', help="settings file (TBD, do not use now)", default='')
+    parser.add_argument("Amat", help="Correlation matrix in mtx format.")
+    parser.add_argument("fval", help="b values text file. Number of lines should match Amat. Two numbers on each line: b_value weight(ignored so far)")
+    parser.add_argument("--mulist", help="List of mu, e.g. '0.1 1 10 1000'", default="0.1 1 10 1000")
+    parser.add_argument("--method", type=int, help="CS method. Default 5", default=5)
+    parser.add_argument("--nrun", type=int, help="Number of fittings. 5=precondictioned Bregman, 101=BCS, Default 5", default=5)
+    parser.add_argument("--training", type=float, help="Proportion of training set. Default 0.8", default=0.8)
+    parser.add_argument("--holdout", type=float, help="Porportion of holdout set. Default 0.2", default=0.2)
+    parser.add_argument("--lbd", type=float, help="Lambda for Bregman subroutines. Default 2.0", default=2.0)
+    parser.add_argument("--submodel", help="e.g. \"[['All', scipy.sparse.identity(N_PARA).tocsr()[:,:10],0]]\"")
+    options = parser.parse_args()
+
+    return options
+
+
+
+if __name__ == '__main__':
+    options = init_cmdline_settingfile()
+
+    Amat = scipy.io.mmread(options.Amat)
+    Amat = scipy.sparse.coo_matrix(Amat)
+    fval = np.loadtxt(options.fval)
+    if fval.ndim==1:
+        fval=fval[:, None]
+    mulist= np.array(list(map(float, options.mulist.split())))
+    assert Amat.shape[0] == fval.shape[0]
+    pdfout = PdfPages("plots.pdf")
+
+    if options.file == '':
+        # simple, oneshot fitting
+        print('debug subm=', options.submodel)
+        ibest, solutions = csfit(Amat, fval[:,0], 1, mulist,
+                method=options.method,
+                maxIter=500,
+                tol=0.0001,
+                nSubset=options.nrun,
+                subsetsize=options.training,
+                holdsize=options.holdout,
+                lbd=options.lbd,
+                #fitf=setting['true_v_fit'],
+                submodels= eval(options.submodel) if options.submodel is not None else [['All', scipy.sparse.identity(Amat.shape[1]).tocsr(),0]],
+                pdfout=pdfout)
+        np.savetxt('solutions_out', solutions[ibest:ibest+1])
+        np.savetxt('input_v_pred.txt', np.vstack((fval[:,0], Amat.dot(solutions[ibest]))).T)
+    else:
+        # more complex control from configuration file
+        mulist = list(map(float, sys.argv[3:]))
+        Amat = scipy.io.mmread(sys.argv[1])
+        csfit(Amat, np.loadtxt(sys.argv[2]), 1, mulist,
+                method = int(settings['fitting']['method']),
+                nSubset= int(settings['fitting']['nSubset']),
+                subsetsize= float(settings['fitting']['subsetsize']),
+                holdsize= float(settings['fitting']['holdsize']),
+                lbd= float(settings['fitting']['lambda']),
+                submodels= [[int(x['fct_range']), x['name']] for x in submodels])
+
+    pdfout.close()
+

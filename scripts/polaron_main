@@ -1,0 +1,1330 @@
+#!/usr/bin/env python3
+
+import sys
+import numpy as np
+import argparse
+import os
+from os.path import isfile
+
+from csld.phonon_mode import PhononMode
+from csld.interface_vasp import Poscar
+from csld.cluster import Cluster
+from csld.coord_utils import pbc_images
+from csld.util.tool import matrix2text
+from csld.basic_lattice_model import BasicLatticeModel
+from csld.lattice_dynamics import LDModel
+from csld.structure import SupercellStructure, Structure
+from csld.symmetry_structure import SymmetrizedStructure
+from csld.util.string_utils import str2arr
+from csld.util.io_utils import co, load_matrix
+import logging
+
+
+debug_level = 1
+
+def init_cmdline_settingfile():
+    """
+    Parse command line options
+    :return: options
+    """
+    task_help = """1. Move a polaron (--p1, relative to primitive cell specified by -prim, including atoms displaced more than --polaron_disp_cut) to positions (--dest_dimer) in destination poscar (--p2); dest_dimer can be either (a) a clusters.out formatted file or (b) 'automatic' or (c) indices (starting at 1) of atoms in p2, e.g. "1 2"\n
+    2. Map a poscar (--p1) to unperturbed (--prim) form, i.e. positions in p1 will be changed to the best matching supercell generated from prim\n
+    3 cmp_pos: Show displacement of two poscars (--p1 --p2), atom by atom. --long to remove center-of-mass shift\n
+    cont_vel: Prints a CONTCAR with velocity from --p1 to --p2 with --npolaron intermediate images. Velocity center-of-mass will be shifted to 0, so final structure will be shifted p2.\n
+    4. Move a polaron (--p1) to closest locations the same structure\n
+    5. Same as 4 but looping over polarons i,j selected from --p1 "pos1 pos2 ...", put into i\n
+    6. Same as task (1) but polaron is simply a dimer with desired distance: move two atoms (--dest_dimer either clusters.out [-prim needed] or indices of two atoms) along their dr vector to either specified distance (--polaron_locations_cut), or changed distance (--dimer_delta_dist), in structure (--p1)\n
+    7. Analyze polaron force from OUTCAR (--prim) and displacement (--p1, --p2 as in task 3): compute entropy of entropy force and of displacement\n
+    8. Convert a LMD potential (--p1) to a different supercell matrix (--p2), given --prim\n
+    magpho_pot Convert a magnon-phonon potential (--p1) to a different (conventional) unitcell matrix with scaling matrix --p2 for f_magpho\n
+    csld_pot_like_magpho Like magpho_pot but converts to the conventional unitcell for CSLD potential for f_ldff
+    magpho_config Convert a magnon-phonon U snapshot (--p1) and unitcell (--p2, NOT supercell) to a supercell POSCAR\n
+    pot_defect For defect phonon calculations, convert a LMD potential (--p1) to a supercell POSCAR (--p2), given --prim. Note the clusters will be given in ijkl of the supercell p2\n
+    rand_disp: Add small random displacement (magnitude -R) to structure (--p1) With --p2="n_selected min_dist", only n_selected atoms are moved and min distance between perturbed atoms should be >= min_dist.\n
+    rand_disp_list: Perform rand_disp for (--npolaron) times\n
+    rand_disp_dir: Same as rand_disp_list but put files into subdirectories \n
+    nsc: Estimate the number of supercell structure needed for phonon calculations, given primitive cell (--prim), supercell size (--p1 "int x 9") and cutoff (-R)\n
+    rand_vec: Print (--npolaron) random vectors of length --r1.\n
+    add_disp: Add displacement (--p2) to structure (--p1). p2 can be either (a) N_atom x 3 (all atoms) or (b) N x 4 (N<=N_atom, each line like "2 0.1 0.2 0.3" adding the displacement to the 2nd atom) text file \n
+    dist: Given structure (--p1), print PBC distance of two atoms (--dest_dimer)\n
+    append_center: append a ficticious atom representing center of atoms (--dest_dimer) to structure (--p1)\n
+    dist_center: given structure (--p1), print center of all possible pairs from i1, i2 ... to i0. --dest_dimer "i0 i1 i2 ..."\n
+    11. Given structure (--p1), print minimum PBC distance among range of atoms (--dest_dimer, e.g. "1 10" for atoms 1 to 10). If --p2 is specified, the distance in p2 of the found min distance pair is also printed\n
+    pos2atat Convert POSCAR (--p1) into ATAT str.out format (stdout) using ATAT lattice file (--prim)\n
+    atat2pos Convert ATAT structure (--p1) into POSCAR, with atoms ordered according to POSCAR (--prim)\n
+    txt2mtx: Convert plain text matrix (--p1) into mtx format (--p2)\n
+    mtx2txt: Opposite; Convert mtx matrix (--p1) into plain text (--p2)\n
+    analyze_solutions: Average bunch of solutions (--p1) and crop out those whose std-deviation*factor(--tol, recommend 0.9) exceeds abs of average\n
+    matmul: matrix multiplication of (--p1) and (--p2), saved to matmul.txt\n
+    spg: Show space group of structure (--prim)\n
+    symmetric_supercell: Generate a supercell from --prim with desired --polaron_disp_cut (No. atom if positive, volume if negative), defined by scaling matrix sc.txt_generated
+    sublattice: Show space group and sublattices of structure (--prim)\n
+    symmetrize: Symmetrize structure (--prim)\n
+    standardize: Find conventional cell and symmetrize the structure (--prim)\n
+    primitive:   Find primitive    cell and symmetrize the structure (--prim)\n
+    scmat: Print scaling_matrix from --prim to --p1\n
+    supercell: Create for primitive cell --prim a supercell specified by integer matrix --p1\n
+    density: Print mass density in g/cc of --p1\n
+    xyarea: area of the xy plane of --p1 POSCAR\n
+    ehull: energy of --p1 according to convexhull from data --p2 (e.g.row A2B -3.1)\n
+    convexhull: print convex hull of data --p1\n
+    NN: print nearest-neighbor of every atom in --p1 \n
+    16. Given prim cell (--prim) and a set of clusters (clusters.out), print the multiplicity of clusters and the number of moves possible from one cluster to another in the nearest neighbor shell with one shared point.\n
+    norm_row: Given plain text table (--p1), show min, max and average of the norm of rows, or norm of each line if --long is specified\n
+    norm_diff: Given two plain text tables (--p1, --p2), show min, max and average of the norm of delta rows\n
+    det: Calculate determinate from file --p1
+    transpose: Transpose matrix from file --p1. If there are more lines than columns, extra matrices will be transposed successively.
+    corr_col: calculate correlation (c1.c2/|c1||c2|) of columns of matrix --p1\n
+    splitby: split text file (--p1) by keyword (--polaron_specie)
+    born: get symmetrized eps_inf and Z* tensors from OUTCAR (--p1)
+    ShengBTE: convert --p1 to ShengBTE CONTROL file and print; including born.txt and epsilon_inf.txt if present
+    force2xml: convert & print plain-text table of forces --p1 to xml fomat
+    cuboid: find cuboid sites in structure (--prim), limited to cation (--polaron_specie), bond cutoff (--polaron_disp_cut), and tolerance of cuboid shape (--dimer_delta_dist), bonded to ligand (--p2). Example: polaron_main --task cuboid --prim $f_in --polaron_specie Sr --polaron_disp_cut 3.3 --dimer_delta_dist 0.2 --p2 "N" 
+    subst: substitute in structure (--p1), an atom to another specie (--p2 "1 Eu" changes first atom to Eu)
+    formula: print formula of POSCAR (--p1), e.g. H4O2
+    calculator_file: calculator for file, e.g. --p1 "a.txt - 3.1* b.txt", where the .txt files are matrices
+    chop: for array --p1, set very small values under tolerance (--tol) to zero
+    statistics: for array --p1, print mean and std of every column
+    reduced_formula: print formula of POSCAR (--p1), e.g. H2O
+    rotate_step: rotate in --npolaron steps a list of vector from initial (--p1) to final --p2
+    final_fit: give A (--p1), b (--p2), input solution (--prim), do LSQ fit according to non-zero element of input, and give RMS error of input and re-fitted (solution_final_fit) solutions
+    split_tensor: given a joined list of flattened tensor elements (--p1) and list of dimensions (--p2, e.g --p2 "0,1,3,3,3,3" for a --p1 file of 1+3+4*9=40 elements, print all non-zero tensors
+    """
+    from argparse import RawTextHelpFormatter
+    parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter)
+    parser.add_argument("--task", help=task_help,default='0')
+    parser.add_argument("--log_level", type=int, help="Logging level", default=1)
+    parser.add_argument('--prim', help="primitive cell", default='prim')
+    # parser.add_argument('--p0', help="unperturbed polaron supercell", default='test/pos_NaI_p0')
+    parser.add_argument('--p1', help="poscar 1")
+    parser.add_argument('--p2', help="poscar 2")
+    parser.add_argument('--n1', help="integer 1", type=int, default=0)
+    parser.add_argument('--a1', help="argument 1", default='')
+    parser.add_argument('--r1', help="real number 1", type=float, default=0.0)
+    parser.add_argument('--dest_dimer', help="dimer in p2")
+    parser.add_argument('--polaron_disp_cut', '-R', type=float, help="displacement cutoff, default 0.01", default=0.01)
+    parser.add_argument('--dimer_delta_dist', type=float, help="change in dimer distance", default=0.0)
+    parser.add_argument('--polaron_specie', help="Which specie may be in the dominant cluster", default="")
+    parser.add_argument("--npolaron", '-N', type=int, help="max number of new locations (task 4)", default=100)
+    parser.add_argument("--min_pol_common", type=int, help="min common atoms (task 4,5). Default = 1 (at least 1 common atom)", default=0)
+    parser.add_argument("--polaron_locations_cut", type=float, help="distance between locations (task 4)", default=100.)
+    parser.add_argument("--tol", type=float, help="tolerance for symmetry", default=1E-3)
+    parser.add_argument("--long", action='store_true', help="Long form output. Default: False", default=False)
+
+    options = parser.parse_args()
+    ## Global variable
+    global debug_level
+    debug_level = options.log_level
+    logging.basicConfig(level=options.log_level)
+
+    return options
+
+
+def task3(f1, f2, cms=False, verbose=0):
+        p1 = Poscar.from_file(f1).structure
+        p2 = Poscar.from_file(f2).structure
+        assert p1.num_sites == p2.num_sites, ValueError("Input structures have different number of atoms")
+        assert np.linalg.norm(p1.lattice.matrix - p2.lattice.matrix, 'fro') < 1E-3, ValueError("Different lattice")
+        u = np.array(p2.frac_coords)-np.array(p1.frac_coords)
+        u = u-np.round(u)
+        if cms:
+            u = u - np.mean(u, axis=0)
+        u = p1.lattice.get_cartesian_coords(u)
+        min_dist = 1E99
+        max_dist = 0.0
+        dist_ls = np.zeros(p1.num_sites)
+        for i in range(p1.num_sites):
+            dist = p1.lattice.get_all_distances(p1[i].frac_coords, p2[i].frac_coords)[0,0]
+            dist_ls[i] = dist
+            if min_dist > dist:
+                min_dist = dist
+            if max_dist < dist:
+                max_dist = dist
+            if verbose > 0:
+                print("%4d %3s  %8.4f  [ %7.4f %7.4f %7.4f ]  [ %7.4f %7.4f %7.4f ] [ %7.4f %7.4f %7.4f ]" %
+                      tuple([i+1, p1[i].specie, dist] + p1[i].frac_coords.tolist() + p2[i].frac_coords.tolist()+
+                            (u[i].tolist())))
+        if verbose > 0:
+            print("min displacement = %f  max = %f" % (min_dist, max_dist))
+        return dist_ls
+
+
+def task_contcar_velocity(f1, f2, nimg):
+        poscar1 = Poscar.from_file(f1)
+        p1 = poscar1.structure
+        p2 = Poscar.from_file(f2).structure
+        assert p1.num_sites == p2.num_sites, ValueError("Input structures have different number of atoms")
+        assert np.linalg.norm(p1.lattice.matrix - p2.lattice.matrix, 'fro') < 1E-3, ValueError("Different lattice")
+        u = np.array(p2.frac_coords)-np.array(p1.frac_coords)
+        u = u-np.round(u)
+        u = u - np.mean(u, axis=0)
+        u = p1.lattice.get_cartesian_coords(u)
+        maxu = np.max(np.linalg.norm(u,axis=1))
+        print("max displacement = %.6f  "%(maxu), end='')
+        poscar1.write_file(sys.stdout)
+        print('C')
+        print(matrix2text(u/(nimg+1)))
+        return
+
+
+
+def read_pot(pot_f):
+    """
+
+    :param f: file
+    :return: each of {npt, fractional cluster, n_clus, clus, data}
+    """
+    pot = []
+    from csld.util.io_utils import read_nrecord_array
+    lines = open(pot_f, 'r').readlines()
+    line=0
+    while line<len(lines):
+        line, frac=read_nrecord_array(lines, line)
+        line, clus=read_nrecord_array(lines, line, int)
+        line, ijval=read_nrecord_array(lines, line, str)
+        line, rad1=read_nrecord_array(lines, line, str)
+        line, rad2=read_nrecord_array(lines, line, str)
+        line += 1 # empty line
+        pot.append([frac, clus, ijval, rad1, rad2])
+    return pot
+    # with open(pot_f, 'rt') as potf:
+    #     while True:
+    #         try:
+    #             npt = int(potf.readline())
+    #         except ValueError:
+    #             break
+    #         frac = [potf.readline().strip() for _ in range(npt)]
+    #         #np.array([np.array(list(map(float, potf.readline()))) for _ in range(npt)])
+    #             #np.array(np.matrix("\n".join(potf.readlines(npt)))).reshape(-1, 3)
+    #         # print(frac)
+    #             # np.array([np.array(list(map(int()))) for _ in range(npt)])
+    # #np.array(np.matrix(co("sh %s/bin/get-force.sh %s" % (os.environ['HOME'], options.prim)).strip())).reshape(-1,3)
+    #         nclus = int(potf.readline())
+    #         clus = np.array([str2arr(potf.readline(),int) for _ in range(nclus)])
+    #         # print(nclus, clus)
+    #         data = []
+    #         while True:
+    #             line = potf.readline().strip()
+    #             data.append(line)
+    #             if not line:
+    #                 break
+    #         # print("debug len data %d given first line %d" % (len(data), int(data[0])))
+    #         if len(data) <= int(data[0])+2 :
+    #             print("missing radial terms reset to 0")
+    #             data[-1] = '0'
+    #             data.extend(['0', ''])
+
+
+def write_pot(pot, fn):
+    #print("debug pot1=", pot[0], "\n", pot[1])
+    with open(fn, 'wt') as f:
+        for fc in pot:
+            f.write("\n".join(["%d%s%s"%(len(m), '\n' if len(m)>0 else '', matrix2text(m)) for m in fc])+'\n\n')
+        f.close()
+
+def print_pot_summary(pot, prim):
+    print("******* summary of potential terms ********")
+    print("order order_unique diameter norm")
+    for fct in pot:
+        clus = Cluster.from_coords(fct[0], prim)
+        val = list(map(float,fct[2][:,-1]))
+        print("%d %d %f %f" % (clus.order, clus.order_uniq, clus.diameter, np.linalg.norm(np.array(val))))
+
+
+
+def task5(prim, pos, clusters, options):
+    npol = len(clusters)
+###    poslist = options.p1.split()
+    orbits = BasicLatticeModel(prim, clusters, [0] * 3).get_orbit_isotropy()
+    images = pbc_images()
+    mat = prim.lattice.matrix.dot(pos.structure.lattice.inv_matrix)
+# dest_dimer is a cluster file
+
+
+    for i in range(npol):
+###        pos1 = poslist[i]
+        #dest = dest_poscar.structure.copy()
+###        dest.map_to_prim(prim)
+        #            print("%d polaron %s" % (i+1, pos1))
+###        pol1 = PhononMode.from_file(prim, pos1, options.polaron_disp_cut,
+###                                    dominant_specie=options.polaron_specie.split())
+#        scmat = prim.get_scmat(dest.lattice.matrix)
+#        inv_sc_mat = np.linalg.inv(scmat)
+        # SCinfo = SupercellStructure(prim, scmat, poscarDirect=dest.frac_coords)
+#        dimer = pol1.dominant_cluster
+        dimer = clusters[i]
+        #            print("dimer", repr(dimer))
+        center0 = dimer.center
+        for j in range(i, npol):
+            print("working on %d %d" % (i + 1, j + 1))
+###            pos2 = poslist[j]
+            #                print("%d polaron is %s" % (j+1, pos2))
+##            pol2 = PhononMode.from_file(prim, pos2, options.polaron_disp_cut,
+##                                        dominant_specie=options.polaron_specie.split())
+            ###orbit = BasicLatticeModel(prim, [pol2.dominant_cluster], [0] * 3).get_orbit_isotropy()[0]
+            orbit = orbits[j]
+            # print(repr(dimer), orbit.clusters)
+
+            clus_try = []
+            #                print("debug clusters=", orbit.clusters)
+            for clus in orbit.clusters:
+                clus.move_closest_to(center0)
+                for img in images:
+                    c1 = clus.copy()
+                    c1.move_to_prim(dijk=img)
+                    dist = prim.norm(c1.center - center0)
+                    # print("dist", prim.lattice.get_norm(c1.center-center0), img)
+                    #                        if dist < 1E-8:
+                    #                            continue
+                    if sorted(dimer.ijkls) == sorted(c1.ijkls):
+                        #                           print("debug same")
+                        continue
+#                    if dist > options.polaron_locations_cut:
+#                        continue
+                        #                       print("dimers", dimer.ijkls, c1.ijkls)
+                    if len([ijk for ijk in dimer.ijkls if ijk in c1.ijkls]) < options.min_pol_common:
+                        continue
+                    clus_try.append(Cluster(dimer.vertices + c1.vertices, prim))
+            if len(clus_try) <= 0:
+                print("  WARNING no candidate structure found")
+                continue
+            print("  %d candidate structures before symm" % (len(clus_try)))
+            clus_try = Cluster.remove_equivalent_clusters(clus_try)
+            clus_try.sort()
+            print("  %d candidate structures after symm" % (len(clus_try)))
+            # print(i,j, clus_try)
+            # if i==1 and j==1:
+            #     for ig in range(prim.nsymm):
+            #         for c in clus_try[2:4]:
+            #             print(i,j,ig,c.operated_by(ig),end=" ")
+            #         print()
+
+
+            for iout, clus in enumerate(clus_try[:options.npolaron]):
+                # print(clus.order, clus.factorial, clus.diameter, clus.ijkls)
+                dest_dimer = Cluster(clus.vertices[(clus.order // 2):], prim)
+###                dest_poscar.structure = pol2.apply_to(dest, dest_dimer, inv_sc_mat)
+###                ct2 = clus.center
+###                print('polaron_%d_%d_%d' % (i + 1, j + 1, iout + 1), "atoms", dimer.ijkls, clus.ijkls, "dist",
+###                      prim.norm(ct2 - center0))
+###                dest_poscar.write_file('polaron_%d_%d_%d' % (i + 1, j + 1, iout + 1), direct=True)
+#                print(dest_dimer.ijkls, 'polaron_%d_%d_%d' % (i + 1, j + 1, iout + 1))
+#                print([pos.structure.frac2ijkl(np.dot(p, mat), tolerance=1E-4)[-1]
+#                            for p in dest_dimer.frac_coords.tolist()])
+                task6(pos, [pos.structure.frac2ijkl(np.dot(p, mat), tolerance=1E-4)[-1]
+                            for p in dest_dimer.frac_coords.tolist()], options,
+                      '_polaron_%d_%d_%d' % (i + 1, j + 1, iout + 1))
+
+def task6(pos, i1i2, options, suffix=""):
+    p1 = pos.structure
+    p_original = p1.copy()
+    i1, i2 = i1i2
+
+    dist, jimg = p1.distance_and_image(i1, i2)
+    if options.dimer_delta_dist != 0.0:
+        dist1 = dist + options.dimer_delta_dist
+        logging.info("change dimer distance to %s" % (dist1))
+    else:
+        dist1 = options.polaron_locations_cut
+        logging.info("set dimer distance to %s" % (dist1))
+    dvec = p1.lattice.get_cartesian_coords(p1[i2].frac_coords + jimg - p1[i1].frac_coords)
+    print("(i1,j1) dist, jimg", (i1 + 1, i2 + 1), dist, jimg)
+    # print("dvec = %f %f %f" % tuple(dvec))
+    dvec = dvec * (dist - dist1) / (dist * 2)
+    p1[i1].set_coords(p1[i1].coords + dvec, cart=True)
+    p1[i2].set_coords(p1[i2].coords - dvec, cart=True)
+    pos.write_file("%s_%d_%d_dist%.3f%s" % (options.p1, i1 + 1, i2 + 1, dist,suffix), direct=True)
+    pos.structure = p_original
+
+
+def read_lat(lat_f):
+    """
+
+    :param lat_f:
+    :return: [scmat, nscatom, ijkls]
+    """
+    lines = list(open(lat_f, 'rt').readlines())
+    scmat = np.array(np.matrix("\n".join(lines[3:6]))).reshape(-1, 3)
+    natom = int(lines[6])
+    nscatom = int(lines[natom + 7])
+    assert len(lines) == natom + 8 + nscatom
+    ijkls = [list(map(int, line.split()[1:5])) for line in lines[natom+8:]]
+    for j in range(len(ijkls)):
+        ijkls[j][-1] -= 1
+    return [scmat, nscatom, ijkls]
+
+def task8(potf1, scmat2, prim):
+    """
+
+    :param pot1: original CSLD potential
+    :param scmat2: dest lattice SC matrix
+    :param prim:
+    :return:
+    """
+    pot = read_pot(potf1)
+    if debug_level > 1:
+        print_pot_summary(pot, prim)
+    scmat = np.loadtxt(scmat2).astype(np.int)
+    scinfo = SupercellStructure.from_scmat(prim, scmat)
+    for x in pot:
+        clus = Cluster.from_coords(x[0], prim)
+        trans_cluster = np.array(BasicLatticeModel.translate_cluster_to_supercell(scinfo, clus))
+        x[1] = trans_cluster+1
+    write_pot(pot, scmat2+'-pot')
+    LDModel(prim, [], [0,0,0,0]).save_fct_lat(scmat2+'-lat', scinfo)
+
+
+def magpho_pot(potf1, scmat2):
+    """
+    :param pot1: original magnon-phonon potential
+    :param scmat2: dest lattice SC integer matrix
+    :return:
+    """
+    from csld.util.io_utils import read_nrecord_array
+    from csld.coord_utils import supercell_latticepoints
+    
+    scmat = np.loadtxt(scmat2).astype(np.int)
+    inv = np.linalg.inv(scmat)
+    refpts= supercell_latticepoints(scmat)
+    refpts_insc = refpts.dot(inv)
+    refpts = np.pad(refpts, ((0,0),(0,1)), 'constant')
+    nsc = abs(int(round(np.linalg.det(scmat))))
+    
+    potsc = open('magpho.pot_unitcell_generated','w')
+    lines = open(potf1, 'r').readlines()
+    line = lines[0].split()
+    na = int(line[0])
+    nterm = int(line[1])
+    m0 = line[2]
+    potsc.write("%d %d %s\n"%(na*nsc, nterm*nsc, m0))
+    n=1
+    while n < len(lines):
+        line= lines[n].split()
+        nLD = int(line[0])
+        nMAG= int(line[1])
+        other = " ".join(line[2:])
+        n+=1
+        clus = np.array([list(map(int,ijkl.split())) for ijkl in lines[n:n+nLD+nMAG]])
+        n+=nLD+nMAG
+        n, ijval=read_nrecord_array(lines, n, str)
+        n += 1 # empty line
+        for j in range(nsc):
+            potsc.write("%d %d %s\n"%(nLD, nMAG, other))
+            clus_sc = [Structure._ijkl_in_supercell(nsc, inv, refpts_insc, ijkl+refpts[j]-1)+1 for ijkl in clus]
+            potsc.write(matrix2text(clus_sc)+'\n')
+            potsc.write("%d\n%s\n\n"%(len(ijval), matrix2text(ijval)))
+    potsc.close()
+
+
+def csld_pot_like_magpho(potf1, scmat2):
+    """
+    :param pot1: original csld potential
+    :param scmat2: dest lattice SC integer matrix
+    :return:
+    """
+    from csld.util.io_utils import read_nrecord_array
+    from csld.coord_utils import supercell_latticepoints
+    
+    scmat = np.loadtxt(scmat2).astype(np.int)
+    inv = np.linalg.inv(scmat*1.0)
+    refpts= supercell_latticepoints(scmat)
+#    refpts_insc = refpts.dot(inv)
+#    refpts = np.pad(refpts, ((0,0),(0,1)), 'constant')
+    nsc = abs(int(round(np.linalg.det(scmat))))
+#    print('debug nsc=', nsc, 'refpts',refpts, 'refpts_insc',refpts_insc)
+    
+    potsc = open('csld.pot_unitcell_generated','w')
+    lines = open(potf1, 'r').readlines()
+    n=0
+    while n < len(lines):
+#        print('debug n=', n, 'line=', lines[n])
+        nLD = int(lines[n])
+        n+=1
+        clus = str2arr("\n".join(lines[n:n+nLD]), float, (nLD,3))
+        n+=nLD
+        nclus = int(lines[n])
+        n+=1+nclus
+        nfct= int(lines[n])
+        n+=1
+        fct= lines[n:n+nfct]
+        n+=nfct
+        nFF = int(lines[n])
+        n+=1
+        xFF = lines[n:n+nFF]
+        n+=nFF
+        nexFF = int(lines[n])
+        n+=1
+        exFF = lines[n:n+nexFF]
+        n += nexFF+1 # empty line
+        for j in range(nsc):
+            potsc.write("%d\n"%(nLD))
+#            clus_sc = [Structure._ijkl_in_supercell(nsc, inv, refpts_insc, ijkl+refpts[j]-1)+1 for ijkl in clus]
+            potsc.write(matrix2text(np.dot(clus+refpts[j][None,:],inv))+'\n')
+            potsc.write("0\n")
+            potsc.write("%d\n%s"%(nfct, "".join(fct)))
+            potsc.write("%d\n%s"%(nFF, "".join(xFF)))
+            potsc.write("%d\n%s\n"%(nexFF, "".join(exFF)))
+    potsc.close()
+
+
+def magpho_config(config, poscar):
+    """
+    :param config: U.cnf
+    :param poscar: prim cell POSCAR
+    :return:
+    """
+    udat = np.loadtxt(config)
+    ijkl = udat[:, 2:6].astype(int)-1
+    l    = ijkl[:,-1]
+    du   = udat[:, 6:9]
+    spe = poscar.structure.elements
+    scmat=np.diag(ijkl[-1,:3]+1)
+    lat= poscar.structure._lattice.matrix
+    assert abs(int(round(np.linalg.det(scmat))))*(l[-1]+1) == len(udat), 'Error in scmat %s'%(str(scmat))
+    sc = Structure(np.dot(scmat, lat), [spe[i] for i in l],
+                   du + [poscar.structure.ijkl2cart(i) for i in ijkl],
+                   coords_are_cartesian=True, to_unit_cell=False)
+    poscar.structure=sc
+    poscar.write_file(sys.stdout, direct=False)
+
+
+def task_pot_defect(potf1, sc, prim):
+    """
+     Write the converted potential file. Note that the cluster coord is now ijkl
+    :param pot1: original potential
+    :param sc:   defect supercell
+    :param prim: primitive cell of potential
+    :return:
+    """
+    pot = read_pot(potf1)
+    if debug_level > 1:
+        print_pot_summary(pot, prim)
+    scpos = Poscar.from_file(sc).structure
+    #scpos.map_to_prim(prim)
+    scmat =  prim.get_scmat(scpos)
+    #scinfo = SupercellStructure(prim, scmat, None, scpos.frac_coords)
+    sc_ideal = SupercellStructure.from_scmat(prim, scmat)
+    st1, pi1, di1, st2, pi2, di2 = sc_ideal.match(scpos)
+    print('%s: interstitial %s'%(sc, [i+1 for i,s in enumerate(st2) if s==b'I']))
+    print('     substitutions %s'%([i+1 for i,s in enumerate(st2) if s==b'S' or s==b's']))
+    print('idealcell: vacancy %s'%([i+1 for i,s in enumerate(st1) if s==b'V']))
+    pot_sc = []
+    for x in pot:
+        if len(x[0])<=0:
+            continue
+#        print("debug", x[0], np.dot([pt+np.array([0,0,0]) for pt in x[0]],scinfo.inv_sc_mat))
+#        print("pot_sc", pot_sc[-1:], scpos.frac2ijkl([[0.125,0.25,0.25],[0.125,0.25,0.25]]))
+#        print("extending", [[scpos.frac2ijkl(np.dot([pt+np.array([0,0,0]) for pt in x[0]],scinfo.inv_sc_mat)), 
+#           [], x[2],x[3],x[4]] for tr in scinfo.sc_ref_np])
+        for tr in sc_ideal.sc_ref:
+            clus=[]
+            vac=False
+            for pt in x[0]:
+                ijkl = sc_ideal.frac2ijkl(np.dot(pt+tr,sc_ideal.inv_sc_mat))
+                ijkl[-1] = pi1[ijkl[-1]]
+                if ijkl[-1]<0:
+                    vac=True
+                    break
+                clus.append(ijkl)
+            if not vac:
+                pot_sc.append([clus, np.array([])]+x[2:5])
+#        trans_cluster = np.array(BasicLatticeModel.translate_cluster_to_supercell(scinfo, clus))
+#        x[1] = trans_cluster+1
+    write_pot(pot_sc, sc+'-pot')
+
+
+def displace_poscar(f1, disp, more_args='', outf=sys.stdout):
+    pos = Poscar.from_file(f1)
+    na = pos.structure.num_sites
+    if isinstance(disp, str) and os.path.exists(disp):
+        dr = np.loadtxt(disp)
+        if dr.shape == (na, 3):
+            pass
+        elif (dr.shape[1] == 4) and (dr.shape[0]<=na):
+            dr_sp = np.zeros((na, 3))
+            for i in range(dr.shape[0]):
+                dr_sp[int(dr[i,0])-1]+= dr[i,1:]
+            dr = dr_sp
+        else:
+            print("format of %s not understood"%(disp))
+            return
+    else:
+        from csld.util.mathtool import random_displacements
+        disp= float(disp)
+        if more_args:
+            nselect, cut = more_args.split()
+            nselect=int(nselect)
+            assert nselect<=na, 'nselect cannot exceed na'
+            cut=float(cut)
+            found= False
+            N_max_try=1000
+            dr=np.zeros((na, 3))
+            dr1=random_displacements(nselect, disp)
+            all_dist= pos.structure.distance_matrix_noself
+            from itertools import combinations
+            for i in range(N_max_try):
+                selected = np.random.choice(na, nselect, False)
+                min_dist = np.min(all_dist[ list(zip(*combinations(selected,2)))])
+                if min_dist>=cut:
+                    found=True
+                    break
+            if not found:
+                print("WARNING: not random selection found with min distance >=%f"%(cut))
+            print("  selected min_dist %f "%(min_dist), selected)
+            dr[selected, :]+= dr1
+        else:
+            dr = random_displacements(na, disp)        
+    pos.structure.displace_by(dr)
+    pos.write_file(outf, direct=False)
+
+
+def task_dist(f1, ij):
+    pos = Poscar.from_file(f1)
+    p1 = pos.structure
+    print(matrix2text([[p1.distance_and_image(*(ij[2*i:2*i+2]))[0] for i in range(len(ij)//2)]]))
+
+def final_fit(A, b, s_in):
+    from cssolve.csfit import RMS, LOOCV
+    import scipy
+    sel=np.where(s_in != 0)[0]
+    A_sub = scipy.sparse.csr_matrix(A)[:, sel].A
+    s_sub=np.zeros_like(s_in)
+    s_sub[sel] = np.linalg.lstsq(A_sub, b)[0]
+    print("RMS of inpu, refitted, LOOCV:", RMS(b-A.dot(s_in)), RMS(b-A.dot(s_sub)), LOOCV(A_sub, s_sub[sel], b), ' A', A_sub.shape, 'refit', A.shape)
+#    s_sub[sel] = scipy.sparse.linalg.lsqr(A_sub, b)[0]
+    np.savetxt("solution_final_fit.txt", s_sub[None,:])
+
+def chop(array, tol):
+    from scipy.stats import threshold
+    print(matrix2text(threshold(array, threshmin=tol)))
+
+def calculator_file(cmd):
+    from csld.util.tool import convert_to_matrix
+    import scipy
+    cmd_translated=" ".join(["load_matrix('%s')"%(x) if os.path.exists(x) else x for x in cmd.split()])
+    result= eval(cmd_translated)
+    result= convert_to_matrix(result)
+    print(matrix2text(result))
+    
+def split_tensor(joined_numbers, order_list, DIM=3):
+    tensordims = np.insert(np.power(DIM, np.array(order_list, dtype=int)), 0, 0)
+    idx = np.cumsum(tensordims)
+    val_list = load_matrix(joined_numbers, True)
+    for iflat, flat in enumerate(val_list):
+        for i in range(len(order_list)):
+            order = order_list[i]
+            tensor= flat[idx[i]:idx[i+1]]
+            if np.linalg.norm(tensor)>1e-10:
+                print("solution#%d tensor#%d =\n"%(iflat+1, i+1), tensor.reshape((DIM,)*order))
+
+def task_append_center(f1, ij):
+    from csld.util.periodic_table import DummySpecie
+    pos = Poscar.from_file(f1)
+    p1 = pos.structure
+    dist, img = p1.distance_and_image(*ij[:2])
+    center=(img+ p1[ij[1]].frac_coords+ p1[ij[0]].frac_coords)/2
+    p1.append(DummySpecie("XC"), center)
+    #print(dist, center, p1)
+    pos.write_file(sys.stdout, direct=False)
+
+
+def task_dist_center(f1, ij):
+    from csld.util.periodic_table import DummySpecie
+    pos = Poscar.from_file(f1)
+    p1 = pos.structure
+    i0= p1[ij[0]]
+    for idx,i1 in enumerate(ij[1:]):
+        for i2 in ij[idx+2:]:
+            dist_pair, img = p1.distance_and_image(i1, i2)
+            center=(img+ p1[i1].frac_coords+ p1[i2].frac_coords)/2
+            dist, img = i0.distance_and_image_from_frac_coords(center)
+            print(dist, dist_pair, i1+1, i2+1)
+
+
+
+def read_atat_latin(fn):
+    import pipes
+    t = pipes.Template()
+    t.append("awk 'NF>=3 {print $1,$2,$3}'", '--')
+    dat = np.loadtxt(t.open(fn, 'r'))
+#    t.reset()
+#    t.append("awk '(NF>=3)&&(NR>6) {print $4}'", '--')
+#    print(open(t.open(fn,'r')))
+    return [dat[:3], dat[3:6], dat[6:], co("awk 'NF>=3 {print $4}' %s"%(fn)).split()]
+
+
+def task_pos2atat(prim, p1):
+    pos = Poscar.from_file(p1).structure
+    [primlat, primsc, primpos, prim_el] = read_atat_latin(prim)
+    print(matrix2text(primlat))
+    print(matrix2text(np.dot(pos.lattice.matrix/pos.lattice._scale, np.linalg.inv(primsc.dot(primlat))).round().astype(int)))
+    newpos= matrix2text(pos.frac_coords.dot(pos.lattice.matrix/pos.lattice._scale).dot(np.linalg.inv(primlat))).split("\n")
+    print(matrix2text(np.vstack(([newpos], [pos.elements])).T))
+
+
+def task_atat2pos(prim, p1):
+    pos0 = Poscar.from_file(prim)
+    [primlat, primsc, primpos, sc_el] = read_atat_latin(p1)
+    s0 = pos0.structure
+    ellist = s0.types_of_elements
+    sclat = np.dot(primsc, primlat)
+    scpos = np.dot(primpos, primlat)
+    scatoms= [[el, scpos[i]] for el in ellist for i in range(len(primpos)) if sc_el[i]==el]
+#    print(sclat, sc_el, ellist, scatoms)
+    p1 = Structure(sclat, *zip(*scatoms), coords_are_cartesian=True)
+    print(Poscar(p1))
+
+
+def task16(prim, cluster_file):
+    from collections import Counter 
+    ld = LDModel.from_file(prim, cluster_file, [2, {2:0}, lambda x:True, {2:0}])
+    clusters=ld.clusters
+    npol = len(clusters)
+    pol_cut = max([c.diameter for c in clusters])+0.0001
+#    print('cut=', pol_cut)
+    prim._init_all_nb_list([pol_cut])
+    ld.get_orbit_isotropy()
+    def angle(v1, v2):
+        from numpy.linalg import norm
+        return np.degrees(np.arccos(np.dot(v1,v2) / (norm(v1) * norm(v2))))
+
+    for i in range(npol):
+        clus = clusters[i]
+        num_jumps= [0]*npol
+        angle_try = [[] for x in range(npol)]
+# for each cluster [A, B], jump to [B, C] if ab=0, and [B, A]->[A, C] if ab=1
+        for ab in range(2):
+            sumPts = prim.find_nb_cluster(np.array(clus.ijkls[1-ab:2-ab]), 0)
+#            print(sumPts[0])
+            sumPts = [x for x in sumPts if not np.any([np.all(x==np.array(abpt)) for abpt in clus.ijkls])]
+            #print('  debug i', i, ab, clus.ijkls, len(sumPts))
+            clus_try = []
+            for sumpt in sumPts:
+                clusSum = clus.append_site(sumpt)
+
+                # find the orbit that each summed cluster corresponds to *)
+                [found, ioF, icF, igF, pi] = ld.identify_cluster(clusSum)
+                # print("identified",[found, ioF, igF, pi])
+                if found:
+                    num_jumps[ioF]+=1
+                    abc = Cluster(clus.vertices[ab:1+ab] + clusSum.vertices, prim)
+                    clus_try.append(abc)
+                    abccoord= np.array([clus.vertices[ab].coords, clus.vertices[1-ab].coords, prim.ijkl2cart(sumpt)])
+                    #print(abccoord)
+                    angle_try[ioF].append(np.round(angle(abccoord[1]-abccoord[0], abccoord[2]-abccoord[1])))
+            #print(num_jumps)
+
+            orbit = BasicLatticeModel(prim, clus_try, [0]*3).get_orbit_isotropy()[0]
+           # print(len(clus_try))
+
+        def cnt(x):
+            y=Counter(x).most_common()
+            if len(y)<=0:
+                return 0
+            else:
+                return y[0][1]
+
+        print(num_jumps, list(map(cnt, angle_try)))
+
+
+    return 0
+
+
+
+def task1(prim, p1, p2, cut, dest_dimer, na_pol=2):
+        print("Moving polaron in %s to %s" %(p1, p2))
+#        prim = get_prim(options)
+        polaron = PhononMode.from_file(prim, p1, cut,natom_dominant=na_pol)
+        # print(len(polaron.cluster.ijkls), polaron.cluster.ijkls)
+
+        dest_poscar = Poscar.from_file(p2)
+        dest = dest_poscar.structure.copy()
+        scmat = prim.get_scmat(dest.lattice.matrix)
+        inv_sc_mat = np.linalg.inv(scmat)
+        # SCinfo = SupercellStructure(prim, scmat, poscarDirect=dest.frac_coords)
+        if isfile(dest_dimer):
+            dest_dimer = Cluster.read_cluster(prim, options.dest_dimer)[0]
+        elif dest_dimer == 'automatic':
+            print("polaron=", polaron)
+            dest_dimer = polaron.dominant_cluster
+        else:
+            try:
+                dimer_idx = str2arr(options.dest_dimer, int)-1
+            except ValueError:
+                print("--dest_dimer should be followed by quoted strings for indices (1-based)")
+                exit(-1)
+            dest_dimer = Cluster.from_coords(np.dot(dest.frac_coords[dimer_idx], scmat), prim)
+        print("  moving to cluster", repr(dest_dimer))
+        dest_poscar.structure = polaron.apply_to(dest, dest_dimer, inv_sc_mat)
+        dest_poscar.write_file(options.p2 + '_polaron', direct=False)
+
+
+def get_prim(options):
+    return SymmetrizedStructure.init_structure({'prim': options.prim, 'sym_tol': options.tol,
+                                                'writeprim':False}, 2, False, check_prim=1)
+
+def task_born(prim, outcar):
+    def _read_born(outcar):
+        nA = int(co("grep NIONS %s" % (outcar)).split()[-1])
+        epsilon = str2arr(co("grep -A4 'MACROSCOPIC.*STATIC.*DIELECTRIC.*TENSOR' %s|tail -n3" % (outcar)), shape=(-1,3))
+        borns = str2arr(co("grep 'BORN.*EFFECTIVE.*CHARGES.*cummulative'  %s -A%d | grep '^ *[1-3] '" %
+                           (outcar, 4*nA+1)), shape=(-1,3,4))[:, :, 1:]
+        return borns, epsilon
+#    eps = np.loadtxt('epsilon_inf.txt')
+#    born= np.loadtxt('born.txt').reshape((-1,3,3))
+    borns, epsilon = _read_born(outcar)
+    # np.savetxt('epsilon_inf_raw.txt', epsilon)
+    # np.savetxt('born_raw.txt', borns.reshape((-1,3)))
+#    print('***** symmetrizing eps ******')
+    np.savetxt('epsilon_inf.txt', prim.symmetrize_tensor(epsilon))
+    # print('***** symmetrizing born ******')
+    np.savetxt('born.txt', prim.symmetrize_born(borns).reshape((-1,3)))
+    return
+
+
+def task_ShengBTE(s):
+    template="""&allocations
+        nelements={NELEMENT},
+        natoms={NA},
+        ngrid(:)= 14 14 14
+        norientations=0
+&end
+&crystal
+        lfactor=0.1,
+        lattvec(:,1)= {AVEC[0]},
+        lattvec(:,2)= {AVEC[1]},
+        lattvec(:,3)= {AVEC[2]},
+        elements= {ELEMENTS}
+        types= {TYP_LIST},
+{APOS}
+{EPSILON}
+{BORN}
+        scell(:)= 3 3 3
+&end
+&parameters
+        T=800
+        scalebroad=1.0
+&end
+&flags
+        onlyharmonic=.FALSE.
+        isotopes=.TRUE.
+        nonanalytic=.TRUE.
+        nanowires=.FALSE.
+        convergence=.TRUE.
+        fourthorder=.TRUE.
+        fourthomega=.TRUE.
+        fourthrate=.FALSE.
+&end
+"""
+    d={}
+    elements= s.types_of_elements
+    d['ELEMENTS']= ' '.join(['"%s"'%(i) for i in elements])
+    d['NELEMENT']= len(elements)
+    d['TYP_LIST']= matrix2text([[elements.index(i)+1 for i in s.elements]])
+    d['NA'] = s.num_sites
+    d['AVEC']=[matrix2text([v.tolist()]) for v in s.lattice.matrix]
+    d['APOS']=matrix2text([['        positions(:,%d)='%(i+1)]+v.tolist() for i,v in enumerate(s.frac_coords)])
+    if os.path.isfile('born.txt') and os.path.isfile('epsilon_inf.txt'):
+        d['BORN']= matrix2text([['        born(:,%d,%d)='%(i%3+1,i//3+1)]+v.tolist() for i,v in enumerate(np.loadtxt('born.txt'))])
+        d['EPSILON']= matrix2text([['        epsilon(:,%d)='%(i+1)]+v.tolist() for i,v in enumerate(np.loadtxt('epsilon_inf.txt'))])
+    else:
+        d['BORN']=''
+        d['EPSILON']=''
+    print(template.format(**d),end='')
+
+
+def force2xml(file):
+    template="""<?xml version="1.0" encoding="ISO-8859-1"?>
+<modeling>
+ <generator>
+  <i name="version" type="string">1 </i>
+ </generator>
+ <calculation>
+  <varray name="forces" >
+{FORCES}
+  </varray>
+ </calculation>
+</modeling>"""
+    outtxt= '\n'.join(['   <v> %s </v>'%(x.rstrip()) for x in open(file).readlines()])
+    print(template.format(FORCES=outtxt))
+
+
+def standardize_cell(posf, outf=None):
+    pos = Poscar.from_file(posf)
+    prim = pos.structure.standardize_cell(False, False, options.tol)
+    pos.structure = prim
+    if outf is not None:
+        pos.write_file(outf, direct=True)
+    return prim
+
+def find_primitive(posf, outf=None):
+    pos = Poscar.from_file(posf)
+    prim = pos.structure.standardize_cell(True, False, options.tol)
+    pos.structure = prim
+    if outf is not None:
+        pos.write_file(outf, direct=True)
+    return prim
+
+def make_symmetric_supercell(posf, target):
+    import spglib
+    prim = find_primitive(posf)
+    #spg=spglib.get_spacegroup(prim.to_spglib())
+    #print('spg',spg)
+    dataset = spglib.get_symmetry_dataset(prim.to_spglib())
+    #print('dataset', dataset)
+    for k in sorted(dataset): print(k, dataset[k])
+    scmat0= np.linalg.inv(dataset['transformation_matrix'])
+    scmat=np.rint(scmat0).astype(np.int)
+    assert np.max(np.max(scmat-scmat0))<1e-3, ValueError('scmat from dataset[transformation_matrix] not integer')
+    print(scmat)
+
+
+def cuboid_sites(posf, specie, rcut, configcut, anion='O', normalize_disp=False):
+    posfs= posf+'_std'
+    prim = find_primitive(posf, posfs)
+    prim= SymmetrizedStructure.init_structure({'prim': posfs, 'sym_tol': options.tol,
+                                               'writeprim':False}, 2, False)
+    elements=prim.elements
+    fcrd = np.mod(prim.frac_coords,1)
+    cubsites=[]
+    nbs=get_disp_aconvasp(posfs, rcut)
+    nligand=[]
+    for i in prim.l_of_orbit:
+        if elements[i] != specie:
+            continue
+        print("\n".join([str(x) for x in nbs[i][1:]]))
+        nbOvec= [x[2][3:6] for x in nbs[i] if x[1]==anion and x[2][-1]>1E-2]
+        nligand.append((i,len(nbOvec)))
+        if len(nbOvec) <= 0:
+            continue
+        if normalize_disp:
+            # normalize the displacement vectors, effectively ignore the effects of different bond length in deciding the type of coordination
+            nbOvec/= np.linalg.norm(nbOvec, axis=1)
+        print('site %d %s with %d oxygen ligands'%(i, specie, len(nbOvec)))
+        dotmat = np.array([[np.dot(v1,v2) for v1 in nbOvec] for v2 in nbOvec])/np.mean(np.linalg.norm(nbOvec, axis=1))**2
+        if is_cuboid_matrix(dotmat, configcut):
+            cubsites.append(i)
+    print("DONE found %d cuboid sites: %s #ligand=%s in %s"%(len(cubsites), cubsites, nligand, posf))
+    return cubsites
+#        nbs = prim.get_neighbors(prim[i], rcut, True)
+#        print(nbs)
+#        for fcoord, dist, ii in prim._lattice.get_points_in_sphere(
+#                fcrd, prim[i].coords, rcut):
+#            print(fcoord, dist, ii)
+
+def is_cuboid_matrix(mat, tol=1E-1):
+    if len(mat)!= 8:
+        return False
+    diff=np.sort(mat)-np.array([-3,-1,-1,-1,1,1,1,3])/3.0
+    print('  mean/max diff from ideal cube', np.mean(np.abs(diff)),  np.max(np.abs(diff)))
+    return  np.mean(np.abs(diff))<tol
+
+def get_disp_aconvasp(posf, cut):
+    lines=co("aconvasp --cart < %s |aconvasp --disp %f"%(posf, cut),True)[6:]
+    out=[]
+    nbs=[]
+    for l in lines:
+        sp = l.split()
+        if not len(sp) in (5,9):
+            continue
+        if len(sp)==5:
+            if len(nbs)>0:
+                out.append(nbs)
+                nbs=[]
+        nbs.append([int(sp[0]), sp[1], str2arr(" ".join(sp[2:]))])
+    return out
+
+def rotate_step(v1, v2, nstep):
+    len1 = np.linalg.norm(v1, axis=1)
+    len2 = np.linalg.norm(v2, axis=1)
+    theta= np.array([np.arccos(np.dot(v1[i], v2[i]) / (len1[i] * len2[i])) for i in range(len(v1))])
+    u_axis= [np.cross(v1[i],v2[i])/np.linalg.norm(np.cross(v1[i],v2[i])) for i in range(len(v1))]
+    for i in range(0, nstep+1):
+        len_i = len1 + (len2-len1)*i/nstep
+        # v_i = v1 + (v2-v1)*i/nstep
+        t = theta*i/nstep
+        v_i= [np.cos(t[j])*v1[j]+ np.sin(t[j])*np.cross(u_axis[j],v1[j] + (1-np.cos(t[j]))*u_axis[j]*np.dot(u_axis[j],v1[j])) for j in range(len(v1))]
+        v_i = np.array(v_i)
+        v_i = (len_i/np.linalg.norm(v_i,axis=1)*v_i.T).T
+        np.savetxt('rotated_vectors_step%02d'%(i), v_i)
+    
+
+def estimate_num_supercell(prim, scmat, cutoff):
+    from csld.lattice_dynamics import init_ld_model
+    ld = init_ld_model(prim, {'model_type':'LD', 'max_order':2, 'cluster_diameter':str(cutoff),
+        'dipole_force':'False','cluster_filter':'lambda cls: True'}, {}, 2, 2, 0)
+    nparameter = ld.Cmat.shape[0]
+    ndata = 3*prim.num_sites*np.linalg.det(scmat)
+    nmin=np.ceil(nparameter/ndata*1.5)
+    nrec=np.ceil(nparameter/ndata*2)
+    return nmin, nrec 
+
+
+if __name__ == '__main__':
+    options = init_cmdline_settingfile()
+
+    if options.task == '0':
+        print("Use option \"-h\" for help.")
+
+    elif options.task == '1':
+        prim = get_prim(options)
+        task1(prim, options.p1, options.p2, options.polaron_disp_cut, options.dest_dimer)
+
+    elif options.task == '2':
+        print("Mapping %s to closest supercell of primitive %s" % (options.p1, options.prim))
+        prim = get_prim(options)
+        p1pos = Poscar.from_file(options.p1)
+        p1pos.structure.map_to_prim(prim)
+        p1pos.write_file(sys.stdout)
+
+    elif options.task in ['3', 'cmp_pos']:
+        task3(options.p1, options.p2, options.long, 1)
+
+    elif options.task in ['cont_vel']:
+        task_contcar_velocity(options.p1, options.p2, options.npolaron)
+
+    elif options.task == '4':
+        print("Moving polaron %s to closest locations; primitive= %s" % (options.p1, options.prim))
+        prim = get_prim(options)
+        dest_poscar = Poscar.from_file(options.p1)
+        dest = dest_poscar.structure.copy()
+        dest.map_to_prim(prim)
+        polaron = PhononMode.from_file(prim, options.p1, options.polaron_disp_cut)
+        scmat = prim.get_scmat(dest.lattice.matrix)
+        inv_sc_mat = np.linalg.inv(scmat)
+        # SCinfo = SupercellStructure(prim, scmat, poscarDirect=dest.frac_coords)
+        dimer = polaron.dominant_cluster
+        center0 = dimer.center
+        orbit = BasicLatticeModel(prim, [dimer], [0]*3).get_orbit_isotropy()[0]
+        # print(repr(dimer), orbit.clusters)
+
+        images = pbc_images()
+        clus_try = []
+        for clus in orbit.clusters:
+            clus.move_closest_to(center0)
+            for img in images:
+                c1 = clus.copy()
+                c1.move_to_prim(dijk=img)
+                dist = prim.norm(c1.center-center0)
+                # print("dist", prim.lattice.get_norm(c1.center-center0), img)
+                if dist < 1E-8:
+                    continue
+                if dist > options.polaron_locations_cut:
+                    continue
+                if len([ijk for ijk in dimer.ijkls if ijk in c1.ijkls]) < options.min_pol_common:
+                    continue
+                clus_try.append(Cluster(dimer.vertices + c1.vertices, prim))
+        if len(clus_try) <= 0:
+            print("WARNING no candidate structure found")
+            exit(-1)
+        print("%d candidate structures before symm" % (len(clus_try)))
+        clus_try = Cluster.remove_equivalent_clusters(clus_try)
+        clus_try.sort()
+        print("%d candidate structures after symm" % (len(clus_try)))
+
+        for iout, clus in enumerate(clus_try[:options.npolaron]):
+            print(clus.order, clus.factorial, clus.diameter, clus.ijkls)
+            dest_dimer = Cluster(clus.vertices[(clus.order//2):], prim)
+            dest_poscar.structure = polaron.apply_to(dest, dest_dimer, inv_sc_mat)
+            dest_poscar.write_file(options.p1 + '_polaron_' + str(iout+1), direct=True)
+
+    elif options.task == '5':
+        print("Finding neighbor polarons; primitive= %s supercell= %s" % (options.prim, options.p1))
+        pos= Poscar.from_file(options.p1)
+        prim = get_prim(options)
+        clusters = Cluster.read_cluster(prim, options.dest_dimer)
+        task5(prim, pos, clusters, options)
+
+
+    elif options.task == '6':
+        pos= Poscar.from_file(options.p1)
+        if os.path.isfile(options.dest_dimer):
+            prim = get_prim(options)
+            clusters = Cluster.read_cluster(prim, options.dest_dimer)
+            mat = prim.lattice.matrix.dot(pos.structure.lattice.inv_matrix)
+# dest_dimer is a cluster file
+            for i,cl in enumerate(clusters):
+                task6(pos, [pos.structure.frac2ijkl(np.dot(p, mat), tolerance=1E-4)[-1]
+                            for p in cl.frac_coords.tolist()], options, '_polaron_%d'%(i+1))
+        else:
+            task6(pos, (str2arr(options.dest_dimer, int) - 1).tolist(), options)
+
+    elif options.task == '7':
+        from csld.util.mathtool import entropy_prob
+#        pforce = co("sh %s/bin/get-force.sh %s polaron" % (os.environ['HOME'], options.p1)).strip()
+        pforce = np.array(np.matrix(co("sh %s/bin/get-force.sh %s" % (os.environ['HOME'], options.prim)).strip())).reshape(-1,3)
+        print(entropy_prob(np.square(pforce).sum(axis=1)), entropy_prob(np.abs(pforce).sum(axis=1)),
+              entropy_prob(dis))
+
+    elif options.task == '8':
+        print("convert potential %s to a different size %s" % (options.p1, options.p2))
+        prim = get_prim(options)
+        task8(options.p1, options.p2, prim)
+
+    elif options.task == 'magpho_pot':
+        print("convert magpho potential %s to a different size %s" % (options.p1, options.p2))
+        magpho_pot(options.p1, options.p2)
+
+    elif options.task == 'csld_pot_like_magpho':
+        print("convert csld potential %s to a different size %s" % (options.p1, options.p2))
+        csld_pot_like_magpho(options.p1, options.p2)
+
+    elif options.task == 'magpho_config':
+        magpho_config(options.p1, Poscar.from_file(options.p2))
+
+    elif options.task == 'pot_defect':
+        print("convert potential %s to a supercell %s for defects" % (options.p1, options.p2))
+        prim = get_prim(options)
+        task_pot_defect(options.p1, options.p2, prim)
+
+    elif options.task == 'rand_disp':
+        displace_poscar(options.p1, options.polaron_disp_cut, options.p2)
+
+    elif options.task == 'rand_disp_list' or options.task == 'rand_disp_dir':
+        from csld.util.mathtool import ndigits
+        nd = ndigits(options.npolaron)
+        subdir=options.task == 'rand_disp_dir'
+        for i in range(options.npolaron):
+            filename= "pos_%05d-disp%g"%(i, options.polaron_disp_cut)
+            if subdir:
+                dir="dir_%05d-disp%g"%(i, options.polaron_disp_cut)
+                filename=dir+"/POSCAR"
+                if not os.path.exists(dir):
+                    os.mkdir(dir)
+            #os.makedirs(os.path.dirname(filename),exist_ok=True)
+            with open(filename, 'w') as f:
+                displace_poscar(options.p1, options.polaron_disp_cut, options.p2, f)
+                f.close()
+
+    elif options.task == 'nsc':
+        prim = get_prim(options)
+        scmat = load_matrix(options.p1).reshape((3,3)).astype(int)
+        nmin, nrec = estimate_num_supercell(prim, scmat, options.polaron_disp_cut)
+        print("Estimating number of required supercells: min= %d recommend= %d"%(nmin, nrec))
+
+    elif options.task == 'rand_vec':
+        from csld.util.mathtool import random_displacements
+        np.savetxt(sys.stdout.buffer, random_displacements(options.npolaron,options.polaron_disp_cut))
+
+    elif options.task == 'add_disp':
+        displace_poscar(options.p1, options.p2)
+
+    elif options.task == 'dist':
+        task_dist(options.p1, (str2arr(options.dest_dimer, int)-1).tolist())
+
+    elif options.task == 'append_center':
+        task_append_center(options.p1, (str2arr(options.dest_dimer, int)-1).tolist())
+
+    elif options.task == 'dist_center':
+        task_dist_center(options.p1, (str2arr(options.dest_dimer, int)-1).tolist())
+
+    elif options.task == '11':
+        pos = Poscar.from_file(options.p1)
+        p1 = pos.structure
+        i1, i2 = (str2arr(options.dest_dimer, int)-1).tolist()
+        min_dist = 1.0e99;
+        for i in range(i1, i2+1):
+            for j in range(i+1, i2+1):
+                dist = p1.distance_and_image(i, j)[0]
+                if dist<min_dist:
+                    min_dist = dist
+                    min_ij = (i, j)
+        print(min_dist, (min_ij[0]+1, min_ij[1]+1), end=" ")
+        if isfile(options.p2):
+            task_dist(options.p2, min_ij)
+        else:
+            print("")
+
+    elif options.task == 'pos2atat':
+        task_pos2atat(options.prim, options.p1)
+
+    elif options.task == 'atat2pos':
+        task_atat2pos(options.prim, options.p1)
+
+    elif options.task == 'txt2mtx':
+        import scipy
+        mat = np.loadtxt(options.p1)
+        scipy.io.mmwrite(options.p2, mat)
+
+    elif options.task == 'mtx2txt':
+        import scipy
+        mat = scipy.io.mmread(options.p1)
+        np.savetxt(options.p2, mat if isinstance(mat, np.ndarray) else mat.todense())
+
+    elif options.task == 'analyze_solutions':
+        from cssolve.csfit import analyze_solutions
+        sols= np.loadtxt(options.p1)
+        sol_analyzed=np.array(analyze_solutions(sols, options.tol))[:1]
+        print("L0 norm ", len([x for x in sol_analyzed[0] if x != 0.0]))
+        np.savetxt(options.p1+'_analyzed', sol_analyzed)
+
+    elif options.task == 'matmul':
+        a=np.loadtxt(options.p1)
+        b=np.loadtxt(options.p2)
+        np.savetxt('matmul.txt', a.dot(b))
+
+    elif options.task== 'rotate_step':
+        a=np.loadtxt(options.p1)
+        b=np.loadtxt(options.p2)
+        rotate_step(a, b, options.npolaron)
+
+    elif options.task == 'spg':
+        #prim = get_prim(options)
+        import spglib
+        s=Poscar.from_file(options.prim).structure
+        print(spglib.get_spacegroup(s.to_spglib()))
+
+    elif options.task == 'symmetric_supercell':
+        make_symmetric_supercell(options.prim, options.polaron_disp_cut)
+
+    elif options.task == 'sublattice':
+        prim = get_prim(options)
+        print(repr(prim))
+
+    elif options.task == 'symmetrize':
+        prim = get_prim(options)
+        #prim = prim.symmetrize(options.tol)
+        prim.symmetrize_coordinates(options.tol)
+        Poscar(prim).write_file("POSCAR_symmetrized", direct=True)
+
+    elif options.task == 'standardize':
+        standardize_cell(options.prim, "POSCAR_symmetrized_conventional")
+
+    elif options.task == 'primitive':
+        find_primitive(options.prim, sys.stdout)
+
+    elif options.task== 'scmat':
+        p0=Poscar.from_file(options.prim).structure
+        p1=Poscar.from_file(options.p1).structure
+        print(matrix2text(p0.get_scmat(p1)))
+
+    elif options.task== 'supercell':
+        prim  = Poscar.from_file(options.prim).structure
+        scmat = np.loadtxt(options.p1).astype(np.int)
+        print(Poscar(SupercellStructure.from_scmat(prim, scmat)))
+
+    elif options.task== 'density':
+        print(Poscar.from_file(options.p1).structure.density)
+
+    elif options.task== 'xyarea':
+        latt=Poscar.from_file(options.p1).structure.lattice._matrix
+        print(np.linalg.norm(np.cross(latt[0], latt[1])))
+
+    elif options.task== 'ehull':
+        from csld.compound_convexhull import CompoundConvexHull
+        hull= CompoundConvexHull.from_file(options.p2)
+        p1=Poscar.from_file(options.p1).structure
+        print(hull.hull_frac_energy(p1.composition)[-1])
+
+    elif options.task== 'convexhull':
+        from csld.compound_convexhull import CompoundConvexHull
+        hull= CompoundConvexHull.from_file(options.p1)
+        hull.plot()
+
+    elif options.task== 'NN':
+        s=Poscar.from_file(options.p1).structure
+        dist = s.distance_matrix_noself
+        elements=s.elements
+        for i,imin in enumerate(np.argmin(dist,axis=1)):
+            print(dist[i,imin], elements[imin], imin+1)
+
+    elif options.task== 'subst':
+        pos=Poscar.from_file(options.p1)
+        iatom=int(options.p2.split()[0])-1
+        new_specie=options.p2.split()[1]
+        pos.structure.replace(iatom, new_specie)
+        print(pos)
+
+    elif options.task== 'formula':
+        pos=Poscar.from_file(options.p1)
+        print(pos.structure.formula.replace(" ", ""))
+
+    elif options.task== 'calculator_file':
+        calculator_file(options.p1)
+
+    elif options.task== 'split_tensor':
+        split_tensor(options.p1, list(map(int,options.p2.split())))
+
+    elif options.task== 'chop':
+        chop(load_matrix(options.p1), options.tol)
+
+    elif options.task== 'statistics':
+        mat=load_matrix(options.p1)
+        print(" ,  ".join(list(map(lambda x: "%.6f +/- %.6f "%(x[0],x[1]), np.vstack([np.mean(mat, axis=0), np.std(mat, axis=0)]).T))))
+
+    elif options.task== 'reduced_formula':
+        pos=Poscar.from_file(options.p1)
+        print(pos.structure.composition.reduced_formula)
+
+    elif options.task == '16':
+        prim = get_prim(options)
+#        clusters = Cluster.read_cluster(prim, 'clusters.out')
+        task16(prim, 'clusters.out')
+
+    elif options.task == 'final_fit':
+        final_fit(load_matrix(options.p1), load_matrix(options.p2).reshape((-1)), load_matrix(options.prim).reshape((-1)))
+
+    elif options.task == 'norm_row':
+        mat = load_matrix(options.p1)
+        l = np.linalg.norm(mat, axis=1)
+        if options.long:
+            [print(i) for i in l.tolist()]
+        else:
+            print("magnitude min %f max %f mean %f" % (np.amin(l), np.amax(l), np.mean(l))) 
+
+    elif options.task == 'norm_diff':
+        mat = load_matrix(options.p1) - load_matrix(options.p2)
+        if mat.ndim<2:
+            print("norm= %f RMS= %f"% (np.linalg.norm(mat), np.linalg.norm(mat)/np.sqrt(len(mat))))
+            exit() 
+        l = np.linalg.norm(mat if isinstance(mat, np.ndarray) else mat.A, axis=1)
+        if options.long:
+            [print(i) for i in l.tolist()]
+        else:
+            print("magnitude min %f max %f mean %f" % (np.amin(l), np.amax(l), np.mean(l)))
+
+    elif options.task == 'det':
+        mat = load_matrix(options.p1)
+        print(np.linalg.det(mat))
+
+    elif options.task == 'transpose':
+        a = load_matrix(options.p1)
+        #print(matrix2text(a.reshape((-1, a.shape[1],a.shape[1])).transpose((0,2,1)).reshape((-1,a.shape[1]))))
+        print(matrix2text(a.T))
+
+    elif options.task == 'corr_col':
+        a = load_matrix(options.p1).toarray()
+        an= a/np.maximum(np.linalg.norm(a,axis=0), 1e-14)[None,:]
+        corr=an.T.dot(an) 
+        #for i in range(len(a)):
+        #    a[i]*=1/max(np.linalg.norm(a[i]), 1.0e-18)
+        np.savetxt('corr_col.txt', corr)
+        print("99.99% correlation:")
+        np.fill_diagonal(corr,0)
+        print(np.array(np.where(np.abs(np.triu(corr))>0.9999)).T)
+
+    elif options.task == 'splitby':
+        with open(options.p1, mode="r") as bigfile:
+            reader = bigfile.read().rstrip()
+            for i,part in enumerate(reader.split(options.polaron_specie)):
+                if not part:
+                    continue
+                with open("File_%d"%(i), mode="w") as newfile:
+                    newfile.write(part)
+
+    elif options.task == 'born':
+        prim = get_prim(options)
+        task_born(prim, options.p1)
+
+    elif options.task == 'ShengBTE':
+        task_ShengBTE(Poscar.from_file(options.p1).structure)
+
+    elif options.task == 'force2xml':
+        force2xml(options.p1)
+
+    elif options.task == 'cuboid':
+        cuboid_sites(options.prim, options.polaron_specie, options.polaron_disp_cut, options.dimer_delta_dist, options.p2)
+
+    else:
+        print("Unknown task", options.task)
+        exit(-1)

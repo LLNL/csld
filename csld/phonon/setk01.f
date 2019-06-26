@@ -1,0 +1,113 @@
+      SUBROUTINE SETK01(NA,A,PTK,NPTK,IDEF,NTET,NKMAX,NTMAX)
+C     SET THE K-POINTS IN THE IRREDUCTIBLE WEDGE OF THE BRILLOUIN ZONE
+C     FOR A SIMPLE CUBIC LATTICE WITH DIRECT LATTICE PARAMETER A,
+C     SYMMETRY IS OH
+      IMPLICIT REAL*8(A-H,O-Z)
+      REAL*4 AVOL
+      DIMENSION PTK(4,NKMAX),IDEF(5,NTMAX)
+      EQUIVALENCE (IVOL,AVOL)
+      PI = 3.141592653589793238D0
+      IF(NA.LE.0) GOTO 97
+      IF(A.LE.0.0D0) GOTO 98
+      NPTK = (NA+1)*(NA+2)*(NA+3)/6
+      IF(NPTK.GT.NKMAX) STOP '*** <SETK01> NPTK EXCEEDS NKMAX ***'
+      NTET = NA**3
+      IF(NTET.GT.NTMAX) STOP '*** <SETK01> NTET EXCEEDS NTMAX ***'
+C *** SET THE K-POINTS
+      DK=PI/A/NA
+      N=NA
+      WRITE(6,100) NPTK,NTET,N*DK,N*DK,N*DK
+      W = 6.0D0/NA**3
+      NPTK=0
+      I=0
+    1 J=0
+    2 K=0
+    3 NPTK=NPTK+1
+C          NPTK = I*(I+1)*(I+2)/6 + J*(J+1)/2 + K + 1
+      WK = W
+      IF(I.EQ.J .OR. J.EQ.K .OR. K.EQ.I) WK = WK/2.0D0
+      IF(I.EQ.J .AND. J.EQ.K) WK = WK/3.0D0
+      IF(K.EQ.0) WK = WK/2.0D0
+      IF(J.EQ.0) WK = WK/2.0D0
+      IF(J.EQ.NA) WK = WK/2.0D0
+      IF(I.EQ.NA) WK = WK/2.0D0
+      PTK(1,NPTK)=DFLOAT(I)*DK
+      PTK(2,NPTK)=DFLOAT(J)*DK
+      PTK(3,NPTK)=DFLOAT(K)*DK
+      PTK(4,NPTK) = WK
+      K=K+1
+      IF(K.LE.J) GOTO 3
+      J=J+1
+      IF(J.LE.I) GOTO 2
+      I=I+1
+      IF(I.LE.N) GOTO 1
+      PTK(4,1) = W/48.0D0
+      PTK(4,NPTK) = W/48.0D0
+C *** DEFINE THE TETRAHEDRA
+      NTET=0
+      I7=0
+      I=0
+    4 IX=(I+1)*(I+2)/2
+      J=0
+    5 K=0
+    6 I7=I7+1
+      I6=I7+IX
+      I2=I6+J+1
+      I1=I2+1
+      I8=I7+1
+      I5=I6+1
+      I3=I7+J+1
+      I4=I3+1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I1
+      IF(K.EQ.J) GOTO 7
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I1
+    7 IF(J.EQ.I) GOTO 8
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I1
+      IF(K.EQ.J) GOTO 8
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I1
+    8 K=K+1
+      IF(K.LE.J) GOTO 6
+      J=J+1
+      IF(J.LE.I) GOTO 5
+      I=I+1
+      IF(I.LT.N) GOTO 4
+      AVOL=1.0D0/DFLOAT(NTET)
+      DO 15 IT=1,NTET
+   15 IDEF(5,IT)=IVOL
+      RETURN
+   97 WRITE(6,101)
+      GOTO 99
+   98 WRITE(6,102)
+   99 STOP
+  100 FORMAT(' SAMPLING THE 48TH PART OF THE B.Z. OF THE',
+     ,' SIMPLE CUBIC LATTICE'/1X,I5,' K-POINTS',I7,' TETRAHEDRA'/
+     .' KXMAX =',D11.4,'  KYMAX =',D11.4,'  KZMAX =',D11.4)
+  101 FORMAT(' *** <SETK01> NA IS NOT A POSITIVE INTEGER ***')
+  102 FORMAT(' *** <SETK01> A IS NOT A POSITIVE NUMBER ***')
+      END

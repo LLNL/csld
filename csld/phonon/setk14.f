@@ -1,0 +1,144 @@
+      SUBROUTINE SETK14(N1,N2,N3,A1,A2,A3,PTK,NPTK,IDEF,NTET,NKMX,NTMX)
+C     SET THE K-POINTS IN ONE FOURTH THE RECIPROCAL CELL FOR A
+C     SIDE-CENTRED MONOCLINIC LATTICE WHOSE CONVENTIONAL MONOCLINIC
+C     CELL HAS DIRECT-SPACE TRANSLATION VECTORS A1, A2 AND A3, WITH A3
+C     ALONG THE BINARY AXIS, A1 AND A2 PERPENDICULAR TO IT, THE (A1,A3)
+C     FACE BEING CENTRED.
+C     SYMMETRY IS C2H
+      IMPLICIT REAL*8(A-H,O-Z)
+      REAL*4 AVOL
+      DIMENSION PTK(4,NKMX),IDEF(5,NTMX),A1(3),A2(3),A3(3),B(3,3)
+      EQUIVALENCE (IVOL,AVOL)
+      PI = 3.141592653589793238D0
+      IF(N1.LE.0 .OR. N2.LE.0 .OR. N3.LE.0) GOTO 97
+C *** GENERATE THE RECIPROCAL BASIS VECTORS
+      B(1,1) = A2(2)*A3(3)-A2(3)*A3(2)
+      B(1,2) = A2(3)*A3(1)-A2(1)*A3(3)
+      B(1,3) = A2(1)*A3(2)-A2(2)*A3(1)
+      C = A1(1)*B(1,1)+A1(2)*B(1,2)+A1(3)*B(1,3)
+      IF(C.EQ.0.0D0) GOTO 98
+      C = PI/C
+      B(1,1) = B(1,1)*C/N1
+      B(1,2) = B(1,2)*C/N1
+      B(1,3) = B(1,3)*C/N1
+      B(2,1) = (A3(2)*A1(3)-A3(3)*A1(2))*C/N2
+      B(2,2) = (A3(3)*A1(1)-A3(1)*A1(3))*C/N2
+      B(2,3) = (A3(1)*A1(2)-A3(2)*A1(1))*C/N2
+      B(3,1) = (A1(2)*A2(3)-A1(3)*A2(2))*C/N3
+      B(3,2) = (A1(3)*A2(1)-A1(1)*A2(3))*C/N3
+      B(3,3) = (A1(1)*A2(2)-A1(2)*A2(1))*C/N3
+      NN1 = 2*N1
+      NN3 = 2*N3
+      NPTK = ((NN1+1)*(NN3+1)-2)*(N2+1)
+      IF(NPTK.GT.NKMX) STOP '*** <SETK14> NPTK EXCEEDS NKMAX ***'
+      NTET = 24*N1*N2*N3
+      IF(NTET.GT.NTMX) STOP '*** <SETK14> NTET EXCEEDS NTMAX ***'
+      WRITE(6,100) NPTK,NTET,
+     ,             NN1*DSQRT(B(1,1)**2+B(1,2)**2+B(1,3)**2),
+     ,              N2*DSQRT(B(2,1)**2+B(2,2)**2+B(2,3)**2),
+     ,             NN3*DSQRT(B(3,1)**2+B(3,2)**2+B(3,3)**2)
+C *** SET THE K-POINTS
+      N3P1 = NN3+1
+      ICODE = 0
+      NPTK = 0
+      W = 1.0D0/(NN1*N2*NN3)
+      I = 0
+    1 J = 0
+    2 K = 0
+    3 ICODE = ICODE+1
+      IF(I.EQ.NN1) THEN
+         IF(K.EQ.0) THEN
+            IDEF(5,ICODE) = IDEF(5,N3P1*J+N3P1)
+            GOTO 5
+         ENDIF
+         IF(K.EQ.NN3) THEN
+            IDEF(5,ICODE) = IDEF(5,N3P1*J+1)
+            GOTO 6
+         ENDIF
+      ENDIF
+      NPTK = NPTK+1
+      IDEF(5,ICODE) = NPTK
+      WK = W
+      IF(I.EQ.0 .OR. I.EQ.NN1) WK = WK/2.0D0
+      IF(J.EQ.0 .OR. J.EQ.N2) WK = WK/2.0D0
+      IF(K.EQ.0 .OR. K.EQ.NN3) WK = WK/2.0D0
+      IF(I.EQ.0 .AND. K.EQ.0) WK = WK*2.0D0
+      IF(I.EQ.0 .AND. K.EQ.NN3) WK = WK*2.0D0
+      DO 4 L=1,3
+         PTK(L,NPTK) = I*B(1,L)+J*B(2,L)+K*B(3,L)
+    4 CONTINUE
+      PTK(4,NPTK) = WK
+    5 K = K+1
+      IF(K.LE.NN3) GOTO 3
+    6 J = J+1
+      IF(J.LE.N2) GOTO 2
+      I = I+1
+      IF(I.LE.NN1) GOTO 1
+C *** DEFINE THE TETRAHEDRA
+      N12 = N3P1*(N2+1)
+      NTET = 0
+      IND7 = 0
+      I = 0
+    7 J = 0
+    8 K = 0
+    9 IND7 = IND7+1
+      IND6 = IND7+N12
+      IND2 = IND6+N3P1
+      IND1 = IND2+1
+      NTET = NTET+1
+      IDEF(1,NTET) = IDEF(5,IND7)
+      IDEF(2,NTET) = IDEF(5,IND6)
+      IDEF(3,NTET) = IDEF(5,IND2)
+      IDEF(4,NTET) = IDEF(5,IND1)
+      IND8 = IND7+1
+      IND5 = IND6+1
+      NTET = NTET+1
+      IDEF(1,NTET) = IDEF(5,IND7)
+      IDEF(2,NTET) = IDEF(5,IND6)
+      IDEF(3,NTET) = IDEF(5,IND5)
+      IDEF(4,NTET) = IDEF(5,IND1)
+      NTET = NTET+1
+      IDEF(1,NTET) = IDEF(5,IND7)
+      IDEF(2,NTET) = IDEF(5,IND8)
+      IDEF(3,NTET) = IDEF(5,IND5)
+      IDEF(4,NTET) = IDEF(5,IND1)
+      IND3 = IND7+N3P1
+      IND4 = IND3+1
+      NTET = NTET+1
+      IDEF(1,NTET) = IDEF(5,IND7)
+      IDEF(2,NTET) = IDEF(5,IND8)
+      IDEF(3,NTET) = IDEF(5,IND4)
+      IDEF(4,NTET) = IDEF(5,IND1)
+      NTET = NTET+1
+      IDEF(1,NTET) = IDEF(5,IND7)
+      IDEF(2,NTET) = IDEF(5,IND3)
+      IDEF(3,NTET) = IDEF(5,IND4)
+      IDEF(4,NTET) = IDEF(5,IND1)
+      NTET = NTET+1
+      IDEF(1,NTET) = IDEF(5,IND7)
+      IDEF(2,NTET) = IDEF(5,IND3)
+      IDEF(3,NTET) = IDEF(5,IND2)
+      IDEF(4,NTET) = IDEF(5,IND1)
+      K = K+1
+      IF(K.LT.NN3) GOTO 9
+      IND7 = IND7+1
+      J = J+1
+      IF(J.LT.N2) GOTO 8
+      IND7 = IND7+N3P1
+      I = I+1
+      IF(I.LT.NN1) GOTO 7
+      AVOL=1.D0/DFLOAT(NTET)
+      DO 15 IT=1,NTET
+   15 IDEF(5,IT)=IVOL
+      RETURN
+   97 WRITE(6,101)
+      GOTO 99
+   98 WRITE(6,102)
+   99 STOP
+  100 FORMAT(' SAMPLING ONE HALF THE CONVENTIONAL MONOCLINIC RECIPROCAL'
+     ,,' CELL'/1X,I5,' K-POINTS',I7,' TETRAHEDRA'/
+     .' THE EDGES OF THE SAMPLED PARALLELEPIPED HAVE LENGTHS EQUAL TO'/
+     .2D11.4,' IN THE BASAL PLANE AND',D11.4,' ALONG THE BINARY AXIS')
+  101 FORMAT(' *** <SETK14> N1, N2 OR N3 IS NOT POSITIVE ***')
+  102 FORMAT(' *** <SETK14> VOLUME OF THE PRIMITIVE CELL IS ZERO ***')
+      END

@@ -1,0 +1,278 @@
+      SUBROUTINE SETK03(NA,A,PTK,NPTK,IDEF,NTET,NKMAX,NTMAX)
+C     SET THE K-POINTS IN THE IRREDUCTIBLE WEDGE OF THE BRILLOUIN ZONE
+C     FOR A FCC LATTICE WITH DIRECT LATTICE PARAMETER A,
+C     SYMMETRY IS OH
+      IMPLICIT REAL*8(A-H,O-Z)
+      REAL AVOL
+      DIMENSION PTK(4,NKMAX),IDEF(5,NTMAX),IWORK(276)
+      EQUIVALENCE (IVOL,AVOL)
+      PI = 3.141592653589793238D0
+      IF(NA.LE.0) GOTO 96
+      IF((NA/2)*2.LT.NA .OR. NA.GT.24) GOTO 97
+      IF(A.LE.0.0D0) GOTO 98
+      IF(NTMAX.LT.35) STOP '*** <SETK03> NTMAX MUST BE >= 35 ***'
+      NPTK = (NA+2)*(8*NA**2+11*NA+6)/12
+      IF(NPTK.GT.NKMAX) STOP '*** <SETK03> NPTK EXCEEDS NKMAX ***'
+      NTET = NA*(8*NA**2-NA+1)/2
+      IF(NTET.GT.NTMAX) STOP '*** <SETK03> NTET EXCEEDS NTMAX ***'
+C *** SET THE K-POINTS
+      DK=PI/A/NA
+      N=2*NA
+      WRITE(6,100) NPTK,NTET,N*DK,1.5D0*NA*DK,NA*DK
+      VOLT=0.5D0*DFLOAT(N)**3
+      LMAX=3*NA
+      W = 1.5D0/NA**3
+      NPTK=0
+      L=0
+    1 I=0
+    2 II=1+I*(I+1)*(I+2)/6
+      J=0
+    3 IJ=II+J*(J+1)/2
+      K=L-I-J
+      IF(K.LT.0) GOTO 5
+      IF(K.GT.J) GOTO 4
+      WK = W
+      IF(I.EQ.J .OR. J.EQ.K .OR. K.EQ.I) WK = WK/2.0D0
+      IF(I.EQ.J .AND. J.EQ.K) WK = WK/3.0D0
+      IF(K.EQ.0) WK = WK/2.0D0
+      IF(J.EQ.0) WK = WK/2.0D0
+      IF(I.EQ.N) WK = WK/2.0D0
+      IF(L.EQ.LMAX) WK = WK/2.0D0
+      NPTK=NPTK+1
+      PTK(1,NPTK)=DFLOAT(I)*DK
+      PTK(2,NPTK)=DFLOAT(J)*DK
+      PTK(3,NPTK)=DFLOAT(K)*DK
+      PTK(4,NPTK)=WK
+      IND=IJ+K
+      IDEF(5,IND)=NPTK
+    4 J=J+1
+      IF(J.LE.I) GOTO 3
+    5 I=I+1
+      IF(I.LE.N) GOTO 2
+      L=L+1
+      IF(L.LE.LMAX) GOTO 1
+      PTK(4,1) = W/48.0D0
+C *** DEFINE THE TETRAHEDRA
+      NTET=0
+      JVOL2=0
+      LMAX=LMAX-3
+      L=0
+    6 I=0
+    7 J=0
+    8 K=L-I-J
+      IF(K.LT.0) GOTO 11
+      IF(K.GT.J) GOTO 10
+      IND7=I*(I+1)*(I+2)/6+J*(J+1)/2+K+1
+      IND6=IND7+(I+1)*(I+2)/2
+      IND2=IND6+J+1
+      IND1=IND2+1
+      IND8=IND7+1
+      IND5=IND6+1
+      IND3=IND7+J+1
+      IND4=IND3+1
+      I7=IDEF(5,IND7)
+      I6=IDEF(5,IND6)
+      I2=IDEF(5,IND2)
+      I1=IDEF(5,IND1)
+      I8=IDEF(5,IND8)
+      I5=IDEF(5,IND5)
+      I3=IDEF(5,IND3)
+      I4=IDEF(5,IND4)
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I1
+      IF(K.EQ.J) GOTO 9
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I1
+    9 IF(J.EQ.I) GOTO 10
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I1
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I1
+      IF(K.EQ.J) GOTO 10
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I1
+   10 J=J+1
+      IF(J.LE.I) GOTO 8
+   11 I=I+1
+      IF(I.LT.N) GOTO 7
+      L=L+1
+      IF(L.LE.LMAX) GOTO 6
+      L=LMAX+1
+      I=0
+   12 J=0
+   13 K=L-I-J
+      IF(K.LT.0) GOTO 15
+      IF(K.GE.J) GOTO 14
+      IND7=I*(I+1)*(I+2)/6+J*(J+1)/2+K+1
+      IND6=IND7+(I+1)*(I+2)/2
+      IND2=IND6+J+1
+      IND8=IND7+1
+      IND5=IND6+1
+      IND3=IND7+J+1
+      IND4=IND3+1
+      I7=IDEF(5,IND7)
+      I6=IDEF(5,IND6)
+      I2=IDEF(5,IND2)
+      I8=IDEF(5,IND8)
+      I5=IDEF(5,IND5)
+      I3=IDEF(5,IND3)
+      I4=IDEF(5,IND4)
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I5
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I2
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I5
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I4
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I2
+      JVOL2=JVOL2+1
+      IWORK(JVOL2)=NTET
+   14 J=J+1
+      IF(J.LT.I) GOTO 13
+   15 I=I+1
+      IF(I.LT.N) GOTO 12
+      L=LMAX+2
+      I=0
+   16 J=0
+   17 K=L-I-J
+      IF(K.LT.0) GOTO 19
+      IF(K.GE.J) GOTO 18
+      IND7=I*(I+1)*(I+2)/6+J*(J+1)/2+K+1
+      IND6=IND7+(I+1)*(I+2)/2
+      IND8=IND7+1
+      IND3=IND7+J+1
+      I7=IDEF(5,IND7)
+      I6=IDEF(5,IND6)
+      I8=IDEF(5,IND8)
+      I3=IDEF(5,IND3)
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I3
+      IDEF(4,NTET)=I6
+   18 J=J+1
+      IF(J.LT.I) GOTO 17
+   19 I=I+1
+      IF(I.LT.N) GOTO 16
+      L=LMAX+1
+      I=0
+   20 K=L-I-I
+      IF(K.LT.0) GOTO 22
+      IF(K.GE.I) GOTO 21
+      IND7=I*(I+1)*(I+2)/6+I*(I+1)/2+K+1
+      IND6=IND7+(I+1)*(I+2)/2
+      IND2=IND6+I+1
+      IND8=IND7+1
+      IND5=IND6+1
+      IND9=IND8+1
+      I7=IDEF(5,IND7)
+      I6=IDEF(5,IND6)
+      I2=IDEF(5,IND2)
+      I8=IDEF(5,IND8)
+      I5=IDEF(5,IND5)
+      I9=IDEF(5,IND9)
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I2
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I8
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I2
+      NTET=NTET+1
+      IDEF(1,NTET)=I8
+      IDEF(2,NTET)=I9
+      IDEF(3,NTET)=I5
+      IDEF(4,NTET)=I2
+   21 I=I+1
+      GOTO 20
+   22 K=0
+   23 I=L-K-K
+      IF(I.LE.K) GOTO 25
+      IF(I.GE.N) GOTO 24
+      IND7=I*(I+1)*(I+2)/6+K*(K+1)/2+K+1
+      IND6=IND7+(I+1)*(I+2)/2
+      IND2=IND6+K+1
+      IND3=IND7+K+1
+      IND4=IND3+1
+      IND10=IND6+(I+2)*(I+3)/2
+      I7=IDEF(5,IND7)
+      I6=IDEF(5,IND6)
+      I2=IDEF(5,IND2)
+      I3=IDEF(5,IND3)
+      I4=IDEF(5,IND4)
+      I10=IDEF(5,IND10)
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I3
+      IDEF(3,NTET)=I4
+      IDEF(4,NTET)=I2
+      NTET=NTET+1
+      IDEF(1,NTET)=I7
+      IDEF(2,NTET)=I4
+      IDEF(3,NTET)=I6
+      IDEF(4,NTET)=I2
+      NTET=NTET+1
+      IDEF(1,NTET)=I4
+      IDEF(2,NTET)=I6
+      IDEF(3,NTET)=I2
+      IDEF(4,NTET)=I10
+   24 K=K+1
+      GOTO 23
+   25 CONTINUE
+      AVOL=1.0D0/VOLT
+      DO 26 ITET=1,NTET
+   26 IDEF(5,ITET)=IVOL
+      AVOL=2.0*AVOL
+      DO 27 J=1,JVOL2
+      ITET=IWORK(J)
+   27 IDEF(5,ITET)=IVOL
+      RETURN
+   96 WRITE(6,101)
+      GOTO 99
+   97 WRITE(6,102)
+      GOTO 99
+   98 WRITE(6,103)
+   99 STOP
+  100 FORMAT(' SAMPLING THE 48TH PART OF THE B.Z. OF THE',
+     ,' FCC LATTICE'/1X,I5,' K-POINTS',I7,' TETRAHEDRA'/
+     .' KXMAX =',D11.4,'  KYMAX =',D11.4,'  KZMAX =',D11.4)
+  101 FORMAT(' *** <SETK03> NA IS NOT A POSITIVE INTEGER ***')
+  102 FORMAT(' *** <SETK03> NA MUST BE EVEN AND NOT GREATER',
+     ,' THAN 24 ***')
+  103 FORMAT(' *** <SETK03> A IS NOT A POSITIVE NUMBER ***')
+      END
