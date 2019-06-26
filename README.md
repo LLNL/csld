@@ -41,7 +41,7 @@ CSLD was created by Fei Zhou, fzhou@llnl.gov.
 
 If you are referencing CSLD in a publication, please cite the following paper:
 
- * Fei Zhou, Weston Nielson, Yi Xia, and Vidvuds Ozolins, Phys. Rev. Lett. 113, 185501, (2014)](http://dx.doi.org/10.1103/PhysRevLett.113.185501)
+ * [Fei Zhou, Weston Nielson, Yi Xia, and Vidvuds Ozolins, Phys. Rev. Lett. 113, 185501, (2014)](http://dx.doi.org/10.1103/PhysRevLett.113.185501)
 
  * Fei Zhou et al, [arxiv:1805.08903](https://arxiv.org/abs/1805.08903), [arxiv:1805.08904](https://arxiv.org/abs/1805.08904)
 
