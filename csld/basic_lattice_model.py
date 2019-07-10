@@ -58,6 +58,8 @@ class BasicLatticeModel(AtomicModel):
                                 ([str(i[0]) for i in cl.id] if hasattr(cl, 'id') else [])), matrix2text(pad_right(
                 np.array(cl.frac_coords, dtype=object), (cl.order, 5)))))
             out_ijkl.append(", ".join(["%d %d %d %d %s%d"%tuple(i.tolist()+[elements[i[-1]],sublat[i[-1]]]) for i in cl._ijkls_np]))
+            out_ijkl[-1]+= "  frac: "+ matrix2text(cl.frac_coords, ' ')
+            out_ijkl[-1]+= "  cart: "+ matrix2text(cl.coords, ' ') 
         open(fname, "w").write("\n".join(out_s))
         open(fname+'_ijkl', "w").write("\n".join(out_ijkl))
 
@@ -309,6 +311,10 @@ class BasicLatticeModel(AtomicModel):
             name_ord = [['All', all_ord]]
         else:
             for i in name_ord:
+                try:
+                    i[1]= list(map(int, i[1]))
+                except:
+                    continue
                 if i[0][-6:].lower()=='except':
                     i[1] = [j for j in all_ord if j not in i[1]]
                 else:
@@ -319,8 +325,17 @@ class BasicLatticeModel(AtomicModel):
     def get_submodels(self, name_ord, knownsol=None, **kwargs):
         """
         :param name_ord: list of [name, fct order], e.g. pair 0,2
+                         or [name, filename] where filename is a matrix
         :return: list of [name, matrix] defining the different fittings
         """
+        def down_select(o, sol0):
+            if isinstance(o, list):
+                return sum([list(range(self.ord_idx[i], self.ord_idx[i+1])) for i in o if i<=self.maxorder], [])
+            elif o=='except-known':
+                return np.where(sol0==0)[0]
+            else:
+                return np.loadtxt(o).reshape((-1))
+
         all_ord=list(set([o.cluster.order for o in self.orbits]))
         name_ord = self.process_name_ord(name_ord, all_ord)
         print("No. of parameters", {o: self.ord_idx[o+1]-self.ord_idx[o] for o in range(self.maxorder+1)})
@@ -331,7 +346,7 @@ class BasicLatticeModel(AtomicModel):
              sol0[:min(sol0.size, input_sol.size)] = input_sol[:min(sol0.size, input_sol.size)]
         return [[nm,
                 scipy.sparse.identity(self.ncorr).tocsr()[:,
-                  sum([list(range(self.ord_idx[i], self.ord_idx[i+1])) for i in o if i<=self.maxorder], [])], sol0]
+                  down_select(o, sol0)], sol0]
                 for (nm, o) in name_ord]
 
 

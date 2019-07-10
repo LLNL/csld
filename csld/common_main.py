@@ -105,10 +105,10 @@ def init_training(model, setting, step, **kwargs):
         fval = np.zeros((Amat.shape[0], 3))
         fval[:, 0] = np.loadtxt(setting['fval_in'])
     elif step in [2, 3]:
-        supercells = [y.split() for x, y in setting.items() if re.match('supercell.*', x) is not None]
+        traindat= [y.split() for x, y in setting.items() if re.match('traindat.*', x) is not None]
         Amat, fval = model.get_correlation([[sc[0],
                                         [f for subs in sc[1:]
-                                        for f in sorted(glob.glob(subs))]] for sc in supercells],
+                                        for f in sorted(glob.glob(subs))]] for sc in traindat],
                                            corrtype=setting['corr_type'], setting=setting, **kwargs)
         if step == 3:
             scipy.io.mmwrite(setting['corr_out'], Amat)
@@ -148,7 +148,7 @@ def fit_data(model, Amat, fval, setting, step, pdfout):
     elif step in [2, 3]:
         mulist = list(map(float, setting['mulist'].split()))
         submodels = [y.split() for x, y in setting.items() if re.match('submodel.*', x) is not None]
-        submodels = [[x[0], list(map(eval, x[1:]))] for x in submodels]
+        submodels = [[x[0], ' '.join(x[1:])] for x in submodels]
         knownsol = setting.get('solution_known', '')
         submodels = model.get_submodels(submodels, setting=setting, knownsol=knownsol)
 
@@ -171,7 +171,8 @@ def fit_data(model, Amat, fval, setting, step, pdfout):
                 submodels=submodels, pdfout=pdfout)
         if step == 3:
             np.savetxt(setting['solution_out'], solutions)
-            np.savetxt(setting['solution_out']+'_full', solutions.dot(model.Cmat))
+            np.savetxt(setting['solution_out']+'_full', model.Cmat.T.dot(np.array(solutions)[:,:model.Cmat.shape[0]].T).T)
+
     else:
         print("ERROR: Unknown fit_step: ", step)
         exit(-1)
