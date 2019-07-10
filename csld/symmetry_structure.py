@@ -10,8 +10,11 @@ from scipy.linalg import block_diag
 import scipy.sparse
 
 from .structure import Structure
-from .util.mathtool import tensor_constraint, get_symmetrized_lsq, mychop
-from _c_util import fct_trans_c
+try:
+    from .util.mathtool import tensor_constraint, get_symmetrized_lsq, mychop
+    from _c_util import fct_trans_c
+except:
+    pass
 
 
 class SymmetrizedStructure(Structure):

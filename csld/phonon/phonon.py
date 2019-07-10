@@ -10,7 +10,7 @@ All numerically heavy computations are in f90 (f_phonon.f90)
 #import os
 #from itertools import islice, product
 from ..util.tool import my_flatten
-from ..util.string_utils import fn_available
+#from ..util.string_utils import fn_available
 from ..symm_kpts import HighSymmKpath
 from ..interface_vasp import Poscar
 #from ..structure import SupercellStructure
@@ -189,7 +189,8 @@ class Phonon():
 #                            d=ticks['distance'][i], l=ticks['label'][i]))
                     plt.axvline(dist[i], color='g')
         plt.axhline(0, color='0.7')
-        with open('wavevec_label.txt', 'w') as f: f.write(''.join([x[1]+'\n' for x in temp_ticks]))
+        with open('wavevec_label.txt', 'w') as f:
+            f.write(''.join([x[1]+'\n' for x in temp_ticks]))
         return plt
 
     #@staticmethod
@@ -239,7 +240,22 @@ class Phonon():
 
         return kpts, lbls
 
-    def get_dispersion(self, k_in_s, unit='THz', cart=True):
+    def replace_gamma(self, kpts, no_gamma):
+        if no_gamma and self.NAC is not None:
+            for i in range(len(kpts)):
+                if not np.any(kpts[i]):
+                    if len(kpts)<2:
+                        kpts[i]=np.full((3),1e-6)
+                    elif i==0:
+                        kpts[i]=kpts[i+1]*1e-3
+                    elif i==len(kpts)-1:
+                        kpts[i]=kpts[i-1]*1e-3
+                    elif np.any(kpts[i+1]):
+                        kpts[i]=kpts[i+1]*1e-3
+                    else:
+                        kpts[i]=kpts[i-1]*1e-3
+    
+    def get_dispersion(self, k_in_s, unit='THz', cart=True, no_gamma=False):
         """
 
         :param k_in_s: string "Auto" or K-points definition
@@ -247,12 +263,13 @@ class Phonon():
         """
         #rec = self.prim.lattice.reciprocal_lattice
         kpts, labels = self.str2kpt(k_in_s, cart)
-        #np.savetxt('q_frac.txt', self.prim.reciprocal_lattice.get_fractional_coords(kpts))
+        self.replace_gamma(kpts, no_gamma)
+        np.savetxt('wavevec_frac_cart.txt', np.hstack([self.prim.reciprocal_lattice.get_fractional_coords(kpts), kpts]))
         xval = np.zeros(len(kpts))
         for i in range(1, len(kpts)):
             xval[i] = xval[i-1] + (0 if labels[i-1] and labels[i] else np.linalg.norm(kpts[i:i+1] - kpts[i-1:i]))
         eigE = f_phonon.get_dispersion(kpts, 1, self.dim)* self.units[unit][0]
-        np.savetxt(fn_available('phonon-dispersion.out'), np.hstack((np.array([xval]).T, eigE.T)), header=
+        np.savetxt('phonon-dispersion.out', np.hstack((np.array([xval]).T, eigE.T)), header=
           'col1: wavevector distance;  col 2 ...: band 1 ...: '+self.units[unit][1])
         if False:
             ref_eigE= np.loadtxt('ref-dispersion.txt')[:,1:].T
@@ -304,7 +321,7 @@ class Phonon():
             plt.close()
 
 
-    def get_dos(self, mesh, nEdos, ismear, epsilon, unit='THz', pdos=False):
+    def get_dos(self, mesh, nEdos, ismear, epsilon, unit='THz', pdos=False, no_gamma=False):
         """
 
         :param mesh: [nx ny nz]
@@ -315,6 +332,7 @@ class Phonon():
         :return: numpy array [[t1, dos1], [t2, dos2], ...]
         """
         kgrid = np.mgrid[0:1:1./mesh[0], 0:1:1./mesh[1], 0:1:1./mesh[2]].transpose((1,2,3,0)).reshape(-1,3)
+        self.replace_gamma(kgrid, no_gamma)
         kred, wt = zip(*self.prim.syminfo.get_ir_reciprocal_mesh(mesh))
         dos, pd = f_phonon.get_dos_new(pdos, mesh, self.to_c(kgrid, False), nEdos, ismear, epsilon, self.prim.num_sites)
 
@@ -323,13 +341,13 @@ class Phonon():
         # returned dos always in eV per primitive cell (3 N_atom modes)
         dos[:,0] *= self.units['eV'][0]
         dos[:,1] /= self.units['eV'][0]
-        np.savetxt(fn_available('phonon-total-dos.out'), dos, header='col1: energy in eV;  col 2: DOS')
+        np.savetxt('phonon-total-dos.out', dos, header='col1: energy in eV;  col 2: DOS')
 
         if pdos:
             for i in range(self.prim.num_sites):
                 self.plot_dos(plt, en, pd[i]/self.units[unit][0], "Partial for atom %d"%(i+1), self.units[unit][1])
             pd /= self.units['eV'][0]
-            np.savetxt(fn_available('phonon-partial-dos.out'), np.hstack((dos[:,0:1], pd.T))
+            np.savetxt('phonon-partial-dos.out', np.hstack((dos[:,0:1], pd.T))
                        , header='col1: energy in eV;  col 2: atom 1 DOE, etc')
 
         return dos

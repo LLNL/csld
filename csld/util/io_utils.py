@@ -14,6 +14,27 @@ import numpy as np
 from csld.util.string_utils import str2arr
 import subprocess
 
+def load_scmatrix(scmat1, prim):
+    """
+    returns 3x3 integer scaling matrix
+    scmat1: string for either file name or 9 integers
+    """
+    from ..interface_vasp import Poscar
+    if os.path.isfile(scmat1):
+        try:
+            scmat= np.loadtxt(scmat1, dtype=np.int)
+        except ValueError:
+            scmat=prim.get_scmat(Poscar.from_file(scmat1,warn_vasp4=False).structure)
+    elif isinstance(scmat1, str):
+        try:
+            scmat=np.array(list(map(int,scmat1.split()))).reshape((3,3))
+        except ValueError:
+            raise ValueError("ERROR: cannot find scaling matrix from "+scmat1)
+    else:
+        scmat= scmat1
+    return scmat
+
+
 def load_matrix(fname, toarray=False):
     if not os.path.exists(fname):
         # fname is simply an array like "1 0 0 0 1 0 0 0 1"

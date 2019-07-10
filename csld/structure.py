@@ -23,8 +23,6 @@ from .coord_utils import get_angle, all_distances
 from .util.units import Mass, Length
 from .coord_utils import supercell_latticepoints
 from .util.tool import non_1to1
-from _c_util import get_structure_ordering
-from f_util import f_util
 
 
 class SiteCollection(collections.Sequence):
@@ -1741,6 +1739,7 @@ class Structure(IStructure, collections.MutableSequence):
             self[i].set_coords(c[i], cart=cart)
 
     def get_order_wrt(self, p1, inverse=False, tol=1E-4):
+        from _c_util import get_structure_ordering
         if p1 is None:
             return list(range(self.num_sites))
 
@@ -1804,6 +1803,7 @@ class Structure(IStructure, collections.MutableSequence):
         self: ideal (supercell) structure
         p2: structure with distortion, defect and/or disorder
         """
+        from f_util import f_util
         return f_util.match_structure(self.lattice.matrix.T, self.frac_coords.T, self.atomic_numbers, p2.frac_coords.T, p2.atomic_numbers, tol_match, tol_distinct)
 
 

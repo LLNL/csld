@@ -13,10 +13,10 @@ import numpy as np
 from collections import Counter
 
 from .sites import Site, PeriodicSite
-from .symmetry_structure import Structure
+from .structure import Structure
 from .lattice import Lattice
 from .analyzer import SpacegroupAnalyzer
-from .util.io_utils import read_into_lines, zopen
+from .util.io_utils import read_into_lines, zopen, load_scmatrix
 from .util.mathtool import multi_index_fac, remove_duplicates, MixedIndexForImproper, relativePosition
 from .coord_utils import pbc_shortest_vectors
 from .util.tool import list2index_unique
@@ -190,25 +190,17 @@ class Cluster():
 # by default filter pairs only
         if self.order>maxord or self.order_uniq <2:
             return True
-        #from.utils.tool import allsubsets
-        import os
-        from .interface_vasp import Poscar
-        if os.path.isfile(scmat1):
-            try:
-                scmat= np.loadtxt(scmat1, dtype=np.int)
-            except ValueError:
-                scmat=self.prim.get_scmat(Poscar.from_file(scmat1,warn_vasp4=False).structure)
-        elif isinstance(scmat1, str):
-            try:
-                scmat=np.array(list(map(int,scmat1.split()))).reshape((3,3))
-            except ValueError:
-                raise ValueError("ERROR: cannot find scaling matrix from "+scmat1)
-        else:
-            scmat= scmat1
+        #from .coord_utils import pbc_images
+        scmat= load_scmatrix(scmat1, self.prim)
         latt = Lattice(np.dot(scmat, self.prim.lattice.matrix))
+        #images = pbc_images(nogamma=True)
+        #if self.uniq[0].ijkl==[0,0,0,4] and self.uniq[1].ijkl[-1]==11 and self.uniq[1].ijkl[0]==0 and self.uniq[1].ijkl[2]==0 and (self.diameter < 1.6 or self.diameter > 8):
+         #   print('debug', self.ijkls)
+        #elif self.order_uniq>=2:
+        #    return False
         for i in range(self.order_uniq-1):
             for j in range(i+1, self.order_uniq):
-               if not latt.vector_in_wigner_seitz(self.uniq[i].coords - self.uniq[j].coords):
+               if not latt.vector_in_wigner_seitz(self.uniq[i].coords - self.uniq[j].coords, -1e-7):
                    return False
         return True
 

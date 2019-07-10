@@ -451,7 +451,7 @@ def match_p1p0(p1, p0):
     return p0 + dp
 
 
-def ReadPBC2Cart(fn_p1, p0):
+def ReadPBC2Cart(fn_p1, p0, tol=1e-13):
     """
 
     :param fn_p1: filename of p1
@@ -460,9 +460,8 @@ def ReadPBC2Cart(fn_p1, p0):
     :return:
     """
     from .interface_vasp import Poscar
+    from .util.mathtool import mychop
     str1 = Poscar.from_file(fn_p1).structure
     p1 = str1.frac_coords
-    # print(p1, p0)
-    return np.dot(match_p1p0(p1, p0)-p0, str1.lattice.matrix)
-
+    return mychop(np.dot(match_p1p0(p1, p0)-p0, str1.lattice.matrix), tol)
 

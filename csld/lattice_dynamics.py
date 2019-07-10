@@ -471,7 +471,7 @@ class LDModel(BasicLatticeModel):
                         iA+1, matrix2text([SCposFrac[iA*ncell+ jLat]])))
         fp.close()
 
-    def save_fct_pot(self, outf, sol_fct, sol_ff, scinfo, tol=1.E-12, combine_improper=False, output_ijkl=False):
+    def save_fct_pot(self, outf, sol_fct, sol_ff, scinfo, tol=1.E-12, combine_improper=False, output_ijkl=True):
         """
         write potential file.
         :param outf:
@@ -521,6 +521,8 @@ class LDModel(BasicLatticeModel):
                     outs = [str(npt), clus_out, str(len(trans_cluster)), matrix2text(trans_cluster+1),
                             LDModel.fct2str(npt, valTrans/fac, tol), ppout]
                     fp.write("\n".join(outs) + "\n\n")
+        np.savetxt("fct_norm_vs_diameter.txt", fc_norm, header='col1=diameter col2=norm col3=npt col4=npt_uniq')
+        return
         for i1 in range(scinfo.num_sites):
             for i2 in range(i1, scinfo.num_sites):
                 if flag_dp[i1,i2]:
@@ -535,7 +537,6 @@ class LDModel(BasicLatticeModel):
                 outs = [str(npt), clus_out, str(1), matrix2text(np.array([[i1,i2]])+1),
                         LDModel.fct2str(npt, valTrans/fac, tol), ppout]
                 fp.write("\n".join(outs) + "\n\n")
-        np.savetxt("fct_norm_vs_diameter.txt", fc_norm, header='col1=diameter col2=norm col3=npt col4=npt_uniq')
 
 
     def save_fcshengbte(self, sol, ord, tol=1e-20):
@@ -724,7 +725,7 @@ class LDModel(BasicLatticeModel):
         return ijk, typ, fcm
 
 
-    def get_dpcor(self, bondlen):
+    def get_dpcor(self, bondlen, errtol=1e-7):
         offd=[[0,0,1],[1,2,2]]
         offdflatUp = [1,2,5]
         offdflatDn = [3,6,7]
@@ -768,7 +769,7 @@ class LDModel(BasicLatticeModel):
             np.savetxt(dpcor_sol_f, solution)
 #        solution = np.linalg.lstsq(Acorrection[:-3].todense(), bvec[:-3])[0]
         rmse = RMS(bvec - Acorrection.dot(solution))
-        if rmse > 1000e-10:
+        if rmse > errtol:
             raise ValueError('dpcor correction FAILED rmse= %5g. Check symmetry or increase dpcor_bond'%(rmse))
         # np.savetxt('Adpcor.out', Acorrection.todense())
         # np.savetxt('bdpcor.out', bvec)
@@ -841,7 +842,7 @@ def init_ld_model(prim, setting, setting_ldff, clus_step, symC_step, ldff_step, 
     if not dpcor:
         return model
     if model.dipole_force and model._dpcor is None:
-        model.get_dpcor(setting.getfloat('dpcor_bond', 2.8))
+        model.get_dpcor(setting.getfloat('dpcor_bond', 2.8),setting.getfloat('dpcor_errtol', 1e-7))
 
     print(model)
     #model.save_clusters('cluster_all')

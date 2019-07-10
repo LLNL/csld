@@ -23,16 +23,16 @@ def list2index_unique(l, uni=None):
 def arr2str1d(m):
     return ' '.join(map(str, m))
 
-def matrix2text(m_in):
+def matrix2text(m_in, separator='\n'):
     try:
         m=np.array(m_in)
     except:
         # m is not a matrix, e.g. [[1,2], [3,4,5]]
-        return '\n'.join([arr2str1d(x) for x in m_in])
+        return separator.join([arr2str1d(x) for x in m_in])
     if len(m.shape) <= 1:
         return arr2str1d(m)
     else:
-        return '\n'.join([arr2str1d(x) for x in m])
+        return separator.join([arr2str1d(x) for x in m])
 #    return re.sub(r'\n *', r'\n', re.sub(r'[\[\]]', r'', str(m)).strip(), flags=re.M)
 
 def convert_to_matrix(m):
