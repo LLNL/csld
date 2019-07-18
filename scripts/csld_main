@@ -119,7 +119,7 @@ def fit_data(model, Amat, fval, setting, step, pdfout):
         uscale_list = list(map(float, setting['uscale_list'].split()))
         ldffscale_list = list(map(float, setting.get('ldffscale_list', '1').split()))
         knownsol = setting.get('solution_known', '')
-        submodels = model.get_submodels(submodels, uscale_list, setting.getfloat('lr_pair_penalty',fallback=0.0),
+        submodels = model.get_submodels(submodels, uscale_list, setting.getfloat('lr_pair_penalty',0.0),
                    ldffscale_list = ldffscale_list, knownsol=knownsol)
 
         ibest, solutions = csfit(Amat, fval[:,0], 1, mulist,
@@ -247,7 +247,7 @@ def phonon_step(model, sols, setting, step, pdfout):
             if 'wavevector' in entries:
 #                kpts = 'Auto' if setting['wavevector']=='Auto' else str2arr(setting['wavevector'], shape=(-1, 3))
                 kpts = setting['wavevector']
-                phonon.get_dispersion(kpts, unit=unit, cart=cart)
+                phonon.get_dispersion(kpts, unit=unit, cart=cart, no_gamma=setting.getboolean("no_gamma",True))
                 print('  + phonon dispersion generated')
             if 'eigen_wavevector' in entries:
                 kpts = str2arr(setting['eigen_wavevector']).reshape((-1,3))
@@ -259,7 +259,7 @@ def phonon_step(model, sols, setting, step, pdfout):
                 epsilon= setting.getfloat('epsilon')
                 # logging.info('    DOS ismear=%d smearing width=%f' %(ismear, epsilon))
                 pdos = setting.getboolean('pdos', False)
-                dos=phonon.get_dos(ngrid, int(setting['nE_dos']), ismear, epsilon, unit=unit, pdos=pdos)
+                dos=phonon.get_dos(ngrid, int(setting['nE_dos']), ismear, epsilon, unit=unit, pdos=pdos,no_gamma=setting.getboolean("no_gamma",True))
                 print('  + phonon DOS%s generated'% (' + partial DOS' if pdos else ''))
                 if 'thermal_t_range' in entries:
                     t_rng = str2arr(setting['thermal_t_range'])
