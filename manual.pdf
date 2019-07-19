@@ -2,7 +2,7 @@
 %“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
 1 0 obj
 <<
-/F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 13 0 R /F5 18 0 R
+/F1 2 0 R /F2 3 0 R /F3 5 0 R /F4 14 0 R /F5 19 0 R
 >>
 endobj
 2 0 obj
@@ -17,133 +17,98 @@ endobj
 endobj
 4 0 obj
 <<
-/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F3 /Subtype /Type1 /Type /Font
+/A <<
+/S /URI /Type /Action /URI (mailto:fei.fzhou@gmail.com)
+>> /Border [ 0 0 0 ] /Rect [ 151.6229 576.0236 274.5829 588.0236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 5 0 obj
 <<
-/A <<
-/S /URI /Type /Action /URI (https://atztogo.github.io/spglib/)
->> /Border [ 0 0 0 ] /Rect [ 148.0329 333.8236 174.1529 345.8236 ] /Subtype /Link /Type /Annot
+/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F3 /Subtype /Type1 /Type /Font
 >>
 endobj
 6 0 obj
 <<
 /A <<
-/S /URI /Type /Action /URI (https://docs.conda.io/en/latest/miniconda.html)
->> /Border [ 0 0 0 ] /Rect [ 209.6471 258.8236 255.2171 270.8236 ] /Subtype /Link /Type /Annot
+/S /URI /Type /Action /URI (https://atztogo.github.io/spglib/)
+>> /Border [ 0 0 0 ] /Rect [ 148.0329 381.8236 174.1529 393.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 7 0 obj
 <<
 /A <<
-/S /URI /Type /Action /URI (https://docs.anaconda.com/anaconda/install/)
->> /Border [ 0 0 0 ] /Rect [ 269.5542 258.8236 313.4742 270.8236 ] /Subtype /Link /Type /Annot
+/S /URI /Type /Action /URI (https://docs.conda.io/en/latest/miniconda.html)
+>> /Border [ 0 0 0 ] /Rect [ 209.6471 306.8236 255.2171 318.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 8 0 obj
 <<
-/Annots [ 5 0 R 6 0 R 7 0 R ] /Contents 51 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
+/A <<
+/S /URI /Type /Action /URI (https://docs.anaconda.com/anaconda/install/)
+>> /Border [ 0 0 0 ] /Rect [ 269.5542 306.8236 313.4742 318.8236 ] /Subtype /Link /Type /Annot
+>>
+endobj
+9 0 obj
+<<
+/Annots [ 4 0 R 6 0 R 7 0 R 8 0 R ] /Contents 46 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 
   /Trans <<
 
 >> /Type /Page
->>
-endobj
-9 0 obj
-<<
-/A <<
-/S /URI /Type /Action /URI (http://dx.doi.org/10.1103/PhysRevLett.113.185501)
->> /Border [ 0 0 0 ] /Rect [ 88.69291 570.6236 311.6129 582.6236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 10 0 obj
 <<
 /A <<
-/S /URI /Type /Action /URI (https://arxiv.org/abs/1805.08903)
->> /Border [ 0 0 0 ] /Rect [ 179.2829 552.6236 232.1029 564.6236 ] /Subtype /Link /Type /Annot
+/S /URI /Type /Action /URI (http://dx.doi.org/10.1103/PhysRevLett.113.185501)
+>> /Border [ 0 0 0 ] /Rect [ 88.69291 629.8236 311.6129 641.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 11 0 obj
 <<
 /A <<
-/S /URI /Type /Action /URI (https://arxiv.org/abs/1805.08904)
->> /Border [ 0 0 0 ] /Rect [ 261.5529 552.6236 314.3729 564.6236 ] /Subtype /Link /Type /Annot
+/S /URI /Type /Action /URI (https://arxiv.org/abs/1805.08903)
+>> /Border [ 0 0 0 ] /Rect [ 179.2829 611.8236 232.1029 623.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 12 0 obj
 <<
-/Border [ 0 0 0 ] /Contents () /Dest [ 17 0 R /XYZ 62.69291 666.3236 0 ] /Rect [ 297.4948 504.6236 330.2848 516.6236 ] /Subtype /Link /Type /Annot
+/A <<
+/S /URI /Type /Action /URI (https://arxiv.org/abs/1805.08904)
+>> /Border [ 0 0 0 ] /Rect [ 261.5529 611.8236 314.3729 623.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 13 0 obj
 <<
-/BaseFont /Helvetica-BoldOblique /Encoding /WinAnsiEncoding /Name /F4 /Subtype /Type1 /Type /Font
+/Border [ 0 0 0 ] /Contents () /Dest [ 18 0 R /XYZ 62.69291 731.3236 0 ] /Rect [ 297.4948 563.8236 330.2848 575.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 14 0 obj
 <<
-/Annots [ 9 0 R 10 0 R 11 0 R 12 0 R ] /Contents 52 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
-/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
->> /Rotate 0 
-  /Trans <<
-
->> /Type /Page
+/BaseFont /Helvetica-BoldOblique /Encoding /WinAnsiEncoding /Name /F4 /Subtype /Type1 /Type /Font
 >>
 endobj
 15 0 obj
 <<
-/A <<
-/S /URI /Type /Action /URI (http://www.shengbte.org/)
->> /Border [ 0 0 0 ] /Rect [ 393.7629 124.6236 442.1229 136.6236 ] /Subtype /Link /Type /Annot
+/Annots [ 10 0 R 11 0 R 12 0 R 13 0 R ] /Contents 47 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 
+  /Trans <<
+
+>> /Type /Page
 >>
 endobj
 16 0 obj
 <<
-/Annots [ 15 0 R ] /Contents 53 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
-/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
->> /Rotate 0 
-  /Trans <<
-
->> /Type /Page
+/A <<
+/S /URI /Type /Action /URI (http://www.shengbte.org/)
+>> /Border [ 0 0 0 ] /Rect [ 393.7629 189.8236 442.1229 201.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 17 0 obj
 <<
-/Contents 54 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
-/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
->> /Rotate 0 /Trans <<
-
->> 
-  /Type /Page
->>
-endobj
-18 0 obj
-<<
-/BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding /Name /F5 /Subtype /Type1 /Type /Font
->>
-endobj
-19 0 obj
-<<
-/Contents 55 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
-/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
->> /Rotate 0 /Trans <<
-
->> 
-  /Type /Page
->>
-endobj
-20 0 obj
-<<
-/A <<
-/S /URI /Type /Action /URI (https://arxiv.org/abs/1805.08904)
->> /Border [ 0 0 0 ] /Rect [ 304.7928 114.0236 357.6128 126.0236 ] /Subtype /Link /Type /Annot
->>
-endobj
-21 0 obj
-<<
-/Annots [ 20 0 R ] /Contents 56 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
+/Annots [ 16 0 R ] /Contents 48 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 
   /Trans <<
@@ -151,40 +116,65 @@ endobj
 >> /Type /Page
 >>
 endobj
-22 0 obj
+18 0 obj
+<<
+/Contents 49 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+19 0 obj
+<<
+/BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding /Name /F5 /Subtype /Type1 /Type /Font
+>>
+endobj
+20 0 obj
+<<
+/Contents 50 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+21 0 obj
 <<
 /A <<
-/S /URI /Type /Action /URI (http://www.shengbte.org/)
->> /Border [ 0 0 0 ] /Rect [ 209.2929 201.0236 257.6529 213.0236 ] /Subtype /Link /Type /Annot
+/S /URI /Type /Action /URI (https://arxiv.org/abs/1805.08904)
+>> /Border [ 0 0 0 ] /Rect [ 304.7928 180.0236 357.6128 192.0236 ] /Subtype /Link /Type /Annot
+>>
+endobj
+22 0 obj
+<<
+/Annots [ 21 0 R ] /Contents 51 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 
+  /Trans <<
+
+>> /Type /Page
 >>
 endobj
 23 0 obj
 <<
 /A <<
-/S /URI /Type /Action /URI (https://doi.org/10.1063/1.5040887)
->> /Border [ 0 0 0 ] /Rect [ 289.1108 129.8236 427.7967 141.8236 ] /Subtype /Link /Type /Annot
+/S /URI /Type /Action /URI (http://www.shengbte.org/)
+>> /Border [ 0 0 0 ] /Rect [ 209.2929 291.0236 257.6529 303.0236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 24 0 obj
 <<
-/Annots [ 22 0 R 23 0 R ] /Contents 57 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
-/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
->> /Rotate 0 
-  /Trans <<
-
->> /Type /Page
+/A <<
+/S /URI /Type /Action /URI (https://doi.org/10.1063/1.5040887)
+>> /Border [ 0 0 0 ] /Rect [ 289.1108 219.8236 427.7967 231.8236 ] /Subtype /Link /Type /Annot
 >>
 endobj
 25 0 obj
 <<
-/A <<
-/S /URI /Type /Action /URI (mailto:zhou6@llnl.gov)
->> /Border [ 0 0 0 ] /Rect [ 173.3029 676.8236 271.2629 688.8236 ] /Subtype /Link /Type /Annot
->>
-endobj
-26 0 obj
-<<
-/Annots [ 25 0 R ] /Contents 58 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 50 0 R /Resources <<
+/Annots [ 23 0 R 24 0 R ] /Contents 52 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 45 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 
   /Trans <<
@@ -192,165 +182,139 @@ endobj
 >> /Type /Page
 >>
 endobj
+26 0 obj
+<<
+/Outlines 28 0 R /PageLabels 53 0 R /PageMode /UseNone /Pages 45 0 R /Type /Catalog
+>>
+endobj
 27 0 obj
 <<
-/Outlines 29 0 R /PageLabels 59 0 R /PageMode /UseNone /Pages 50 0 R /Type /Catalog
+/Author () /CreationDate (D:20190702064953+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20190702064953+00'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
+  /Subject (\(unspecified\)) /Title () /Trapped /False
 >>
 endobj
 28 0 obj
 <<
-/Author () /CreationDate (D:20181011184039+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20181011184039+00'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
-  /Subject (\(unspecified\)) /Title () /Trapped /False
+/Count 21 /First 29 0 R /Last 39 0 R /Type /Outlines
 >>
 endobj
 29 0 obj
 <<
-/Count 25 /First 30 0 R /Last 49 0 R /Type /Outlines
+/Dest [ 9 0 R /XYZ 62.69291 765.0236 0 ] /Next 30 0 R /Parent 28 0 R /Title (Introduction to CSLD)
 >>
 endobj
 30 0 obj
 <<
-/Dest [ 8 0 R /XYZ 62.69291 765.0236 0 ] /Next 31 0 R /Parent 29 0 R /Title (What is CSLD?)
+/Dest [ 9 0 R /XYZ 62.69291 564.0236 0 ] /Next 31 0 R /Parent 28 0 R /Prev 29 0 R /Title (Installation)
 >>
 endobj
 31 0 obj
 <<
-/Dest [ 8 0 R /XYZ 62.69291 702.0236 0 ] /Next 32 0 R /Parent 29 0 R /Prev 30 0 R /Title (Why use CSLD?)
+/Dest [ 15 0 R /XYZ 62.69291 701.8236 0 ] /Next 32 0 R /Parent 28 0 R /Prev 30 0 R /Title (How to cite)
 >>
 endobj
 32 0 obj
 <<
-/Dest [ 8 0 R /XYZ 62.69291 567.0236 0 ] /Next 33 0 R /Parent 29 0 R /Prev 31 0 R /Title (Getting CSLD)
+/Count 6 /Dest [ 15 0 R /XYZ 62.69291 602.8236 0 ] /First 33 0 R /Last 36 0 R /Next 39 0 R /Parent 28 0 R 
+  /Prev 31 0 R /Title (Tutorial)
 >>
 endobj
 33 0 obj
 <<
-/Dest [ 8 0 R /XYZ 62.69291 516.0236 0 ] /Next 34 0 R /Parent 29 0 R /Prev 32 0 R /Title (Installation)
+/Count 2 /Dest [ 15 0 R /XYZ 62.69291 539.8236 0 ] /First 34 0 R /Last 35 0 R /Next 36 0 R /Parent 32 0 R 
+  /Title (Si)
 >>
 endobj
 34 0 obj
 <<
-/Dest [ 14 0 R /XYZ 62.69291 642.6236 0 ] /Next 35 0 R /Parent 29 0 R /Prev 33 0 R /Title (How to cite)
+/Dest [ 15 0 R /XYZ 62.69291 509.8236 0 ] /Next 35 0 R /Parent 33 0 R /Title (Getting started)
 >>
 endobj
 35 0 obj
 <<
-/Count 6 /Dest [ 14 0 R /XYZ 62.69291 543.6236 0 ] /First 36 0 R /Last 39 0 R /Next 42 0 R /Parent 29 0 R 
-  /Prev 34 0 R /Title (Tutorial)
+/Dest [ 15 0 R /XYZ 62.69291 241.2236 0 ] /Parent 33 0 R /Prev 34 0 R /Title (Input files preparation)
 >>
 endobj
 36 0 obj
 <<
-/Count 2 /Dest [ 14 0 R /XYZ 62.69291 480.6236 0 ] /First 37 0 R /Last 38 0 R /Next 39 0 R /Parent 35 0 R 
-  /Title (Si)
+/Count 2 /Dest [ 17 0 R /XYZ 62.69291 505.4236 0 ] /First 37 0 R /Last 38 0 R /Parent 32 0 R /Prev 33 0 R 
+  /Title (NaCl)
 >>
 endobj
 37 0 obj
 <<
-/Dest [ 14 0 R /XYZ 62.69291 450.6236 0 ] /Next 38 0 R /Parent 36 0 R /Title (Getting started)
+/Dest [ 17 0 R /XYZ 62.69291 457.4236 0 ] /Next 38 0 R /Parent 36 0 R /Title (Getting started)
 >>
 endobj
 38 0 obj
 <<
-/Dest [ 14 0 R /XYZ 62.69291 182.0236 0 ] /Parent 36 0 R /Prev 37 0 R /Title (Input files preparation)
+/Dest [ 17 0 R /XYZ 62.69291 135.6236 0 ] /Parent 36 0 R /Prev 37 0 R /Title (Input files for long-range forces)
 >>
 endobj
 39 0 obj
 <<
-/Count 2 /Dest [ 16 0 R /XYZ 62.69291 440.2236 0 ] /First 40 0 R /Last 41 0 R /Parent 35 0 R /Prev 36 0 R 
-  /Title (NaCl)
+/Count 5 /Dest [ 18 0 R /XYZ 62.69291 727.8236 0 ] /First 40 0 R /Last 42 0 R /Parent 28 0 R /Prev 32 0 R 
+  /Title (Manual)
 >>
 endobj
 40 0 obj
 <<
-/Dest [ 16 0 R /XYZ 62.69291 392.2236 0 ] /Next 41 0 R /Parent 39 0 R /Title (Getting started)
+/Dest [ 18 0 R /XYZ 62.69291 694.8236 0 ] /Next 41 0 R /Parent 39 0 R /Title (Executable scripts)
 >>
 endobj
 41 0 obj
 <<
-/Dest [ 17 0 R /XYZ 62.69291 765.0236 0 ] /Parent 39 0 R /Prev 40 0 R /Title (Input files for long-range forces)
+/Dest [ 18 0 R /XYZ 62.69291 589.6236 0 ] /Next 42 0 R /Parent 39 0 R /Prev 40 0 R /Title (Input files)
 >>
 endobj
 42 0 obj
 <<
-/Count 5 /Dest [ 17 0 R /XYZ 62.69291 662.8236 0 ] /First 43 0 R /Last 45 0 R /Next 48 0 R /Parent 29 0 R 
-  /Prev 35 0 R /Title (Manual)
+/Count 2 /Dest [ 20 0 R /XYZ 62.69291 765.0236 0 ] /First 43 0 R /Last 44 0 R /Parent 39 0 R /Prev 41 0 R 
+  /Title (Training data)
 >>
 endobj
 43 0 obj
 <<
-/Dest [ 17 0 R /XYZ 62.69291 629.8236 0 ] /Next 44 0 R /Parent 42 0 R /Title (Executable scripts)
+/Dest [ 20 0 R /XYZ 62.69291 561.8236 0 ] /Next 44 0 R /Parent 42 0 R /Title (Program flow and settings)
 >>
 endobj
 44 0 obj
 <<
-/Dest [ 17 0 R /XYZ 62.69291 524.6236 0 ] /Next 45 0 R /Parent 42 0 R /Prev 43 0 R /Title (Input files)
+/Dest [ 25 0 R /XYZ 62.69291 405.0236 0 ] /Parent 42 0 R /Prev 43 0 R /Title (Output files)
 >>
 endobj
 45 0 obj
 <<
-/Count 2 /Dest [ 19 0 R /XYZ 62.69291 683.8236 0 ] /First 46 0 R /Last 47 0 R /Parent 42 0 R /Prev 44 0 R 
-  /Title (Training data)
+/Count 7 /Kids [ 9 0 R 15 0 R 17 0 R 18 0 R 20 0 R 22 0 R 25 0 R ] /Type /Pages
 >>
 endobj
 46 0 obj
 <<
-/Dest [ 19 0 R /XYZ 62.69291 480.6236 0 ] /Next 47 0 R /Parent 45 0 R /Title (Program flow and settings)
->>
-endobj
-47 0 obj
-<<
-/Dest [ 24 0 R /XYZ 62.69291 315.0236 0 ] /Parent 45 0 R /Prev 46 0 R /Title (Output files)
->>
-endobj
-48 0 obj
-<<
-/Dest [ 26 0 R /XYZ 62.69291 715.8236 0 ] /Next 49 0 R /Parent 29 0 R /Prev 42 0 R /Title (Issues)
->>
-endobj
-49 0 obj
-<<
-/Dest [ 26 0 R /XYZ 62.69291 664.8236 0 ] /Parent 29 0 R /Prev 48 0 R /Title (License)
->>
-endobj
-50 0 obj
-<<
-/Count 8 /Kids [ 8 0 R 14 0 R 16 0 R 17 0 R 19 0 R 21 0 R 24 0 R 26 0 R ] /Type /Pages
->>
-endobj
-51 0 obj
-<<
-/Length 7218
+/Length 7927
 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
 1 0 0 1 62.69291 744.0236 cm
 q
-BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (What is CSLD?) Tj T* ET
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Introduction to CSLD) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 714.0236 cm
+1 0 0 1 62.69291 702.0236 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL .671647 Tw (A comprehensive package to study lattice dynamics from first-principles. The interatomic force constants) Tj T* 0 Tw (were fitted using the compressive sensing algorithm.) Tj T* ET
+BT 1 0 0 1 0 26 Tm /F1 10 Tf 12 TL 1.133059 Tw (CSLD, or compressive sensing lattice dynamics, is a comprehensive package to study lattice dynamics) Tj T* 0 Tw .440814 Tw (from first-principles. The interatomic force constants were fitted using the compressive sensing algorithm.) Tj T* 0 Tw (Some of the attractive features of CSLD are) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 681.0236 cm
-q
-BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Why use CSLD?) Tj T* ET
-Q
+1 0 0 1 62.69291 696.0236 cm
 Q
 q
-1 0 0 1 62.69291 669.0236 cm
+1 0 0 1 62.69291 696.0236 cm
 Q
 q
-1 0 0 1 62.69291 669.0236 cm
-Q
-q
-1 0 0 1 62.69291 645.0236 cm
+1 0 0 1 62.69291 672.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -371,10 +335,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 639.0236 cm
+1 0 0 1 62.69291 666.0236 cm
 Q
 q
-1 0 0 1 62.69291 627.0236 cm
+1 0 0 1 62.69291 654.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -395,10 +359,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 621.0236 cm
+1 0 0 1 62.69291 648.0236 cm
 Q
 q
-1 0 0 1 62.69291 609.0236 cm
+1 0 0 1 62.69291 636.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -419,10 +383,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 603.0236 cm
+1 0 0 1 62.69291 630.0236 cm
 Q
 q
-1 0 0 1 62.69291 579.0236 cm
+1 0 0 1 62.69291 606.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -443,36 +407,29 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 579.0236 cm
+1 0 0 1 62.69291 606.0236 cm
 Q
 q
-1 0 0 1 62.69291 546.0236 cm
+1 0 0 1 62.69291 576.0236 cm
 q
-BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Getting CSLD) Tj T* ET
-Q
-Q
-q
-1 0 0 1 62.69291 528.0236 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Open source under MIT license) Tj T* ET
+BT 1 0 0 1 0 14 Tm .209986 Tw 12 TL /F1 10 Tf 0 0 0 rg (CSLD is released as an open source package under the MIT license. For issues, please report via github,) Tj T* 0 Tw (or contact Fei Zhou ) Tj 0 0 .501961 rg (mailto:fei.fzhou@gmail.com) Tj  T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 495.0236 cm
+1 0 0 1 62.69291 543.0236 cm
 q
 BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Installation) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 465.0236 cm
+1 0 0 1 62.69291 513.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 1.65881 Tw (Hereby we refer to all files from the main source code directory. User input commands start with "$",) Tj T* 0 Tw (followed by output without leading "$":) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 419.8236 cm
+1 0 0 1 62.69291 467.8236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -493,13 +450,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 405.8236 cm
+1 0 0 1 62.69291 453.8236 cm
 Q
 q
-1 0 0 1 62.69291 405.8236 cm
+1 0 0 1 62.69291 453.8236 cm
 Q
 q
-1 0 0 1 62.69291 249.8236 cm
+1 0 0 1 62.69291 297.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -651,16 +608,16 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 249.8236 cm
+1 0 0 1 62.69291 297.8236 cm
 Q
 q
-1 0 0 1 62.69291 243.8236 cm
+1 0 0 1 62.69291 291.8236 cm
 Q
 q
-1 0 0 1 62.69291 243.8236 cm
+1 0 0 1 62.69291 291.8236 cm
 Q
 q
-1 0 0 1 62.69291 219.8236 cm
+1 0 0 1 62.69291 267.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -680,10 +637,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 219.8236 cm
+1 0 0 1 62.69291 267.8236 cm
 Q
 q
-1 0 0 1 62.69291 186.6236 cm
+1 0 0 1 62.69291 234.6236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -704,13 +661,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 172.6236 cm
+1 0 0 1 62.69291 220.6236 cm
 Q
 q
-1 0 0 1 62.69291 172.6236 cm
+1 0 0 1 62.69291 220.6236 cm
 Q
 q
-1 0 0 1 62.69291 160.6236 cm
+1 0 0 1 62.69291 208.6236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -731,10 +688,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 160.6236 cm
+1 0 0 1 62.69291 208.6236 cm
 Q
 q
-1 0 0 1 62.69291 127.4236 cm
+1 0 0 1 62.69291 175.4236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -755,13 +712,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 113.4236 cm
+1 0 0 1 62.69291 161.4236 cm
 Q
 q
-1 0 0 1 62.69291 113.4236 cm
+1 0 0 1 62.69291 161.4236 cm
 Q
 q
-1 0 0 1 62.69291 101.4236 cm
+1 0 0 1 62.69291 149.4236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -782,19 +739,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 101.4236 cm
+1 0 0 1 62.69291 149.4236 cm
 Q
- 
-endstream
-endobj
-52 0 obj
-<<
-/Length 6357
->>
-stream
-1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 739.8236 cm
+1 0 0 1 62.69291 116.2236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -815,13 +763,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 725.8236 cm
+1 0 0 1 62.69291 102.2236 cm
 Q
 q
-1 0 0 1 62.69291 725.8236 cm
+1 0 0 1 62.69291 102.2236 cm
 Q
 q
-1 0 0 1 62.69291 713.8236 cm
+1 0 0 1 62.69291 90.22362 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -842,10 +790,19 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 713.8236 cm
+1 0 0 1 62.69291 90.22362 cm
 Q
+ 
+endstream
+endobj
+47 0 obj
+<<
+/Length 6247
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 680.6236 cm
+1 0 0 1 62.69291 739.8236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -866,13 +823,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 666.6236 cm
+1 0 0 1 62.69291 725.8236 cm
 Q
 q
-1 0 0 1 62.69291 666.6236 cm
+1 0 0 1 62.69291 725.8236 cm
 Q
 q
-1 0 0 1 62.69291 654.6236 cm
+1 0 0 1 62.69291 713.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -893,29 +850,29 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 654.6236 cm
+1 0 0 1 62.69291 713.8236 cm
 Q
 q
-1 0 0 1 62.69291 621.6236 cm
+1 0 0 1 62.69291 680.8236 cm
 q
 BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (How to cite) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 603.6236 cm
+1 0 0 1 62.69291 662.8236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (If you use CSLD in your research, please cite the following works:) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 597.6236 cm
+1 0 0 1 62.69291 656.8236 cm
 Q
 q
-1 0 0 1 62.69291 597.6236 cm
+1 0 0 1 62.69291 656.8236 cm
 Q
 q
-1 0 0 1 62.69291 573.6236 cm
+1 0 0 1 62.69291 632.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -935,10 +892,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 567.6236 cm
+1 0 0 1 62.69291 626.8236 cm
 Q
 q
-1 0 0 1 62.69291 555.6236 cm
+1 0 0 1 62.69291 614.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -958,47 +915,47 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 555.6236 cm
+1 0 0 1 62.69291 614.8236 cm
 Q
 q
-1 0 0 1 62.69291 522.6236 cm
+1 0 0 1 62.69291 581.8236 cm
 q
 BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Tutorial) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 492.6236 cm
+1 0 0 1 62.69291 551.8236 cm
 q
 BT 1 0 0 1 0 14 Tm 1.903984 Tw 12 TL /F1 10 Tf 0 0 0 rg (More detailed documentation can be found in the ) Tj 0 0 .501961 rg (Manual) Tj 0 0 0 rg ( section next. This section provides a short) Tj T* 0 Tw (tutorial To get started quickly after installation. The files can be found in the examples/ directory.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 462.6236 cm
+1 0 0 1 62.69291 521.8236 cm
 q
 BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Si) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 435.6236 cm
+1 0 0 1 62.69291 494.8236 cm
 q
 BT 1 0 0 1 0 2.5 Tm 15 TL /F4 12.5 Tf 0 0 0 rg (Getting started) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 417.6236 cm
+1 0 0 1 62.69291 476.8236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (All input files have been prepared in the examples/Si/ folder.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 411.6236 cm
+1 0 0 1 62.69291 470.8236 cm
 Q
 q
-1 0 0 1 62.69291 411.6236 cm
+1 0 0 1 62.69291 470.8236 cm
 Q
 q
-1 0 0 1 62.69291 399.6236 cm
+1 0 0 1 62.69291 458.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1019,10 +976,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 399.6236 cm
+1 0 0 1 62.69291 458.8236 cm
 Q
 q
-1 0 0 1 62.69291 354.4236 cm
+1 0 0 1 62.69291 413.6236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1043,20 +1000,20 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 334.4236 cm
+1 0 0 1 62.69291 393.6236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Then Check out the generated plots.pdf) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 328.4236 cm
+1 0 0 1 62.69291 387.6236 cm
 Q
 q
-1 0 0 1 62.69291 328.4236 cm
+1 0 0 1 62.69291 387.6236 cm
 Q
 q
-1 0 0 1 62.69291 316.4236 cm
+1 0 0 1 62.69291 375.6236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1077,10 +1034,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 316.4236 cm
+1 0 0 1 62.69291 375.6236 cm
 Q
 q
-1 0 0 1 62.69291 283.2236 cm
+1 0 0 1 62.69291 342.4236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1101,14 +1058,14 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 263.2236 cm
+1 0 0 1 62.69291 322.4236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (The above can be equivalently achieved by modifying the command line rather than the config file) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 194.0236 cm
+1 0 0 1 62.69291 253.2236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1122,27 +1079,27 @@ n -6 -6 468.6898 60 re B*
 Q
 q
 0 0 0 rg
-BT 1 0 0 1 0 38 Tm /F3 10 Tf 12 TL ($ csld_main --override "[fitting] solution_known=sol_2nd" \\) Tj T* (--override "[fitting] submodel1=anh 3 4" \\) Tj T* (--override "[fitting] solution_out=solution_all" \\) Tj T* (--override "[training] supercell1=fcc333/SPOSCAR fcc333/dir*0.06") Tj T* ET
+BT 1 0 0 1 0 38 Tm /F3 10 Tf 12 TL ($ csld_main --override "[fitting] solution_known=sol_2nd" \\) Tj T* (--override "[fitting] submodel1=anh 3 4" \\) Tj T* (--override "[fitting] solution_out=solution_all" \\) Tj T* (--override "[training] traindat1=fcc333/SPOSCAR fcc333/dir*0.06") Tj T* ET
 Q
 Q
 Q
 Q
 Q
 q
-1 0 0 1 62.69291 167.0236 cm
+1 0 0 1 62.69291 226.2236 cm
 q
 BT 1 0 0 1 0 2.5 Tm 15 TL /F4 12.5 Tf 0 0 0 rg (Input files preparation) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 137.0236 cm
+1 0 0 1 62.69291 196.2236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 1.66881 Tw (Now let's see how to start from scratch, by copying over the config file control.in and symmetrizing a) Tj T* 0 Tw (primitive cell Si/POSCAR \(pretending that Si/POSCAR was relaxed without proper symmetry\):) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 91.82362 cm
+1 0 0 1 62.69291 151.0236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1161,24 +1118,15 @@ Q
 Q
 Q
 Q
- 
-endstream
-endobj
-53 0 obj
-<<
-/Length 5913
->>
-stream
-1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 753.0236 cm
+1 0 0 1 62.69291 131.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Next, prepare training data:) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 707.8236 cm
+1 0 0 1 62.69291 85.82362 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1197,15 +1145,24 @@ Q
 Q
 Q
 Q
+ 
+endstream
+endobj
+48 0 obj
+<<
+/Length 5941
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 675.8236 cm
+1 0 0 1 62.69291 741.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 1.963555 Tw (where sc.txt is a 3x3 integer scaling matrix specifying the supercell. Perturbed supercells for phonon) Tj T* 0 Tw (calculations can be generated in subdirectories by:) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 582.6236 cm
+1 0 0 1 62.69291 647.8236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1226,14 +1183,14 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 550.6236 cm
+1 0 0 1 62.69291 615.8236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 1.388443 Tw (where the supercell fcc333/SPOSCAR was perturbed by R=0.01 angstrom randomly for N=1 time. For) Tj T* 0 Tw (anharmonic terms, larger displacements should be attempted, e.g.:) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 517.4236 cm
+1 0 0 1 62.69291 582.6236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1254,13 +1211,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 485.4236 cm
+1 0 0 1 62.69291 550.6236 cm
 q
 BT 1 0 0 1 0 14 Tm .464985 Tw 12 TL /F1 10 Tf 0 0 0 rg (The user should then run DFT codes \(e.g. VASP\) to compute the corresponding total forces. Once done,) Tj T* 0 Tw (the latter can be collected using the supplied ) Tj /F2 10 Tf (get-force.sh) Tj /F1 10 Tf ( script:) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 452.2236 cm
+1 0 0 1 62.69291 517.4236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1281,32 +1238,32 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 422.2236 cm
+1 0 0 1 62.69291 487.4236 cm
 q
 BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (NaCl) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 404.2236 cm
+1 0 0 1 62.69291 469.4236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (This is an example that requires long-range forces) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 377.2236 cm
+1 0 0 1 62.69291 442.4236 cm
 q
 BT 1 0 0 1 0 2.5 Tm 15 TL /F4 12.5 Tf 0 0 0 rg (Getting started) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 365.2236 cm
+1 0 0 1 62.69291 430.4236 cm
 Q
 q
-1 0 0 1 62.69291 365.2236 cm
+1 0 0 1 62.69291 430.4236 cm
 Q
 q
-1 0 0 1 62.69291 341.2236 cm
+1 0 0 1 62.69291 406.4236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1327,10 +1284,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 341.2236 cm
+1 0 0 1 62.69291 406.4236 cm
 Q
 q
-1 0 0 1 62.69291 296.0236 cm
+1 0 0 1 62.69291 361.2236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1351,13 +1308,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 282.0236 cm
+1 0 0 1 62.69291 347.2236 cm
 Q
 q
-1 0 0 1 62.69291 282.0236 cm
+1 0 0 1 62.69291 347.2236 cm
 Q
 q
-1 0 0 1 62.69291 270.0236 cm
+1 0 0 1 62.69291 335.2236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1378,10 +1335,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 270.0236 cm
+1 0 0 1 62.69291 335.2236 cm
 Q
 q
-1 0 0 1 62.69291 236.8236 cm
+1 0 0 1 62.69291 302.0236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1402,20 +1359,20 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 216.8236 cm
+1 0 0 1 62.69291 282.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Never mind the artifact in the phonon dispersion curve at zone center. It's the non-analytic correction.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 210.8236 cm
+1 0 0 1 62.69291 276.0236 cm
 Q
 q
-1 0 0 1 62.69291 210.8236 cm
+1 0 0 1 62.69291 276.0236 cm
 Q
 q
-1 0 0 1 62.69291 198.8236 cm
+1 0 0 1 62.69291 264.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1436,10 +1393,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 198.8236 cm
+1 0 0 1 62.69291 264.0236 cm
 Q
 q
-1 0 0 1 62.69291 165.6236 cm
+1 0 0 1 62.69291 230.8236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1460,13 +1417,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 151.6236 cm
+1 0 0 1 62.69291 216.8236 cm
 Q
 q
-1 0 0 1 62.69291 151.6236 cm
+1 0 0 1 62.69291 216.8236 cm
 Q
 q
-1 0 0 1 62.69291 127.6236 cm
+1 0 0 1 62.69291 192.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1486,10 +1443,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 127.6236 cm
+1 0 0 1 62.69291 192.8236 cm
 Q
 q
-1 0 0 1 62.69291 82.42362 cm
+1 0 0 1 62.69291 147.6236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1509,30 +1466,30 @@ Q
 Q
 Q
 Q
- 
-endstream
-endobj
-54 0 obj
-<<
-/Length 6540
->>
-stream
-1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 750.0236 cm
+1 0 0 1 62.69291 120.6236 cm
 q
 BT 1 0 0 1 0 2.5 Tm 15 TL /F4 12.5 Tf 0 0 0 rg (Input files for long-range forces) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 708.0236 cm
+1 0 0 1 62.69291 78.62362 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 26 Tm /F1 10 Tf 12 TL 1.728443 Tw (To obtain the Born effective charges and dielectric tensor required for long-range treatment, dielectric) Tj T* 0 Tw .876136 Tw (calculations should be performed with density functional perturbation theory \(DFPT\) for the primitive cell) Tj T* 0 Tw (before csld fitting. Obtain born_charge.txt and epsilon_inf.txt by) Tj T* ET
 Q
 Q
+ 
+endstream
+endobj
+49 0 obj
+<<
+/Length 6871
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 674.8236 cm
+1 0 0 1 62.69291 739.8236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1553,25 +1510,25 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 641.8236 cm
+1 0 0 1 62.69291 706.8236 cm
 q
 BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Manual) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 611.8236 cm
+1 0 0 1 62.69291 676.8236 cm
 q
 BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Executable scripts) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 581.8236 cm
+1 0 0 1 62.69291 646.8236 cm
 q
 BT 1 0 0 1 0 14 Tm 5.021647 Tw 12 TL /F1 10 Tf 0 0 0 rg (The main executable is the Python 3 script scripts/) Tj /F2 10 Tf (csld_main) Tj /F1 10 Tf (. Other executables include the) Tj T* 0 Tw (scripts/) Tj /F2 10 Tf (polaron_main) Tj /F1 10 Tf ( script for various auxilliary functions. Help is available via:) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 536.6236 cm
+1 0 0 1 62.69291 601.6236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1592,25 +1549,25 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 506.6236 cm
+1 0 0 1 62.69291 571.6236 cm
 q
 BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Input files) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 488.6236 cm
+1 0 0 1 62.69291 553.6236 cm
 q
 BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (The csld_main code takes two basic input files: ) Tj /F2 10 Tf (POSCAR) Tj /F1 10 Tf ( and ) Tj /F2 10 Tf (csld.in) Tj /F1 10 Tf (.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 482.6236 cm
+1 0 0 1 62.69291 547.6236 cm
 Q
 q
-1 0 0 1 62.69291 482.6236 cm
+1 0 0 1 62.69291 547.6236 cm
 Q
 q
-1 0 0 1 62.69291 446.6236 cm
+1 0 0 1 62.69291 511.6236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1630,10 +1587,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 446.6236 cm
+1 0 0 1 62.69291 511.6236 cm
 Q
 q
-1 0 0 1 62.69291 413.4236 cm
+1 0 0 1 62.69291 478.4236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1653,13 +1610,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 399.4236 cm
+1 0 0 1 62.69291 464.4236 cm
 Q
 q
-1 0 0 1 62.69291 399.4236 cm
+1 0 0 1 62.69291 464.4236 cm
 Q
 q
-1 0 0 1 62.69291 144.2236 cm
+1 0 0 1 62.69291 209.2236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1827,10 +1784,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 144.2236 cm
+1 0 0 1 62.69291 209.2236 cm
 Q
 q
-1 0 0 1 62.69291 111.0236 cm
+1 0 0 1 62.69291 176.0236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1851,22 +1808,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 97.02362 cm
+1 0 0 1 62.69291 162.0236 cm
 Q
 q
-1 0 0 1 62.69291 97.02362 cm
+1 0 0 1 62.69291 162.0236 cm
 Q
- 
-endstream
-endobj
-55 0 obj
-<<
-/Length 8788
->>
-stream
-1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 729.0236 cm
+1 0 0 1 62.69291 126.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1887,10 +1835,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 729.0236 cm
+1 0 0 1 62.69291 126.0236 cm
 Q
 q
-1 0 0 1 62.69291 695.8236 cm
+1 0 0 1 62.69291 92.82362 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1910,34 +1858,43 @@ Q
 Q
 Q
 Q
+ 
+endstream
+endobj
+50 0 obj
+<<
+/Length 9571
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 665.8236 cm
+1 0 0 1 62.69291 747.0236 cm
 q
 BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Training data) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 647.8236 cm
+1 0 0 1 62.69291 729.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Additional input files include the supercell structure\(s\), perturbed structures and associated total forces.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 617.8236 cm
+1 0 0 1 62.69291 699.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL .929398 Tw (Once the supercell size is determined, the main variable in the above setup is the number of structures) Tj T* 0 Tw (\(-N switch\) to generate.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 611.8236 cm
+1 0 0 1 62.69291 693.0236 cm
 Q
 q
-1 0 0 1 62.69291 611.8236 cm
+1 0 0 1 62.69291 693.0236 cm
 Q
 q
-1 0 0 1 62.69291 587.8236 cm
+1 0 0 1 62.69291 669.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -1958,10 +1915,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 587.8236 cm
+1 0 0 1 62.69291 669.0236 cm
 Q
 q
-1 0 0 1 62.69291 554.6236 cm
+1 0 0 1 62.69291 635.8236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -1982,13 +1939,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 540.6236 cm
+1 0 0 1 62.69291 621.8236 cm
 Q
 q
-1 0 0 1 62.69291 540.6236 cm
+1 0 0 1 62.69291 621.8236 cm
 Q
 q
-1 0 0 1 62.69291 492.6236 cm
+1 0 0 1 62.69291 573.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2009,29 +1966,29 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 492.6236 cm
+1 0 0 1 62.69291 573.8236 cm
 Q
 q
-1 0 0 1 62.69291 465.6236 cm
+1 0 0 1 62.69291 546.8236 cm
 q
 BT 1 0 0 1 0 2.5 Tm 15 TL /F4 12.5 Tf 0 0 0 rg (Program flow and settings) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 423.6236 cm
+1 0 0 1 62.69291 504.8236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 26 Tm /F1 10 Tf 12 TL 3.114983 Tw (The csld_main script runs in the following steps, each controlled by a command-line argument of) Tj T* 0 Tw .501235 Tw (csld_main with detailed settings under a section of the csld.in config file. The most important settings are) Tj T* 0 Tw (given below, too.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 417.6236 cm
+1 0 0 1 62.69291 498.8236 cm
 Q
 q
-1 0 0 1 62.69291 417.6236 cm
+1 0 0 1 62.69291 498.8236 cm
 Q
 q
-1 0 0 1 62.69291 303.6236 cm
+1 0 0 1 62.69291 384.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2127,20 +2084,20 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 303.6236 cm
+1 0 0 1 62.69291 384.8236 cm
 Q
 q
-1 0 0 1 62.69291 297.6236 cm
+1 0 0 1 62.69291 378.8236 cm
 Q
 q
-1 0 0 1 62.69291 273.6236 cm
+1 0 0 1 62.69291 354.8236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F4 10 Tf 12 TL 168.5249 0 Td ("[model]" section of csld.in.) Tj T* -168.5249 0 Td ET
 Q
 Q
 q
-1 0 0 1 62.69291 159.6236 cm
+1 0 0 1 62.69291 240.8236 cm
 1 1 1 rg
 n 0 108 469.8898 -18 re f*
 .878431 .878431 .878431 rg
@@ -2267,16 +2224,16 @@ n 469.8898 0 m 469.8898 108 l S
 Q
 Q
 q
-1 0 0 1 62.69291 159.6236 cm
+1 0 0 1 62.69291 240.8236 cm
 Q
 q
-1 0 0 1 62.69291 153.6236 cm
+1 0 0 1 62.69291 234.8236 cm
 Q
 q
-1 0 0 1 62.69291 153.6236 cm
+1 0 0 1 62.69291 234.8236 cm
 Q
 q
-1 0 0 1 62.69291 123.6236 cm
+1 0 0 1 62.69291 204.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2326,43 +2283,32 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 123.6236 cm
+1 0 0 1 62.69291 204.8236 cm
 Q
 q
-1 0 0 1 62.69291 117.6236 cm
+1 0 0 1 62.69291 198.8236 cm
 Q
 q
-1 0 0 1 62.69291 93.62362 cm
+1 0 0 1 62.69291 174.8236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F4 10 Tf 12 TL 189.6449 0 Td ("[training]" section) Tj T* -189.6449 0 Td ET
 Q
 Q
- 
-endstream
-endobj
-56 0 obj
-<<
-/Length 10629
->>
-stream
-1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 645.0236 cm
+1 0 0 1 62.69291 102.8236 cm
 1 1 1 rg
-n 0 120 469.8898 -18 re f*
+n 0 66 469.8898 -18 re f*
 .878431 .878431 .878431 rg
-n 0 102 469.8898 -18 re f*
+n 0 48 469.8898 -18 re f*
 1 1 1 rg
-n 0 84 469.8898 -30 re f*
-.878431 .878431 .878431 rg
-n 0 54 469.8898 -54 re f*
+n 0 30 469.8898 -30 re f*
 .960784 .960784 .862745 rg
-n 0 120 469.8898 -18 re f*
+n 0 66 469.8898 -18 re f*
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
-1 0 0 1 6 105 cm
+1 0 0 1 6 51 cm
 q
 .960784 .960784 .862745 rg
 n 0 0 66.31496 12 re f*
@@ -2373,7 +2319,7 @@ BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 26.20748 0 Td (tag) Tj T* -26.20748 0 Td ET
 Q
 Q
 q
-1 0 0 1 84.31496 105 cm
+1 0 0 1 84.31496 51 cm
 q
 .960784 .960784 .862745 rg
 n 0 0 66.31496 12 re f*
@@ -2384,7 +2330,7 @@ BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 21.20748 0 Td (value) Tj T* -21.20748 0 Td ET
 Q
 Q
 q
-1 0 0 1 162.6299 105 cm
+1 0 0 1 162.6299 51 cm
 q
 .960784 .960784 .862745 rg
 n 0 0 301.2598 12 re f*
@@ -2396,52 +2342,82 @@ Q
 Q
 0 0 0 rg
 q
-1 0 0 1 6 87 cm
+1 0 0 1 6 33 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (corr_type) Tj T* ET
 Q
 Q
 q
-1 0 0 1 84.31496 87 cm
+1 0 0 1 84.31496 33 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (str) Tj T* ET
 Q
 Q
 q
-1 0 0 1 162.6299 87 cm
+1 0 0 1 162.6299 33 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Which type of property to fit: f for force, e for energy) Tj T* ET
 Q
 Q
 q
-1 0 0 1 6 57 cm
+1 0 0 1 6 3 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL (cluster_diamet) Tj T* (er) Tj T* ET
 Q
 Q
 q
-1 0 0 1 84.31496 69 cm
+1 0 0 1 84.31496 15 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (real [real...]) Tj T* ET
 Q
 Q
 q
-1 0 0 1 162.6299 69 cm
+1 0 0 1 162.6299 15 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (cluster cutoff for pair, triplet, ... e.g. 8.0 4.5) Tj T* ET
 Q
 Q
 q
+1 J
+1 j
+0 0 0 RG
+.25 w
+n 0 0 m 469.8898 0 l S
+n 0 48 m 469.8898 48 l S
+n 0 30 m 469.8898 30 l S
+n 78.31496 0 m 78.31496 66 l S
+n 156.6299 0 m 156.6299 66 l S
+n 0 66 m 469.8898 66 l S
+n 0 0 m 0 66 l S
+n 469.8898 0 m 469.8898 66 l S
+Q
+Q
+ 
+endstream
+endobj
+51 0 obj
+<<
+/Length 10568
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 711.0236 cm
+1 1 1 rg
+n 0 54 469.8898 -54 re f*
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
 1 0 0 1 6 39 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (supercell*) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (traindat*) Tj T* ET
 Q
 Q
 q
@@ -2455,7 +2431,7 @@ q
 1 0 0 1 162.6299 3 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 38 Tm /F1 10 Tf 12 TL (POSCAR of supercell, followed by list of subdirs, e.g. fcc333/POS) Tj T* (fcc333/dir-*. Multiple supercells may be supplied to mix and match) Tj T* (supercells of different sizes, e.g. supercell1= fcc222.... \\n) Tj T* (supercell2= fcc333....) Tj T* ET
+BT 1 0 0 1 0 38 Tm /F1 10 Tf 12 TL (POSCAR of supercell, followed by list of subdirs, e.g. fcc333/POS) Tj T* (fcc333/dir-*. Multiple traindat entries with different supercells may) Tj T* (be supplied to mix and match supercells of different sizes, e.g.) Tj T* (traindat1= fcc222.... \\n traindat2= fcc333....) Tj T* ET
 Q
 Q
 q
@@ -2463,28 +2439,25 @@ q
 1 j
 0 0 0 RG
 .25 w
-n 0 102 m 469.8898 102 l S
-n 0 84 m 469.8898 84 l S
 n 0 54 m 469.8898 54 l S
-n 78.31496 0 m 78.31496 120 l S
-n 156.6299 0 m 156.6299 120 l S
-n 0 120 m 469.8898 120 l S
+n 78.31496 0 m 78.31496 54 l S
+n 156.6299 0 m 156.6299 54 l S
+n 0 0 m 0 54 l S
+n 469.8898 0 m 469.8898 54 l S
 n 0 0 m 469.8898 0 l S
-n 0 0 m 0 120 l S
-n 469.8898 0 m 469.8898 120 l S
 Q
 Q
 q
-1 0 0 1 62.69291 645.0236 cm
+1 0 0 1 62.69291 711.0236 cm
 Q
 q
-1 0 0 1 62.69291 639.0236 cm
+1 0 0 1 62.69291 705.0236 cm
 Q
 q
-1 0 0 1 62.69291 639.0236 cm
+1 0 0 1 62.69291 705.0236 cm
 Q
 q
-1 0 0 1 62.69291 609.0236 cm
+1 0 0 1 62.69291 675.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2534,20 +2507,20 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 609.0236 cm
+1 0 0 1 62.69291 675.0236 cm
 Q
 q
-1 0 0 1 62.69291 603.0236 cm
+1 0 0 1 62.69291 669.0236 cm
 Q
 q
-1 0 0 1 62.69291 579.0236 cm
+1 0 0 1 62.69291 645.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F4 10 Tf 12 TL 194.0949 0 Td ("[fitting]" section) Tj T* -194.0949 0 Td ET
 Q
 Q
 q
-1 0 0 1 62.69291 231.0236 cm
+1 0 0 1 62.69291 297.0236 cm
 1 1 1 rg
 n 0 342 469.8898 -18 re f*
 .878431 .878431 .878431 rg
@@ -2794,16 +2767,16 @@ n 469.8898 0 m 469.8898 342 l S
 Q
 Q
 q
-1 0 0 1 62.69291 231.0236 cm
+1 0 0 1 62.69291 297.0236 cm
 Q
 q
-1 0 0 1 62.69291 225.0236 cm
+1 0 0 1 62.69291 291.0236 cm
 Q
 q
-1 0 0 1 62.69291 225.0236 cm
+1 0 0 1 62.69291 291.0236 cm
 Q
 q
-1 0 0 1 62.69291 195.0236 cm
+1 0 0 1 62.69291 261.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2853,30 +2826,36 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 195.0236 cm
+1 0 0 1 62.69291 261.0236 cm
 Q
 q
-1 0 0 1 62.69291 189.0236 cm
+1 0 0 1 62.69291 255.0236 cm
 Q
 q
-1 0 0 1 62.69291 165.0236 cm
+1 0 0 1 62.69291 231.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F4 10 Tf 12 TL 189.6499 0 Td ("[phonon]" section) Tj T* -189.6499 0 Td ET
 Q
 Q
 q
-1 0 0 1 62.69291 111.0236 cm
+1 0 0 1 62.69291 87.02362 cm
 1 1 1 rg
-n 0 48 469.8898 -18 re f*
+n 0 138 469.8898 -18 re f*
 .878431 .878431 .878431 rg
-n 0 30 469.8898 -30 re f*
+n 0 120 469.8898 -30 re f*
+1 1 1 rg
+n 0 90 469.8898 -54 re f*
+.878431 .878431 .878431 rg
+n 0 36 469.8898 -18 re f*
+1 1 1 rg
+n 0 18 469.8898 -18 re f*
 .960784 .960784 .862745 rg
-n 0 48 469.8898 -18 re f*
+n 0 138 469.8898 -18 re f*
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
-1 0 0 1 6 33 cm
+1 0 0 1 6 123 cm
 q
 .960784 .960784 .862745 rg
 n 0 0 66.31496 12 re f*
@@ -2887,7 +2866,7 @@ BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 26.20748 0 Td (tag) Tj T* -26.20748 0 Td ET
 Q
 Q
 q
-1 0 0 1 84.31496 33 cm
+1 0 0 1 84.31496 123 cm
 q
 .960784 .960784 .862745 rg
 n 0 0 66.31496 12 re f*
@@ -2898,7 +2877,7 @@ BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 21.20748 0 Td (value) Tj T* -21.20748 0 Td ET
 Q
 Q
 q
-1 0 0 1 162.6299 33 cm
+1 0 0 1 162.6299 123 cm
 q
 .960784 .960784 .862745 rg
 n 0 0 301.2598 12 re f*
@@ -2910,23 +2889,86 @@ Q
 Q
 0 0 0 rg
 q
-1 0 0 1 6 15 cm
+1 0 0 1 6 105 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (nac) Tj T* ET
 Q
 Q
 q
-1 0 0 1 84.31496 15 cm
+1 0 0 1 84.31496 105 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (int) Tj T* ET
 Q
 Q
 q
-1 0 0 1 162.6299 3 cm
+1 0 0 1 162.6299 93 cm
 q
 BT 1 0 0 1 0 14 Tm 12 TL /F1 10 Tf 0 0 0 rg (Method for non-analytic correction. ) Tj /F2 10 Tf (-1) Tj /F1 10 Tf ( =disabled, 0=long range) Tj T* (treatment in arxiv:) Tj 0 0 .501961 rg (1805.08904) Tj T* ET
+Q
+Q
+q
+1 0 0 1 6 75 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (wavevector) Tj T* ET
+Q
+Q
+q
+1 0 0 1 84.31496 75 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (str) Tj T* ET
+Q
+Q
+q
+1 0 0 1 162.6299 39 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 38 Tm /F1 10 Tf 12 TL (If specified, plot phonon dispersion. wavevector = Auto will turn on) Tj T* (automatic generation of special paths in reciprocal space. Manual) Tj T* (settings e.g. [[25, [0,0,0],'Gamma', [0,0.5,0.5], 'X']] will add 25 points) Tj T* (between zone center and X point) Tj T* ET
+Q
+Q
+q
+1 0 0 1 6 21 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (unit) Tj T* ET
+Q
+Q
+q
+1 0 0 1 84.31496 21 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (str) Tj T* ET
+Q
+Q
+q
+1 0 0 1 162.6299 21 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Unit for dispersion and DOS. One of THz, meV, eV, cm) Tj T* ET
+Q
+Q
+q
+1 0 0 1 6 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (dos_grid) Tj T* ET
+Q
+Q
+q
+1 0 0 1 84.31496 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (int x 3) Tj T* ET
+Q
+Q
+q
+1 0 0 1 162.6299 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (If specified, plot density states sampled on a grid, e.g. 10 10 10) Tj T* ET
 Q
 Q
 q
@@ -2935,106 +2977,40 @@ q
 0 0 0 RG
 .25 w
 n 0 0 m 469.8898 0 l S
-n 0 30 m 469.8898 30 l S
-n 78.31496 0 m 78.31496 48 l S
-n 156.6299 0 m 156.6299 48 l S
-n 0 48 m 469.8898 48 l S
-n 0 0 m 0 48 l S
-n 469.8898 0 m 469.8898 48 l S
+n 0 120 m 469.8898 120 l S
+n 0 90 m 469.8898 90 l S
+n 0 36 m 469.8898 36 l S
+n 0 18 m 469.8898 18 l S
+n 78.31496 0 m 78.31496 138 l S
+n 156.6299 0 m 156.6299 138 l S
+n 0 138 m 469.8898 138 l S
+n 0 0 m 0 138 l S
+n 469.8898 0 m 469.8898 138 l S
 Q
 Q
  
 endstream
 endobj
-57 0 obj
+52 0 obj
 <<
-/Length 10269
+/Length 9187
 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 549.0236 cm
+1 0 0 1 62.69291 639.0236 cm
 1 1 1 rg
-n 0 216 469.8898 -54 re f*
-.878431 .878431 .878431 rg
-n 0 162 469.8898 -18 re f*
-1 1 1 rg
-n 0 144 469.8898 -18 re f*
-.878431 .878431 .878431 rg
 n 0 126 469.8898 -30 re f*
-1 1 1 rg
+.878431 .878431 .878431 rg
 n 0 96 469.8898 -18 re f*
-.878431 .878431 .878431 rg
-n 0 78 469.8898 -18 re f*
 1 1 1 rg
-n 0 60 469.8898 -42 re f*
+n 0 78 469.8898 -18 re f*
 .878431 .878431 .878431 rg
+n 0 60 469.8898 -42 re f*
+1 1 1 rg
 n 0 18 469.8898 -18 re f*
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 201 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (wavevector) Tj T* ET
-Q
-Q
-q
-1 0 0 1 84.31496 201 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (str) Tj T* ET
-Q
-Q
-q
-1 0 0 1 162.6299 165 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 38 Tm /F1 10 Tf 12 TL (If specified, plot phonon dispersion. wavevector = Auto will turn on) Tj T* (automatic generation of special paths in reciprocal space. Manual) Tj T* (settings e.g. [[25, [0,0,0],'Gamma', [0,0.5,0.5], 'X']] will add 25 points) Tj T* (between zone center and X point) Tj T* ET
-Q
-Q
-q
-1 0 0 1 6 147 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (unit) Tj T* ET
-Q
-Q
-q
-1 0 0 1 84.31496 147 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (str) Tj T* ET
-Q
-Q
-q
-1 0 0 1 162.6299 147 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Unit for dispersion and DOS. One of THz, meV, eV, cm) Tj T* ET
-Q
-Q
-q
-1 0 0 1 6 129 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (dos_grid) Tj T* ET
-Q
-Q
-q
-1 0 0 1 84.31496 129 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (int x 3) Tj T* ET
-Q
-Q
-q
-1 0 0 1 162.6299 129 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (If specified, plot density states sampled on a grid, e.g. 10 10 10) Tj T* ET
-Q
-Q
 q
 1 0 0 1 6 111 cm
 q
@@ -3144,32 +3120,29 @@ q
 1 j
 0 0 0 RG
 .25 w
-n 0 216 m 469.8898 216 l S
-n 0 162 m 469.8898 162 l S
-n 0 144 m 469.8898 144 l S
 n 0 126 m 469.8898 126 l S
 n 0 96 m 469.8898 96 l S
 n 0 78 m 469.8898 78 l S
 n 0 60 m 469.8898 60 l S
 n 0 18 m 469.8898 18 l S
-n 78.31496 0 m 78.31496 216 l S
-n 156.6299 0 m 156.6299 216 l S
-n 0 0 m 0 216 l S
-n 469.8898 0 m 469.8898 216 l S
+n 78.31496 0 m 78.31496 126 l S
+n 156.6299 0 m 156.6299 126 l S
+n 0 0 m 0 126 l S
+n 469.8898 0 m 469.8898 126 l S
 n 0 0 m 469.8898 0 l S
 Q
 Q
 q
-1 0 0 1 62.69291 549.0236 cm
+1 0 0 1 62.69291 639.0236 cm
 Q
 q
-1 0 0 1 62.69291 543.0236 cm
+1 0 0 1 62.69291 633.0236 cm
 Q
 q
-1 0 0 1 62.69291 543.0236 cm
+1 0 0 1 62.69291 633.0236 cm
 Q
 q
-1 0 0 1 62.69291 513.0236 cm
+1 0 0 1 62.69291 603.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -3219,20 +3192,20 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 513.0236 cm
+1 0 0 1 62.69291 603.0236 cm
 Q
 q
-1 0 0 1 62.69291 507.0236 cm
+1 0 0 1 62.69291 597.0236 cm
 Q
 q
-1 0 0 1 62.69291 483.0236 cm
+1 0 0 1 62.69291 573.0236 cm
 q
 0 0 0 rg
 BT 1 0 0 1 0 2 Tm /F4 10 Tf 12 TL 169.0849 0 Td ("[export_potential]" section) Tj T* -169.0849 0 Td ET
 Q
 Q
 q
-1 0 0 1 62.69291 405.0236 cm
+1 0 0 1 62.69291 495.0236 cm
 1 1 1 rg
 n 0 72 469.8898 -18 re f*
 .878431 .878431 .878431 rg
@@ -3311,16 +3284,16 @@ n 469.8898 0 m 469.8898 72 l S
 Q
 Q
 q
-1 0 0 1 62.69291 405.0236 cm
+1 0 0 1 62.69291 495.0236 cm
 Q
 q
-1 0 0 1 62.69291 399.0236 cm
+1 0 0 1 62.69291 489.0236 cm
 Q
 q
-1 0 0 1 62.69291 399.0236 cm
+1 0 0 1 62.69291 489.0236 cm
 Q
 q
-1 0 0 1 62.69291 327.0236 cm
+1 0 0 1 62.69291 417.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -3334,7 +3307,7 @@ q
 1 0 0 1 26 57 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Prediction step to predict supercells forces or energies with known solution) Tj T* ET
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Prediction of supercells forces or energies with known solution) Tj T* ET
 Q
 Q
 q
@@ -3394,22 +3367,22 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 327.0236 cm
+1 0 0 1 62.69291 417.0236 cm
 Q
 q
-1 0 0 1 62.69291 300.0236 cm
+1 0 0 1 62.69291 390.0236 cm
 q
 BT 1 0 0 1 0 2.5 Tm 15 TL /F4 12.5 Tf 0 0 0 rg (Output files) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 288.0236 cm
+1 0 0 1 62.69291 378.0236 cm
 Q
 q
-1 0 0 1 62.69291 288.0236 cm
+1 0 0 1 62.69291 378.0236 cm
 Q
 q
-1 0 0 1 62.69291 276.0236 cm
+1 0 0 1 62.69291 366.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -3430,10 +3403,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 270.0236 cm
+1 0 0 1 62.69291 360.0236 cm
 Q
 q
-1 0 0 1 62.69291 234.0236 cm
+1 0 0 1 62.69291 324.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -3454,10 +3427,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 228.0236 cm
+1 0 0 1 62.69291 318.0236 cm
 Q
 q
-1 0 0 1 62.69291 204.0236 cm
+1 0 0 1 62.69291 294.0236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -3477,10 +3450,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 204.0236 cm
+1 0 0 1 62.69291 294.0236 cm
 Q
 q
-1 0 0 1 62.69291 158.8236 cm
+1 0 0 1 62.69291 248.8236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -3501,13 +3474,13 @@ Q
 Q
 Q
 q
-1 0 0 1 62.69291 144.8236 cm
+1 0 0 1 62.69291 234.8236 cm
 Q
 q
-1 0 0 1 62.69291 144.8236 cm
+1 0 0 1 62.69291 234.8236 cm
 Q
 q
-1 0 0 1 62.69291 120.8236 cm
+1 0 0 1 62.69291 210.8236 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -3527,19 +3500,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 120.8236 cm
+1 0 0 1 62.69291 210.8236 cm
 Q
- 
-endstream
-endobj
-58 0 obj
-<<
-/Length 846
->>
-stream
-1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 727.8236 cm
+1 0 0 1 62.69291 165.6236 cm
 q
 q
 1 0 0 1 0 0 cm
@@ -3559,160 +3523,123 @@ Q
 Q
 Q
 Q
-q
-1 0 0 1 62.69291 694.8236 cm
-q
-BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Issues) Tj T* ET
-Q
-Q
-q
-1 0 0 1 62.69291 676.8236 cm
-q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Please contact Fei Zhou ) Tj 0 0 .501961 rg (mailto:zhou6@llnl.gov) Tj  T* ET
-Q
-Q
-q
-1 0 0 1 62.69291 643.8236 cm
-q
-BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (License) Tj T* ET
-Q
-Q
-q
-1 0 0 1 62.69291 625.8236 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (MIT License) Tj T* ET
-Q
-Q
  
 endstream
 endobj
-59 0 obj
+53 0 obj
 <<
-/Nums [ 0 60 0 R 1 61 0 R 2 62 0 R 3 63 0 R 4 64 0 R 
-  5 65 0 R 6 66 0 R 7 67 0 R ]
+/Nums [ 0 54 0 R 1 55 0 R 2 56 0 R 3 57 0 R 4 58 0 R 
+  5 59 0 R 6 60 0 R ]
 >>
 endobj
-60 0 obj
+54 0 obj
 <<
 /S /D /St 1
 >>
 endobj
-61 0 obj
+55 0 obj
 <<
 /S /D /St 2
 >>
 endobj
-62 0 obj
+56 0 obj
 <<
 /S /D /St 3
 >>
 endobj
-63 0 obj
+57 0 obj
 <<
 /S /D /St 4
 >>
 endobj
-64 0 obj
+58 0 obj
 <<
 /S /D /St 5
 >>
 endobj
-65 0 obj
+59 0 obj
 <<
 /S /D /St 6
 >>
 endobj
-66 0 obj
+60 0 obj
 <<
 /S /D /St 7
 >>
 endobj
-67 0 obj
-<<
-/S /D /St 8
->>
-endobj
 xref
-0 68
+0 61
 0000000000 65535 f 
 0000000073 00000 n 
 0000000146 00000 n 
 0000000253 00000 n 
 0000000365 00000 n 
-0000000470 00000 n 
-0000000655 00000 n 
-0000000853 00000 n 
-0000001048 00000 n 
-0000001283 00000 n 
-0000001483 00000 n 
+0000000543 00000 n 
+0000000648 00000 n 
+0000000833 00000 n 
+0000001031 00000 n 
+0000001226 00000 n 
+0000001467 00000 n 
 0000001668 00000 n 
 0000001853 00000 n 
-0000002022 00000 n 
-0000002142 00000 n 
-0000002387 00000 n 
-0000002564 00000 n 
-0000002789 00000 n 
-0000002995 00000 n 
-0000003111 00000 n 
-0000003317 00000 n 
-0000003502 00000 n 
-0000003727 00000 n 
-0000003904 00000 n 
+0000002038 00000 n 
+0000002207 00000 n 
+0000002327 00000 n 
+0000002573 00000 n 
+0000002750 00000 n 
+0000002975 00000 n 
+0000003181 00000 n 
+0000003297 00000 n 
+0000003503 00000 n 
+0000003688 00000 n 
+0000003913 00000 n 
 0000004090 00000 n 
-0000004322 00000 n 
-0000004496 00000 n 
-0000004721 00000 n 
-0000004827 00000 n 
-0000005085 00000 n 
-0000005160 00000 n 
-0000005274 00000 n 
-0000005401 00000 n 
-0000005527 00000 n 
-0000005653 00000 n 
-0000005779 00000 n 
-0000005941 00000 n 
-0000006084 00000 n 
-0000006201 00000 n 
-0000006326 00000 n 
-0000006471 00000 n 
-0000006588 00000 n 
-0000006723 00000 n 
-0000006883 00000 n 
-0000007003 00000 n 
-0000007129 00000 n 
-0000007283 00000 n 
-0000007410 00000 n 
-0000007524 00000 n 
-0000007645 00000 n 
-0000007754 00000 n 
-0000007863 00000 n 
+0000004276 00000 n 
+0000004508 00000 n 
+0000004614 00000 n 
+0000004872 00000 n 
+0000004947 00000 n 
+0000005068 00000 n 
+0000005194 00000 n 
+0000005320 00000 n 
+0000005482 00000 n 
+0000005625 00000 n 
+0000005742 00000 n 
+0000005867 00000 n 
+0000006012 00000 n 
+0000006129 00000 n 
+0000006264 00000 n 
+0000006411 00000 n 
+0000006531 00000 n 
+0000006657 00000 n 
+0000006811 00000 n 
+0000006938 00000 n 
+0000007052 00000 n 
+0000007154 00000 n 
 0000015133 00000 n 
-0000021542 00000 n 
-0000027507 00000 n 
-0000034099 00000 n 
-0000042939 00000 n 
-0000053621 00000 n 
-0000063943 00000 n 
-0000064840 00000 n 
-0000064947 00000 n 
-0000064981 00000 n 
-0000065015 00000 n 
-0000065049 00000 n 
-0000065083 00000 n 
-0000065117 00000 n 
-0000065151 00000 n 
-0000065185 00000 n 
+0000021432 00000 n 
+0000027425 00000 n 
+0000034348 00000 n 
+0000043971 00000 n 
+0000054592 00000 n 
+0000063831 00000 n 
+0000063929 00000 n 
+0000063963 00000 n 
+0000063997 00000 n 
+0000064031 00000 n 
+0000064065 00000 n 
+0000064099 00000 n 
+0000064133 00000 n 
 trailer
 <<
 /ID 
-[<0d676252036d5b625744128a382a8653><0d676252036d5b625744128a382a8653>]
+[<de7f770d5d2e5dff4b79a064886b0049><de7f770d5d2e5dff4b79a064886b0049>]
 % ReportLab generated PDF document -- digest (http://www.reportlab.com)
 
-/Info 28 0 R
-/Root 27 0 R
-/Size 68
+/Info 27 0 R
+/Root 26 0 R
+/Size 61
 >>
 startxref
-65219
+64167
 %%EOF

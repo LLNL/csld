@@ -210,7 +210,7 @@ def predict(model, sols, setting, step):
         print("  sol# %d: err= (%.2f%%) %f" % (i, err[0], err[1]))
         np.savetxt("%s_%d"%(setting['fval_out'],i), np.transpose(err[2:4]))
         if setting.getboolean('save_force_prediction', True) and setting['corr_type']=='f':
-            supercells= [y.split() for x, y in setting.items() if re.match('supercell.*', x)]
+            supercells= [y.split() for x, y in setting.items() if re.match('traindat.*', x)]
             left=0
             f_all= np.reshape(err[3],(-1,3))
             for sc in supercells:

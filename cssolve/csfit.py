@@ -294,5 +294,5 @@ def csfit(Amat, flist_in, wt, mulist, method=5, submodels=None, nSubset=1, subse
         # fittings.append(bestsol[-1])
 
     print(rms_all)
-    return np.argmin(rms_all), sol_all
+    return np.argmin(rms_all), np.array(sol_all)
 

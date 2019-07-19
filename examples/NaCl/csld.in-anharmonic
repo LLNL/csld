@@ -26,7 +26,7 @@ corr_in = Amat.mtx
 corr_out = Amat.mtx
 fval_in = fval.txt
 fval_out = fval.txt
-supercell1 = fcc333/SPOSCAR fcc333/dir*0.06
+traindat1 = fcc333/SPOSCAR fcc333/dir*0.06
 
 
 
@@ -109,4 +109,4 @@ corr_in = Amat_pred.mtx
 corr_out = Amat_pred.mtx
 fval_in = fval_pred.txt
 fval_out = fval_pred.txt
-supercell0 = 1 fcc222/POSCAR fcc222/traj*
+traindat0 = fcc222/POSCAR fcc222/traj*

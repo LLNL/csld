@@ -8,6 +8,9 @@ from scipy.sparse import lil_matrix as spmat
 from _c_util import fct_trans_c, get_nullspace
 
 
+def cofactor(M):
+    return np.linalg.det(M)* np.linalg.inv(M).T
+
 def vec_linspace(ls, n, remove_duplicate_middle_point=False):
     if remove_duplicate_middle_point:
         return np.vstack([np.array([np.linspace(i,j,n) for i,j in zip(ls[i], ls[i+1])]).T[0 if i<=0 else 1:] for i in range(len(ls)-1)])
@@ -15,8 +18,8 @@ def vec_linspace(ls, n, remove_duplicate_middle_point=False):
         return np.vstack([np.array([np.linspace(i,j,n) for i,j in zip(ls[i], ls[i+1])]).T for i in range(len(ls)-1)])
 
 #  Normalize[RandomVariate[NormalDistribution[0,1],DIM ]]RandomReal[{rmin,rmax}]
-def random_displacements(natom, rmin, rmax=None):
-    dx = np.random.normal(size=(natom, 3))
+def random_displacements(natom, rmin, rmax=None, dim=3):
+    dx = np.random.normal(size=(natom, dim))
     veclen = np.full(natom, rmin) if rmax is None else np.random.uniform(rmin, rmax, natom)
     dx*= (veclen/np.linalg.norm(dx, axis=1))[:,None]
     return dx

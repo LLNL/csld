@@ -558,6 +558,22 @@ class Cluster():
         return orbits
 
 
+    def index_of_uniq(self):
+        return [self.uniq.index(v) for v in self.vertices]
+
+    def permutations(self):
+        from itertools import permutations
+        uniq_ids = self.index_of_uniq()
+        permutated_ids = []
+        perms=[]
+        for iper in permutations(range(self.order)):
+            id_permutated = [uniq_ids[i] for i in iper]
+            if id_permutated not in permutated_ids:
+                perms.append(iper)
+                permutated_ids.append(id_permutated)
+        return perms
+
+
 class ClusterOrbit():
     """
     orbit of an cluster, consisting of representative cluster and the set of

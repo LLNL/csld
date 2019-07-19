@@ -549,18 +549,23 @@ class LDModel(BasicLatticeModel):
         icount=0
         for iO, orb in enumerate(self.orbits):
             clus0 = orb.cluster
-            npt = clus0.order
+            npt = orb.order
             if npt != ord:
                 continue
             val = sol_fct[self.orb_idx_full[iO]:self.orb_idx_full[iO+1]]
-            if np.amax(np.abs(val))>tol:
-                for ic, clus in enumerate(orb.clusters):
+            if np.amax(np.abs(val)) <= tol:
+                continue
+            for ic, clus in enumerate(orb.clusters):
+                ijkls = clus._ijkls_np
+                valTrans = fct_trans_c(npt, 3, ops[orb.clusters_ig[ic]].rot, np.arange(npt, dtype=int)).dot(val).reshape((3,)*ord)
+#                print('debug iorb, ic iper', iO, ic, len(perms))
+                for iper in clus0.permutations():
                     icount+=1
                     #print('debug', icount, clus0.ijkls, iO, ic)
-                    valTrans = fct_trans_c(npt, 3, ops[orb.clusters_ig[ic]].rot, np.arange(npt, dtype=int)).dot(val)
-                    ijk_other= matrix2text(self.prim.lattice.get_cartesian_coords(clus._ijkls_np[1:,:3]- clus._ijkls_np[0:1,:3]))
-                    fp.write("\n%d\n%s\n%s\n"%(icount, ijk_other, matrix2text(clus._ijkls_np[:,3]+1)))
-                    fp.write(re.sub(r".*\n", r"",LDModel.fct2str(npt, valTrans, -1),count=1)+'\n')
+                    ijk_other= matrix2text(self.prim.lattice.get_cartesian_coords(ijkls[iper[1:],:3]- ijkls[iper[0:1],:3]))
+                    valPerm = np.transpose(valTrans, iper).reshape((-1))
+                    fp.write("\n%d\n%s\n%s\n"%(icount, ijk_other, matrix2text(ijkls[iper,3]+1)))
+                    fp.write(re.sub(r".*\n", r"",LDModel.fct2str(npt, valPerm, -1),count=1)+'\n')
         with open(fc_name, 'w') as modified: modified.write("%d\n"%(icount) + fp.getvalue())
         fp.close()
 

@@ -1,14 +1,8 @@
-*************
-What is CSLD?
-*************
+**********************
+Introduction to CSLD
+**********************
 
-A comprehensive package to study lattice dynamics from first-principles. The interatomic force constants were fitted using the compressive sensing algorithm.
-
-
-*************
-Why use CSLD?
-*************
-
+CSLD, or compressive sensing lattice dynamics, is a comprehensive package to study lattice dynamics from first-principles. The interatomic force constants were fitted using the compressive sensing algorithm. Some of the attractive features of CSLD are 
 
 - Accurate: up to 6th order anharmonic terms. Optimized treatment of long-range Coulomb interactions in polar semiconductors.
 
@@ -18,12 +12,9 @@ Why use CSLD?
 
 - Versatility: phonon (harmonic) and anharmonic force constants, vibrational free energies,  interatomic potentials for solid molecular dynamics simulations.
 
-************
-Getting CSLD
-************
+CSLD is released as an open source package under the MIT license.
+For issues, please report via github, or contact Fei Zhou `<fei.fzhou@gmail.com>`_
 
-
-Open source under MIT license
 
 ************
 Installation
@@ -126,7 +117,7 @@ The above can be equivalently achieved by modifying the command line rather than
   $ csld_main --override "[fitting] solution_known=sol_2nd" \
   --override "[fitting] submodel1=anh 3 4" \
   --override "[fitting] solution_out=solution_all" \
-  --override "[training] supercell1=fcc333/SPOSCAR fcc333/dir*0.06"
+  --override "[training] traindat1=fcc333/SPOSCAR fcc333/dir*0.06"
 
 Input files preparation
 ---------------------------------
@@ -301,7 +292,7 @@ The csld_main script runs in the following steps, each controlled by a command-l
 
   corr_type, str, "Which type of property to fit: f for force, e for energy"
   "cluster_diameter", "real [real...]", "cluster cutoff for pair, triplet, ... e.g. 8.0 4.5"
-  "supercell\*", "str_SC str_dir1 [str_dir2...]", "POSCAR of supercell, followed by list of subdirs, e.g. fcc333/POS fcc333/dir-\*. Multiple supercells may be supplied to mix and match supercells of different sizes, e.g. supercell1= fcc222.... \\n supercell2= fcc333...."
+  "traindat\*", "str_SC str_dir1 [str_dir2...]", "POSCAR of supercell, followed by list of subdirs, e.g. fcc333/POS fcc333/dir-\*. Multiple traindat entries with different supercells may be supplied to mix and match supercells of different sizes, e.g. traindat1= fcc222.... \\n traindat2= fcc333...."
 
 - Fitting step to obtain model parameters using compressive sensing or other algorithms.
 
@@ -349,7 +340,7 @@ The csld_main script runs in the following steps, each controlled by a command-l
   export_shengbte, "int x 3 int [int...]", "If specified, export force constants for calculation in ShengBTE. First 3 integers designate size of supercell for pair force constants, followed by list of orders to export. e.g. exporting Hessian matrix of a 5x5x5 supercell, as well as 3rd-order FCs with 5 5 5 2 3"
 
 
-- Prediction step to predict supercells forces or energies with known solution
+- Prediction of supercells forces or energies with known solution
 
   - switch "--pred_step STEP". **0** =skip, 1=load training setup correlation matrix from file, 2=compute, 3=compute & save. Use "csld_main --predict" to quickly predict supercells"
   - Settings in "[prediction]" with the same sets of tags as "[training]". Usually used together with "[fitting] solution_in = previous_solution"
@@ -379,17 +370,4 @@ Output files
 
 .. _ShengBTE: http://www.shengbte.org/
 .. _modified version of ShengBTE: https://doi.org/10.1063/1.5040887
-
-
-******
-Issues
-******
-
-Please contact Fei Zhou `<zhou6@llnl.gov>`_
-
-*******
-License
-*******
-
-MIT License
 
