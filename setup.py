@@ -21,13 +21,13 @@ import numpy
 
 subprocess.call(['make'])
 
-def package_files(directory):
-    paths = []
-    for (path, directories, filenames) in os.walk(directory):
-        for filename in filenames:
-            paths.append(os.path.join('..', path, filename))
-    return paths
-data_files = package_files('examples')
+#def package_files(directory):
+#    paths = []
+#    for (path, directories, filenames) in os.walk(directory):
+#        for filename in filenames:
+#            paths.append(os.path.join('..', path, filename))
+#    return paths
+#data_files = package_files('examples')
 
 setup(
      name="csld",
@@ -41,7 +41,7 @@ setup(
      package_data={"csld.util": ["*.json"],
 #       'csld': ['../bregman*.so', '../f_phonon*.so', '../bcs_driver*.so','../f_util*.so','../Makefile', '../css*/*.f90','../compile/f_util/*.f90', '../csld/*/*.f90', '../csld/*/*.f']},
        'csld': ['../bregman*.so', '../f_phonon*.so', '../f_util*.so','../Makefile', '../css*/*.f90','../compile/f_util/*.f90', '../csld/*/*.f90', '../csld/*/*.f']},
-     data_files=data_files,
+     #data_files=data_files,
      license="MIT",
      description="CSLD",
      long_description="Compressive sensing lattice dynamics",
