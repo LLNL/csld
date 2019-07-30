@@ -122,7 +122,7 @@ def fit_data(model, Amat, fval, setting, step, pdfout):
         submodels = model.get_submodels(submodels, uscale_list, setting.getfloat('lr_pair_penalty',0.0),
                    ldffscale_list = ldffscale_list, knownsol=knownsol)
 
-        ibest, solutions = csfit(Amat, fval[:,0], 1, mulist,
+        ibest, solutions, rel_err = csfit(Amat, fval[:,0], 1, mulist,
                 method=int(setting['method']),
                 maxIter=int(setting['maxiter']),
                 tol=float(setting['tolerance']),
@@ -147,7 +147,7 @@ def fit_data(model, Amat, fval, setting, step, pdfout):
     if model.ldff is not None:
         model.ldff.plot_pairPES(solutions)
     print("+ Fitting done. Best solution", ibest)
-    return ibest, solutions
+    return ibest, solutions, rel_err
 
 
 def save_pot(model, sol, setting, step, phonon):
@@ -318,9 +318,9 @@ if __name__ == '__main__':
     model = init_ld_model(prim, settings['model'], settings['LDFF'] if 'LDFF' in settings.sections() else {}, options.clus_step,
                           options.symC_step, options.ldff_step)
     Amat, fval = init_training(model, settings['training'], options.train_step)
-    ibest, solutions = fit_data(model, Amat, fval, settings['fitting'], options.fit_step, pdfout)
+    ibest, solutions, rel_err = fit_data(model, Amat, fval, settings['fitting'], options.fit_step, pdfout)
     if settings.has_section('phonon'):
-        phonon= phonon_step(model, solutions, settings['phonon'], options.phonon_step, pdfout)
+        phonon = phonon_step(model, solutions, settings['phonon'], options.phonon_step, pdfout)
     if settings.has_section('export_potential'):
         save_pot(model, solutions[ibest], settings['export_potential'], options.save_pot_step, phonon)
     if settings.has_section('prediction'):
