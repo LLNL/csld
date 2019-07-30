@@ -555,11 +555,12 @@ class LDModel(BasicLatticeModel):
             val = sol_fct[self.orb_idx_full[iO]:self.orb_idx_full[iO+1]]
             if np.amax(np.abs(val)) <= tol:
                 continue
+            perms = clus0.permutations()
             for ic, clus in enumerate(orb.clusters):
                 ijkls = clus._ijkls_np
                 valTrans = fct_trans_c(npt, 3, ops[orb.clusters_ig[ic]].rot, np.arange(npt, dtype=int)).dot(val).reshape((3,)*ord)
-#                print('debug iorb, ic iper', iO, ic, len(perms))
-                for iper in clus0.permutations():
+                #print('debug iorb, ic iper', iO, ic, len(perms), clus)
+                for iper in perms:
                     icount+=1
                     #print('debug', icount, clus0.ijkls, iO, ic)
                     ijk_other= matrix2text(self.prim.lattice.get_cartesian_coords(ijkls[iper[1:],:3]- ijkls[iper[0:1],:3]))
