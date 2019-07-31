@@ -9,6 +9,68 @@ from csld.phonon.phonon import Phonon, NA_correction
 from cssolve.csfit import csfit, predict_holdout
 from csld.common_main import init_training
 
+def fit_data(model, Amat, fval, setting, step, pdfout):
+    """
+    Fitting
+    :param model: Lattice dynamics model
+    :param Amat:
+    :param fval:
+    :param setting:
+    :param step:
+    :param pdfout:
+    :return: optimal solution
+    """
+    if step <= 0:
+        exit(0)
+    elif step == 1:
+        solutions = model.load_solution(setting['solution_in'],setting.getboolean('potential_coords_ijkl',False))
+        if Amat is not None:
+            err = [np.std(Amat.dot(solutions[i])-fval[:,0]) for i in range(solutions.shape[0])]
+            ibest = np.argmin(err)
+        else:
+            ibest = 0
+            if solutions.size <= 0:
+                logging.error("ERROR: empty solution")
+                exit(-1)
+            if solutions.shape[0] > 1:
+                logging.warning("More than 1 solutions found. Returning the first.")
+    elif step in [2, 3]:
+        mulist = list(map(float, setting['mulist'].split()))
+        submodels = [y.split() for x, y in setting.items() if re.match('submodel.*', x) is not None]
+        submodels = [[x[0], list(map(int, x[1:]))] for x in submodels]
+        uscale_list = list(map(float, setting['uscale_list'].split()))
+        ldffscale_list = list(map(float, setting.get('ldffscale_list', '1').split()))
+        knownsol = setting.get('solution_known', '')
+        submodels = model.get_submodels(submodels, uscale_list, setting.getfloat('lr_pair_penalty',0.0),
+                   ldffscale_list = ldffscale_list, knownsol=knownsol)
+
+        ibest, solutions, rel_err = csfit(Amat, fval[:,0], 1, mulist,
+                method=int(setting['method']),
+                maxIter=int(setting['maxiter']),
+                tol=float(setting['tolerance']),
+                nSubset=int(setting['nsubset']),
+                subsetsize=float(setting['subsetsize']),
+                holdsize=float(setting['holdsize']),
+                lbd=float(setting['lambda']),
+# bcs options
+                reweight=setting.getboolean('bcs_reweight', False),
+                penalty=setting.get('bcs_penalty', 'arctan'),
+                jcutoff=setting.getfloat('bcs_jcutoff',1E-7),
+                sigma2=setting.getfloat('bcs_sigma2',-1.0),
+                eta=setting.getfloat('bcs_eta',1E-3),
+                fitf=setting.get('true_v_fit'),
+                submodels=submodels, pdfout=pdfout)
+        if step == 3:
+            np.savetxt(setting['solution_out'], solutions)
+            np.savetxt(setting['solution_out']+'_full', model.Cmat.T.dot(np.array(solutions)[:,:model.Cmat.shape[0]].T).T)
+    else:
+        print("ERROR: Unknown fit_step: ", step)
+        exit(-1)
+    if model.ldff is not None:
+        model.ldff.plot_pairPES(solutions)
+    print("+ Fitting done. Best solution", ibest)
+    return ibest, solutions, rel_err
+
 
 def save_pot(model, sol, setting, step, phonon):
     """

@@ -14,7 +14,7 @@ from csld.symmetry_structure import SymmetrizedStructure
 from csld.lattice_dynamics import init_ld_model
 #from csld.polaron_force import PolaronFF
 from csld.common_main import *
-from csld.csld_main_functions import save_pot, predict, phonon_step
+from csld.csld_main_functions import save_pot, predict, phonon_step, fit_data
 
 
 def print_logo():
