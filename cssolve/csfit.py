@@ -296,4 +296,3 @@ def csfit(Amat, flist_in, wt, mulist, method=5, submodels=None, nSubset=1, subse
     print(rms_all)
     rel_err = fit_mu[1]
     return np.argmin(rms_all), np.array(sol_all), rel_err
-
