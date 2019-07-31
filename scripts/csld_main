@@ -8,17 +8,13 @@ matplotlib.use('Agg')
 from matplotlib.backends.backend_pdf import PdfPages
 from configparser import ConfigParser
 import atexit
-import logging
 
 import csld.config as config
-from csld.util.string_utils import str2arr
 from csld.symmetry_structure import SymmetrizedStructure
-from csld.interface_vasp import Poscar
 from csld.lattice_dynamics import init_ld_model
-from csld.structure import SupercellStructure
 #from csld.polaron_force import PolaronFF
-from csld.phonon.phonon import Phonon, NA_correction
 from csld.common_main import *
+from csld.csld_main_functions import save_pot, predict, phonon_step
 
 
 def print_logo():
@@ -98,7 +94,7 @@ if __name__ == '__main__':
     Amat, fval = init_training(model, settings['training'], options.train_step)
     ibest, solutions, rel_err = fit_data(model, Amat, fval, settings['fitting'], options.fit_step, pdfout)
     if settings.has_section('phonon'):
-        phonon, freq_matrix = phonon_step(model, solutions, settings['phonon'], options.phonon_step, pdfout, prim)
+        phonon = phonon_step(model, solutions, settings['phonon'], options.phonon_step, pdfout, prim)
     if settings.has_section('export_potential'):
         save_pot(model, solutions[ibest], settings['export_potential'], options.save_pot_step, phonon)
     if settings.has_section('prediction'):
