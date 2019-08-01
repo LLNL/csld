@@ -574,7 +574,7 @@ class LDModel(BasicLatticeModel):
         icount2=0
 
         #######################################################################################
-        ### Apply Cell Translations - JP modeled after Yi's codes phononFCT.py and tools.py ###
+        ### Apply triplet selection - JP modeled after Yi's codes phononFCT.py and tools.py ###
         #######################################################################################
 
         R = self.prim.lattice.matrix
