@@ -618,12 +618,7 @@ class LDModel(BasicLatticeModel):
                         print('Distinct FCT : \n',val)
                         fctsym.append(ListFlat(list(val)))
                         icount2+=1
-                        ### Fei's Transformation
-                        #valTrans2 = fct_trans_c(npt, 3, ops[orb.clusters_ig[ic2]].rot, np.arange(npt, dtype=int)).dot(val)
-                        ### Yi's Transformation
                         valTrans2 = np.array(FCTrans(npt, 3, ops[orb.clusters_ig[ic2]].rot, relativePosition(clustry, foundOrb))).dot(val)
-                        ### valTrans2 = array(FCTrans(npt, DIM, sgopALL[ic2[2]-1][0], tools.relativePosition(clusInOrb[3], foundOrb))) ###
-                        ### valTrans2 = dot(array(valTrans2),array(val[iO])) ###
                         print('Transformed FCT : \n',valTrans2,'\n')
                         # get lattice coordinates of the 2 other cells by zero-referencing to the 1st cell
                         #ijk_other= matrix2text(self.prim.lattice.get_cartesian_coords(clus._ijkls_np[1:,:3] - clus._ijkls_np[0:1,:3]))
@@ -639,44 +634,6 @@ class LDModel(BasicLatticeModel):
         np.savetxt('fctsym',fctsym)
         with open(fc_name, 'w') as modified: modified.write("%d\n"%(icount2) + fp.getvalue())
         fp.close()
-
-#        foundOrb=False
-#        for iorb in range(len(uniqueC)):  # loop over orbits (sets of unique clusters)
-#            if len(uniqueC[iorb])!=npt:   # skip if the orders of the clusters are different
-#                continue
-#            for clusInOrb in orbitUniq[iorb]:  # loop over each cluster in an orbit until (break) the translation-equivalent cluster is found
-#                foundOrb=tools.LPTClusterEquivalentByTranslation(clusInOrb[3], clus, True) # check if the clusters are translation-equivalent 
-#                    if foundOrb != False:
-#                        icount2+=1
-#                    for clusInOrb in orbitUniq[iorb]:  # loop over each cluster in an orbit until (break) the translation-equivalent cluster is found
-#                        foundOrb=LPTClusterEquivalentByTranslation(clusInOrb[3], clus, True) # check if the clusters are translation-equivalent
-#                        if foundOrb != False:  # if translation-equivalent, transform FCT using space-group operations
-#                            valTrans2=array(FCTrans(npt, DIM, sgopALL[clusInOrb[2]-1][0], tools.relativePosition(clusInOrb[3], foundOrb)))
-#                            valTrans2=dot(array(valTrans),array(fctsym[iorb]))
-#                            fctTrans2=valTrans2.tolist()
-#                            break # found the cluster, done
-#                    if foundOrb != False: # save symmetry-transformed clusters to finalFCM
-#                        counter1=counter1+1
-#                        finalTyp.append([clus[0][1], clus[1][1], clus[2][1]])
-#                        finalLat.append(clus[0][0]+clus[1][0]+clus[2][0])
-#                        finalFCM.append(fctTrans)
-#                    fp.write(re.sub(r".*\n", r"",LDModel.fct2str(npt, valTrans2, -1),count=1)+'\n')
-                    ### Apply Translations - JP ###
-
-            ### Fei's part applying SG rotation ###
-#            if np.amax(np.abs(val))>tol: # if it is a non-zero FCT matrix
-#                for ic, clus in enumerate(orb.clusters): # loop over all clusters within the orbit
-#                    icount+=1
-#                    print('ic, clus: ',ic,'  ',clus)
-#                    print('debug', icount, clus0.ijkls, iO, ic)
-#                    valTrans = fct_trans_c(npt, 3, ops[orb.clusters_ig[ic]].rot, np.arange(npt, dtype=int)).dot(val)
-#                    print('Transformed FCT : \n',valTrans)
-#                    # get lattice coordinates of the 2 other cells by zero-referencing to the 1st cell
-#                    ijk_other= matrix2text(self.prim.lattice.get_cartesian_coords(clus._ijkls_np[1:,:3] - clus._ijkls_np[0:1,:3]))
-#                    print('ijk_other : \n',ijk_other)
-#                    fp.write("\n%d\n%s\n%s\n"%(icount, ijk_other, matrix2text(clus._ijkls_np[:,3]+1)))
-#                    fp.write(re.sub(r".*\n", r"",LDModel.fct2str(npt, valTrans, -1),count=1)+'\n')
-            ### End Fei's part ###
 
 
     def load_solution(self, sol_f, potential_coords_ijkl=True):
