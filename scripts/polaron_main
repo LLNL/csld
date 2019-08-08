@@ -49,6 +49,7 @@ def init_cmdline_settingfile():
     dist: Given structure (--p1), print PBC distance of two atoms (--dest_dimer)\n
     append_center: append a ficticious atom representing center of atoms (--dest_dimer) to structure (--p1)\n
     dist_center: given structure (--p1), print center of all possible pairs from i1, i2 ... to i0. --dest_dimer "i0 i1 i2 ..."\n
+    dist_to: given structure (--p1), print distance of all atoms to atom -N (1-based)\n
     11. Given structure (--p1), print minimum PBC distance among range of atoms (--dest_dimer, e.g. "1 10" for atoms 1 to 10). If --p2 is specified, the distance in p2 of the found min distance pair is also printed\n
     pos2atat Convert POSCAR (--p1) into ATAT str.out format (stdout) using ATAT lattice file (--prim)\n
     atat2pos Convert ATAT structure (--p1) into POSCAR, with atoms ordered according to POSCAR (--prim)\n
@@ -62,6 +63,7 @@ def init_cmdline_settingfile():
     symmetrize: Symmetrize structure (--prim)\n
     standardize: Find conventional cell and symmetrize the structure (--prim)\n
     primitive:   Find primitive    cell and symmetrize the structure (--prim)\n
+    primitive_no_standard:   Find primitive  cell and symmetrize (but not standardize) the structure (--prim)\n
     scmat: Print scaling_matrix from --prim to --p1\n
     supercell: Create for primitive cell --prim a supercell specified by integer matrix --p1\n
     density: Print mass density in g/cc of --p1\n
@@ -89,6 +91,7 @@ def init_cmdline_settingfile():
     rotate_step: rotate in --npolaron steps a list of vector from initial (--p1) to final --p2
     final_fit: give A (--p1), b (--p2), input solution (--prim), do LSQ fit according to non-zero element of input, and give RMS error of input and re-fitted (solution_final_fit) solutions
     split_tensor: given a joined list of flattened tensor elements (--p1) and list of dimensions (--p2, e.g --p2 "0,1,3,3,3,3" for a --p1 file of 1+3+4*9=40 elements, print all non-zero tensors
+    cat_npy: concatenate two .npy arrays (--p1 and --p2)
     """
     from argparse import RawTextHelpFormatter
     parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter)
@@ -849,17 +852,9 @@ def force2xml(file):
     print(template.format(FORCES=outtxt))
 
 
-def standardize_cell(posf, outf=None):
+def standardize_cell(posf, pri, std, outf=None):
     pos = Poscar.from_file(posf)
-    prim = pos.structure.standardize_cell(False, False, options.tol)
-    pos.structure = prim
-    if outf is not None:
-        pos.write_file(outf, direct=True)
-    return prim
-
-def find_primitive(posf, outf=None):
-    pos = Poscar.from_file(posf)
-    prim = pos.structure.standardize_cell(True, False, options.tol)
+    prim = pos.structure.standardize_cell(pri, std, options.tol)
     pos.structure = prim
     if outf is not None:
         pos.write_file(outf, direct=True)
@@ -1118,6 +1113,12 @@ if __name__ == '__main__':
     elif options.task == 'dist_center':
         task_dist_center(options.p1, (str2arr(options.dest_dimer, int)-1).tolist())
 
+    elif options.task == 'dist_to':
+        s = Poscar.from_file(options.p1).structure
+        n = options.npolaron-1
+        dist = s.distance_matrix
+        print("\n".join(map(str,dist[n])))
+
     elif options.task == '11':
         pos = Poscar.from_file(options.p1)
         p1 = pos.structure
@@ -1188,10 +1189,13 @@ if __name__ == '__main__':
         Poscar(prim).write_file("POSCAR_symmetrized", direct=True)
 
     elif options.task == 'standardize':
-        standardize_cell(options.prim, "POSCAR_symmetrized_conventional")
+        standardize_cell(options.prim, False, False, "POSCAR_symmetrized_conventional")
 
     elif options.task == 'primitive':
-        find_primitive(options.prim, sys.stdout)
+        standardize_cell(options.prim, True, False, sys.stdout)
+
+    elif options.task == 'primitive_no_standard':
+        standardize_cell(options.prim, True, True, sys.stdout)
 
     elif options.task== 'scmat':
         p0=Poscar.from_file(options.prim).structure
@@ -1244,6 +1248,11 @@ if __name__ == '__main__':
 
     elif options.task== 'split_tensor':
         split_tensor(options.p1, list(map(int,options.p2.split())))
+
+    elif options.task== 'cat_npy':
+        t1= np.load(options.p1)
+        t2= np.load(options.p2)
+        np.save('joined_out.npy', np.concatenate((t1,t2)))
 
     elif options.task== 'chop':
         chop(load_matrix(options.p1), options.tol)

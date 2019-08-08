@@ -575,7 +575,7 @@ class LDModel(BasicLatticeModel):
 
     # for original (unmodified) version of ShengBTE
     def save_fcshengbte_original(self, sol, ord, tol=1e-20, output_ijkl=True):
-        from .util.tool import LPTClusterEquivalentByTranslation, relativePosition, FCTrans, ListFlat
+        from .util.tool_for_original_shengbte import LPTClusterEquivalentByTranslation, relativePosition, FCTrans, ListFlat
         assert ord in (3,4), "Only order 3 or 4 FCTs are accepted by shengbte, got %d"%(ord)
         import io, re
         import os.path
