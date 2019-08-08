@@ -112,6 +112,7 @@ def fit_data(model, Amat, fval, setting, step, pdfout):
                 exit(-1)
             if solutions.shape[0] > 1:
                 logging.warning("More than 1 solutions found. Returning the first.")
+        rel_err = 0
     elif step in [2, 3]:
         mulist = list(map(float, setting['mulist'].split()))
         submodels = [y.split() for x, y in setting.items() if re.match('submodel.*', x) is not None]
@@ -172,13 +173,20 @@ def save_pot(model, sol, setting, step, phonon):
     if 'export_shengbte' in setting.keys():
         numbers= list(map(int, setting['export_shengbte'].split()))
         orders = numbers[3:]
+        use_old = setting.getboolean('original_shengbte_format', False)
         for ord in orders:
             if ord == 2:
             # note solution sol should already have been passed to phonon
                 sc = SupercellStructure.from_scmat(model.prim, np.diag(numbers[:3]))
-                phonon.export_hessian_forshengbte(sc)
+                if use_old:
+                    phonon.export_hessian_forshengbte_original(sc)
+                else:
+                    phonon.export_hessian_forshengbte(sc)
             elif ord in [3,4]:
-                model.save_fcshengbte(sol, ord)
+                if use_old:
+                    model.save_fcshengbte_original(sol, ord)
+                else:
+                    model.save_fcshengbte(sol, ord)
             else:
                 print("cannot force constants of %d order"%(ord))
         print("  + shengbte format exported")

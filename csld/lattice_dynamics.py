@@ -269,6 +269,7 @@ class LDModel(BasicLatticeModel):
                   sum([list(range(self.ord_range[i-1]+1, self.ord_range[i]+1)) for i in o if i<=maxfitord], []) if o[0]>=0 else list(range(-o[0],-o[1]))], sol0]
                 for (nm, o) in name_ord for uscale in u_list for ldffscale in ld_scalelist]
 
+
     def CheckNumericTranslationalInvariance(self, trans=np.array([1.0, 2.0, 3.0])):
         """
         Apply uniform translation, calculate the force
@@ -306,7 +307,7 @@ class LDModel(BasicLatticeModel):
         if corrtype == 'e':
             totNF = sum([len(sc[1]) for sc in sclist])
         elif corrtype == 'f':
-            # ignore the last atom because of translational invariance
+            # ignore the last atom because of translational invariance (subtract delForce=1)
             totNF = sum([3*(Poscar.from_file(rd+"/POSCAR").structure.num_sites - delForce) for sc in sclist for rd in sc[1]])
         else:
             raise ValueError("ERROR: expecting to fit f(orce) or e(energy) but found %s"%(corrtype))
@@ -433,6 +434,7 @@ class LDModel(BasicLatticeModel):
                                   np.array([orb.cluster.factorial for orb in self.orbits]),
                                   np.array([op.rot_inv for op in self.prim.spacegroup])))
 
+
     def save_fct(self, sol, outf, scmat, combine_improper=True):
         """
         :param sol: solution vector
@@ -447,6 +449,7 @@ class LDModel(BasicLatticeModel):
         self.save_fct_pot(outf+'.pot', self.get_full_fct(sol), sol[self.nfct:], scinfo,
                           combine_improper=combine_improper)
 
+
     def save_fct_lat(self, outf, scinfo):
         """
 
@@ -459,7 +462,6 @@ class LDModel(BasicLatticeModel):
         natom = self.prim.num_sites
         ncell = scinfo.n_cell
         SCposFrac=  scinfo.frac_coords
-        # print("debug mass", self.prim.atomic_masses)
         outs =[matrix2text(self.prim.lattice._matrix), matrix2text(scinfo.sc_mat), str(natom)]
         outs += ["%f %f %f %d" % tuple(self.prim.frac_coords[i].tolist()+[self.prim.atomic_numbers[i]]) for i in range(natom)]
         outs += [str(SCposFrac.shape[0]), '']
@@ -569,6 +571,92 @@ class LDModel(BasicLatticeModel):
                     fp.write(re.sub(r".*\n", r"",LDModel.fct2str(npt, valPerm, -1),count=1)+'\n')
         with open(fc_name, 'w') as modified: modified.write("%d\n"%(icount) + fp.getvalue())
         fp.close()
+
+
+    # for original (unmodified) version of ShengBTE
+    def save_fcshengbte_original(self, sol, ord, tol=1e-20, output_ijkl=True):
+        from .util.tool import LPTClusterEquivalentByTranslation, relativePosition, FCTrans, ListFlat
+        assert ord in (3,4), "Only order 3 or 4 FCTs are accepted by shengbte, got %d"%(ord)
+        import io, re
+        import os.path
+        from f_util import f_util
+#        uscale = u_list[0]
+        np.savetxt('sol',sol)
+#        print('SOL : ',len(sol),'\n',sol)
+        sol_fct = self.get_full_fct(sol) # expend independent FCT over the null space (isotropy group, translational invariance)
+#        print('SOL_FCT : ',len(sol_fct),'\n',sol_fct)
+        np.savetxt('sol_fct',sol_fct)
+        ops = self.prim.spacegroup
+#        scinfo = SupercellStructure.from_scmat(self.prim, scmat)
+#        flag_dp = np.zeros((scinfo.num_sites, scinfo.num_sites),dtype=np.int)
+        fc_name="FORCE_CONSTANTS_%s"%({3:"3RD",4:"4TH"}[ord])
+        fp=io.StringIO()
+        fp2=io.StringIO()
+        icount=0
+        icount2=0
+
+        #######################################################################################
+        ### Apply triplet selection - JP modeled after Yi's codes phononFCT.py and tools.py ###
+        #######################################################################################
+
+        R = self.prim.lattice.matrix
+        rmat = np.array(R).tolist()
+        print('rmat : \n',rmat)
+        apos = self.prim.frac_coords
+        poscar = np.array(apos).tolist()
+        print('poscar : \n',poscar)
+        natom = len(apos)
+        print('natom : ',natom)
+        cutoff = 6
+        nlat = 2
+        # normally requires 5 parameters, but calling using f2py relieves the need for 5th natom
+        f_util.select_triplet(poscar, rmat, cutoff, nlat)
+        #-----------------------------------------------------------
+        lines=[list(map(int, line.split())) for line in open('triplet-selection','r')]
+        selclus=[ [ [[0,0,0],line1[3]],[[line1[4],line1[5],line1[6]],line1[7]],[[line1[8],line1[9],line1[10]],line1[11]] ] for line1 in lines ]
+        counter=0
+        icount2=0
+        fctsym=[]
+        for clus in selclus: # loop over all selected triplet clusters (could be in any cell)
+            print('CLUS : \n',clus)
+            counter=counter+1
+            npt=len(clus) # 2 for pair, 3 for triplets, etc.
+            foundOrb=False
+            for iO, orb in enumerate(self.orbits): # loop over all orbits
+                clus0 = orb.cluster
+                npt = clus0.order
+                if npt != ord:
+                    continue
+                #val = sol_fct[self.orb_idx_full[iO]:self.orb_idx_full[iO+1]]/(pow(uscale, npt-1))
+                for ic2, clus2 in enumerate(orb.clusters): # loop over all clusters in the orbits
+                    tmp = list(clus2.vertices)
+                    clustry = [[[tmp[0].ijkl[0],tmp[0].ijkl[1],tmp[0].ijkl[2]],tmp[0].ijkl[3]],[[tmp[1].ijkl[0],tmp[1].ijkl[1],tmp[1].ijkl[2]],tmp[1].ijkl[3]],[[tmp[2].ijkl[0],tmp[2].ijkl[1],tmp[2].ijkl[2]],tmp[2].ijkl[3]]]
+                    foundOrb = LPTClusterEquivalentByTranslation(clustry, clus, True) # check if this cluster is the translated version of selclus
+                    if foundOrb != False: # if match found
+                        print('Cluster Matched! \n',clustry)
+                        print('SOL_FCT INDICES : ',self.orb_idx_full[iO],self.orb_idx_full[iO+1])
+                        print('foundOrb : ',foundOrb)
+                        val = sol_fct[self.orb_idx_full[iO]:self.orb_idx_full[iO+1]] # load full FCT for a cluster   
+                        print('Distinct FCT : \n',val)
+                        fctsym.append(ListFlat(list(val)))
+                        icount2+=1
+                        valTrans2 = np.array(FCTrans(npt, 3, ops[orb.clusters_ig[ic2]].rot, relativePosition(clustry, foundOrb))).dot(val)
+                        print('Transformed FCT : \n',valTrans2,'\n')
+                        # get lattice coordinates of the 2 other cells by zero-referencing to the 1st cell
+                        #ijk_other= matrix2text(self.prim.lattice.get_cartesian_coords(clus._ijkls_np[1:,:3] - clus._ijkls_np[0:1,:3]))
+                        difference = np.array([np.array(clus[1][0]) - np.array(clus[0][0]),np.array(clus[2][0]) - np.array(clus[0][0])])
+                        #print(difference)
+                        ijk_other= matrix2text(self.prim.lattice.get_cartesian_coords(difference))
+                        #print('ijk_other : \n',ijk_other)
+                        #fp.write("\n%d\n%s\n%s\n"%(icount2, ijk_other, matrix2text(clus._ijkls_np[:,3]+1)))
+                        fp.write("\n%d\n%s\n%s\n"%(icount2, ijk_other, matrix2text(np.array([clus[0][1],clus[1][1],clus[2][1]])+1)))
+                        fp.write(re.sub(r".*\n", r"",LDModel.fct2str(npt, valTrans2, -1),count=1)+'\n')
+                        break
+        
+        np.savetxt('fctsym',fctsym)
+        with open(fc_name, 'w') as modified: modified.write("%d\n"%(icount2) + fp.getvalue())
+        fp.close()
+
 
     def load_solution(self, sol_f, potential_coords_ijkl=True):
         """
@@ -749,7 +837,7 @@ class LDModel(BasicLatticeModel):
         # create an LD model using nearest neighbor only
         ldNN = init_ld_model(self.prim, {'model_type':'LD', 'max_order':2, 'cluster_diameter':str(bondlen),
           'proper_diameter':str(bondlen),'cluster_filter':'lambda cls: True'}, {}, 2, 2, 0, False)
-        print(ldNN)
+        #print(ldNN)
         C1mats = ldNN.isotropy_derivative_constraint()[1+2*npt:]
         C1 = spmat(scipy.sparse.vstack(C1mats))[:,1+12*npt:]
         nvar= C1.shape[0]
