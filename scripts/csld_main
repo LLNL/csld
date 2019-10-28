@@ -48,7 +48,7 @@ def init_cmdline_settingfile():
     add_common_parameter(parser)
     options = parser.parse_args()
     config.debug_level = options.log_level
-    logging.basicConfig(level=options.log_level)
+    #logging.basicConfig(level=options.log_level)
     if options.log_level > 0:
         print_logo()
         print_version(config.VERSION)
@@ -59,7 +59,7 @@ def init_cmdline_settingfile():
         options.phonon_step = 0
     if options.pot:
         options.cont= True
-        options.phonon_step = 0
+        options.phonon_step = 1
         options.save_pot_step = 1
     process_common_options(options)
 
@@ -84,8 +84,9 @@ def init_cmdline_settingfile():
 
 
 if __name__ == '__main__':
-#    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
     options, settings = init_cmdline_settingfile()
+    logger.setLevel(level=options.log_level)
     pdfout = PdfPages(options.pdfout.strip()) if options.pdfout.strip() else None
     atexit.register(upon_exit, pdfout)
 

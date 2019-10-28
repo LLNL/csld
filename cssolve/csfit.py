@@ -254,7 +254,7 @@ def csfit(Amat, flist_in, wt, mulist, method=5, submodels=None, nSubset=1, subse
 #        np.savetxt('solution_all_'+model_name, [theC.dot(x[-2])+sol0 for x in fit_model])
         print("     mu    err%%      err    err_cv     L0   L1(scaled)     L1")
         for i, s in enumerate(fit_model):
-            print("%8.2g %7.2f  %7.4g  %7.4g  %6d   %7g   %7g" % tuple(s[:6]+[L1norm(theC.dot(s[-2]))]), '  \033[92m<==BEST\033[0m' if i==i_mu else '')
+            print("%8.2g %7.2g  %7.4g  %7.4g  %6d   %7g   %7g" % tuple(s[:6]+[L1norm(theC.dot(s[-2]))]), '  \033[92m<==BEST\033[0m' if i==i_mu else '')
 
         if plt is not None:
             def writepdf():
@@ -284,7 +284,7 @@ def csfit(Amat, flist_in, wt, mulist, method=5, submodels=None, nSubset=1, subse
 
             plt.figure()
             plt.vlines(np.arange(1,bestsol[9].shape[0]+1), 0, bestsol[9], color='k', linestyles='solid')
-            plt.axes().errorbar(np.arange(1,bestsol[9].shape[0]+1), bestsol[9], yerr=bestsol[-1], fmt='o')
+            plt.gca().errorbar(np.arange(1,bestsol[9].shape[0]+1), bestsol[9], yerr=bestsol[-1], fmt='o')
             plt.ylabel("fitted values")
             plt.axhline(0, color='black', lw=1)
             writepdf()

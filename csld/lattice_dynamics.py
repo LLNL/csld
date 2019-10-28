@@ -22,7 +22,6 @@ from .util.tool import pad_right, matrix2text
 from _c_util import fct_trans_c, ld_get_correlation, get_nullspace, init_ldff_basis, ldff_get_corr
 from .coord_utils import ReadPBC2Cart
 from .util.string_utils import str2arr, str2bool
-from f_phonon import f_phonon
 
 import logging
 logger = logging.getLogger(__name__)
@@ -766,6 +765,7 @@ class LDModel(BasicLatticeModel):
         """
         :param s:  structure with epsilon_inf and born_charge
         """
+        from f_phonon import f_phonon
         if s.intensive_properties['epsilon_inf'] is None:
             return np.zeros((3*s.num_sites,3*s.num_sites))
         return f_phonon.get_fcm_dipole(s.lattice.matrix.T, s.lattice.inv_matrix, 1E-18, s.cart_coords.T,
@@ -776,6 +776,7 @@ class LDModel(BasicLatticeModel):
         """
         s: supercell
         """
+        from f_phonon import f_phonon
         fcm_dp = self.get_hessian_dipole(s)
         if self._dpcor is None:
             return fcm_dp
@@ -820,6 +821,7 @@ class LDModel(BasicLatticeModel):
 
 
     def get_dpcor(self, bondlen, errtol=1e-7):
+        from f_phonon import f_phonon
         offd=[[0,0,1],[1,2,2]]
         offdflatUp = [1,2,5]
         offdflatDn = [3,6,7]

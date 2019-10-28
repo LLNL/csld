@@ -29,7 +29,7 @@ def init_cmdline_settingfile():
     """
     task_help = """1. Move a polaron (--p1, relative to primitive cell specified by -prim, including atoms displaced more than --polaron_disp_cut) to positions (--dest_dimer) in destination poscar (--p2); dest_dimer can be either (a) a clusters.out formatted file or (b) 'automatic' or (c) indices (starting at 1) of atoms in p2, e.g. "1 2"\n
     2. Map a poscar (--p1) to unperturbed (--prim) form, i.e. positions in p1 will be changed to the best matching supercell generated from prim\n
-    3 cmp_pos: Show displacement of two poscars (--p1 --p2), atom by atom. --long to remove center-of-mass shift\n
+    3 cmp_pos: Show displacement of two poscars (--p1 --p2), atom by atom. --long to remove center-of-mass shift --summary for displacements only \n
     cont_vel: Prints a CONTCAR with velocity from --p1 to --p2 with --npolaron intermediate images. Velocity center-of-mass will be shifted to 0, so final structure will be shifted p2.\n
     4. Move a polaron (--p1) to closest locations the same structure\n
     5. Same as 4 but looping over polarons i,j selected from --p1 "pos1 pos2 ...", put into i\n
@@ -46,6 +46,7 @@ def init_cmdline_settingfile():
     nsc: Estimate the number of supercell structure needed for phonon calculations, given primitive cell (--prim), supercell size (--p1 "int x 9") and cutoff (-R)\n
     rand_vec: Print (--npolaron) random vectors of length --r1.\n
     add_disp: Add displacement (--p2) to structure (--p1). p2 can be either (a) N_atom x 3 (all atoms) or (b) N x 4 (N<=N_atom, each line like "2 0.1 0.2 0.3" adding the displacement to the 2nd atom) text file \n
+    vol_disp: given unperturbed (--p1), apply displacements of (--p2) to a scaled supercell of scale (-R)\n
     dist: Given structure (--p1), print PBC distance of two atoms (--dest_dimer)\n
     append_center: append a ficticious atom representing center of atoms (--dest_dimer) to structure (--p1)\n
     dist_center: given structure (--p1), print center of all possible pairs from i1, i2 ... to i0. --dest_dimer "i0 i1 i2 ..."\n
@@ -67,6 +68,7 @@ def init_cmdline_settingfile():
     scmat: Print scaling_matrix from --prim to --p1\n
     supercell: Create for primitive cell --prim a supercell specified by integer matrix --p1\n
     density: Print mass density in g/cc of --p1\n
+    volume: Print volume in ang**3 of --p1\n
     xyarea: area of the xy plane of --p1 POSCAR\n
     ehull: energy of --p1 according to convexhull from data --p2 (e.g.row A2B -3.1)\n
     convexhull: print convex hull of data --p1\n
@@ -113,6 +115,7 @@ def init_cmdline_settingfile():
     parser.add_argument("--polaron_locations_cut", type=float, help="distance between locations (task 4)", default=100.)
     parser.add_argument("--tol", type=float, help="tolerance for symmetry", default=1E-3)
     parser.add_argument("--long", action='store_true', help="Long form output. Default: False", default=False)
+    parser.add_argument("--summary", action='store_true', help="summary only. Default: False", default=False)
 
     options = parser.parse_args()
     ## Global variable
@@ -122,14 +125,28 @@ def init_cmdline_settingfile():
 
     return options
 
+def get_displacement(p1, p2):
+     assert p1.num_sites == p2.num_sites, ValueError("Input structures have different number of atoms")
+     assert np.linalg.norm(p1.lattice.matrix - p2.lattice.matrix, 'fro') < 1E-3, ValueError("Different lattice")
+     u = np.array(p2.frac_coords)-np.array(p1.frac_coords)
+     u = u-np.round(u)
+     return u
 
-def task3(f1, f2, cms=False, verbose=0):
+
+def vol_disp(f1, f2, R):
+    pos = Poscar.from_file(f1)
+    p1 = pos.structure
+    p2 = Poscar.from_file(f2).structure
+    u = get_displacement(p1, p2)
+    u = p1.lattice.get_cartesian_coords(u)
+    p1.scale_lattice(p1.volume*R**3)
+    pos.structure.displace_by(u)
+    pos.write_file(sys.stdout, direct=True)
+
+def task3(f1, f2, cms=False, displacement_only=False):
         p1 = Poscar.from_file(f1).structure
         p2 = Poscar.from_file(f2).structure
-        assert p1.num_sites == p2.num_sites, ValueError("Input structures have different number of atoms")
-        assert np.linalg.norm(p1.lattice.matrix - p2.lattice.matrix, 'fro') < 1E-3, ValueError("Different lattice")
-        u = np.array(p2.frac_coords)-np.array(p1.frac_coords)
-        u = u-np.round(u)
+        u = get_displacement(p1, p2)
         if cms:
             u = u - np.mean(u, axis=0)
         u = p1.lattice.get_cartesian_coords(u)
@@ -143,11 +160,13 @@ def task3(f1, f2, cms=False, verbose=0):
                 min_dist = dist
             if max_dist < dist:
                 max_dist = dist
-            if verbose > 0:
+            if not displacement_only:
                 print("%4d %3s  %8.4f  [ %7.4f %7.4f %7.4f ]  [ %7.4f %7.4f %7.4f ] [ %7.4f %7.4f %7.4f ]" %
                       tuple([i+1, p1[i].specie, dist] + p1[i].frac_coords.tolist() + p2[i].frac_coords.tolist()+
                             (u[i].tolist())))
-        if verbose > 0:
+            else:
+                print("%18.14f %18.14f %18.14f"%tuple(u[i].tolist()))
+        if not displacement_only:
             print("min displacement = %f  max = %f" % (min_dist, max_dist))
         return dist_ls
 
@@ -156,10 +175,7 @@ def task_contcar_velocity(f1, f2, nimg):
         poscar1 = Poscar.from_file(f1)
         p1 = poscar1.structure
         p2 = Poscar.from_file(f2).structure
-        assert p1.num_sites == p2.num_sites, ValueError("Input structures have different number of atoms")
-        assert np.linalg.norm(p1.lattice.matrix - p2.lattice.matrix, 'fro') < 1E-3, ValueError("Different lattice")
-        u = np.array(p2.frac_coords)-np.array(p1.frac_coords)
-        u = u-np.round(u)
+        u = get_displacement(p1, p2)
         u = u - np.mean(u, axis=0)
         u = p1.lattice.get_cartesian_coords(u)
         maxu = np.max(np.linalg.norm(u,axis=1))
@@ -567,7 +583,7 @@ def displace_poscar(f1, disp, more_args='', outf=sys.stdout):
             from itertools import combinations
             for i in range(N_max_try):
                 selected = np.random.choice(na, nselect, False)
-                min_dist = np.min(all_dist[ list(zip(*combinations(selected,2)))])
+                min_dist = np.min(all_dist[tuple(zip(*combinations(selected,2)))])
                 if min_dist>=cut:
                     found=True
                     break
@@ -973,7 +989,7 @@ if __name__ == '__main__':
         p1pos.write_file(sys.stdout)
 
     elif options.task in ['3', 'cmp_pos']:
-        task3(options.p1, options.p2, options.long, 1)
+        task3(options.p1, options.p2, options.long, options.summary)
 
     elif options.task in ['cont_vel']:
         task_contcar_velocity(options.p1, options.p2, options.npolaron)
@@ -1104,6 +1120,9 @@ if __name__ == '__main__':
     elif options.task == 'add_disp':
         displace_poscar(options.p1, options.p2)
 
+    elif options.task == 'vol_disp':
+        vol_disp(options.p1, options.p2, options.polaron_disp_cut)
+
     elif options.task == 'dist':
         task_dist(options.p1, (str2arr(options.dest_dimer, int)-1).tolist())
 
@@ -1209,6 +1228,9 @@ if __name__ == '__main__':
 
     elif options.task== 'density':
         print(Poscar.from_file(options.p1).structure.density)
+
+    elif options.task== 'volume':
+        print(Poscar.from_file(options.p1).structure.volume)
 
     elif options.task== 'xyarea':
         latt=Poscar.from_file(options.p1).structure.lattice._matrix

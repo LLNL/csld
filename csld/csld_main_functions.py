@@ -192,7 +192,7 @@ def phonon_step(model, sols, setting, step, pdfout, prim, return_eigen=False):
                 if 'thermal_t_range' in entries:
                     t_rng = str2arr(setting['thermal_t_range'])
                     t_rng = np.arange(*(t_rng.tolist()))
-                    Phonon.calc_thermal_QHA(dos, t_rng, setting['thermal_out'])
+                    Phonon.calc_thermal_QHA(dos, t_rng, setting.get('thermal_out','QHA.out'))
                     print('  + phonon thermal properties calculated')
 
             if 'debye_t_qfrac' in entries:
