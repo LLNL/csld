@@ -311,6 +311,19 @@ The csld_main script runs in the following steps, each controlled by a command-l
   "solution_in", str , "filename for loading previous solution instead of fitting"
   "solution_known", str, "filename for previously obtained parameter phi_in. The force predicted by phi_in will be subtracted from the total force. This is useful in conjunction with submodel to fit in several steps, e.g. assuming max_order=4, first fit harmonic terms with submodel=harmonic 1 2; solution_out=sol_2nd, then fit anharmonic terms with solution_known=sol_2nd; submodel1=anh 3 4; solution_out=solution_all"
 
+- Pairwise force-field setup step to capture the bulk of the anharmonicity and to make fitting the residual force/energy easier. Turned **off** by default
+
+  - switch "--ldff_step STEP". **0**=off, 2=on.
+
+.. csv-table:: "[LDFF]" section
+  :header: "tag", "value", "description"
+  :widths: 4, 4, 16
+
+  num_basis, int, "Number of basis"
+  orbit_indices, "int [int]", "list of clusters to include in LDFF, usually choose only the nearest-neighbor pairs"
+  interpolation_pts, "int int int", "min, max, interval of sampling points"
+  basis_2, str, "pair basis functions. See Si/csld.in-forcefield for an example"
+
 - Phonon step
 
   - switch "--phonon_step STEP". 0=skip, **1** = compute.

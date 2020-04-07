@@ -14,7 +14,7 @@ Then:
 Documentation
 ----------------
 
-Check out [manual.pdf](manual.pdf)
+Check out [manual.rst](manual.rst)
 
 
 Get Involved
