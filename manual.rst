@@ -73,8 +73,8 @@ How to cite
 If you use CSLD in your research, please cite the following works:
 
 * Fei Zhou, Weston Nielson, Yi Xia, and Vidvuds Ozolins, Phys. Rev. Lett. 113, 185501, (2014). `<http://dx.doi.org/10.1103/PhysRevLett.113.185501>`_
-*	F. Zhou, W. Nielson, Y. Xia, and V. Ozolins, Phys. Rev. B 100, 184308 (2019). `<https://link.aps.org/doi/10.1103/PhysRevB.100.184308>`_
-*	F. Zhou, B. Sadigh, D. Aberg, Y. Xia, and V. Ozolins, Phys. Rev. B 100, 184309 (2019). `<https://link.aps.org/doi/10.1103/PhysRevB.100.184309>`_
+*	\F. Zhou, W. Nielson, Y. Xia, and V. Ozolins, Phys. Rev. B 100, 184308 (2019). `<https://link.aps.org/doi/10.1103/PhysRevB.100.184308>`_
+*	\F. Zhou, B. Sadigh, D. Aberg, Y. Xia, and V. Ozolins, Phys. Rev. B 100, 184309 (2019). `<https://link.aps.org/doi/10.1103/PhysRevB.100.184309>`_
 
 
 ***************
