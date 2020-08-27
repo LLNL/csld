@@ -85,6 +85,9 @@ More detailed documentation can be found in the `Manual`_ section next.
 This section provides a short tutorial To get started quickly after installation. The files can be found in the examples/ directory.
 
 
+CSLD requires an input structure file of very high accuracy. See the `Manual`_ section for details to prepare a VASP POSCAR-styled file first.
+
+
 Si
 ====
 
@@ -122,7 +125,7 @@ Input files preparation
 Now let's see how to start from scratch, by copying over the config file control.in and symmetrizing a primitive cell Si/POSCAR (pretending that Si/POSCAR was relaxed without proper symmetry)::
 
   $ cd ..; mkdir Si-test2; cp Si/csld.in Si-test2; cd Si-test2
-  $ polaron_main --task primitive --prim ../Si/POSCAR --tol 0.001 >POSCAR
+  $ polaron_main --task primitive_no_standardize --prim ../Si/POSCAR --tol 0.001 >POSCAR
 
 Next, prepare training data::
 
@@ -186,12 +189,14 @@ Never mind the artifact in the phonon dispersion curve at zone center. It's the 
 
 Input files for long-range forces
 ---------------------------------
-To obtain the Born effective charges and dielectric tensor required for long-range treatment,  dielectric calculations should be performed with density functional perturbation theory (DFPT) for the primitive cell before csld fitting. Obtain born_charge.txt and epsilon_inf.txt by
+To obtain the Born effective charges and dielectric tensor required for long-range treatment, dielectric calculations should be performed with density functional perturbation theory (DFPT) for the primitive cell before csld fitting. Obtain born_charge.txt and epsilon_inf.txt by
 
 
 ::
 
   $ polaron_main --task born --p1 PATH_TO_DFPT_CALCULATION/OUTCAR
+
+Failure to use this script to generate symmetrized files may result in errors.
 
 ******
 Manual
@@ -212,11 +217,11 @@ Input files
 
 The csld_main code takes two basic input files: **POSCAR** and **csld.in**.
 
-- The structure of the primitive cell in VASP 5 format. The file name is specified in the config file (POSCAR, see above). It's important to keep high precision in the structure file. We recommend using the **polaron_main** helper script to symmetrize your primitive cell
+- The structure of the primitive cell in VASP 5 format. The file name is specified in the config file (POSCAR, see above). It's important to keep high precision in the structure file. We STRONGLY recommend using the **polaron_main** helper script to symmetrize your primitive cell
 
 ::
 
-  $ polaron_main --task primitive --prim your_input_POSCAR --tol 0.001 >POSCAR
+  $ polaron_main --task primitive_no_standardize --prim your_input_POSCAR --tol 0.001 >POSCAR
 
 
 - csld.in, the main configuration file containing essentially all the settings.
