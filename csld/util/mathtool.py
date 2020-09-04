@@ -466,13 +466,19 @@ def mychop(arr, tol=1E-10):
     :param tol:
     :return:
     """
+    if scipy.sparse.issparse(arr):
+        nz=arr.nonzero()
+        nonzero_mask = np.array(np.abs(arr[nz]) < tol)[0]
+        rows = nz[0][nonzero_mask]
+        cols = nz[1][nonzero_mask]
+        arr[rows, cols] = 0
+        arr.eliminate_zeros()
+        return arr
     if np.iscomplex(arr).any():
-	    arr.real[abs(arr.real) < tol] = 0
-	    arr.imag[abs(arr.real) < tol] = 0
+        arr.real[abs(arr.real) < tol] = 0
+        arr.imag[abs(arr.real) < tol] = 0
     else:
         arr[abs(arr)<tol]=0
-    if scipy.sparse.issparse(arr):
-        arr.eliminate_zeros()
     return arr
 
 
@@ -513,7 +519,7 @@ def tensor_constraint(dim, rank, rots, mappings=None, other_constraits=None):
             Bmats.extend([m for m in other_constraits if m.shape[0] > 0])
         if len(Bmats) > 0:
             Bmat = scipy.sparse.vstack(Bmats)
-            null = get_nullspace(Bmat)
+            null = mychop(get_nullspace(Bmat), 1e-12)
         else:
             null = scipy.sparse.identity(dimtensor)
     return null

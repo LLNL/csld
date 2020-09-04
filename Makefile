@@ -8,11 +8,11 @@ ifeq ($(ARCH),ppc64le)
 LIB =
 F2PY = f2py3
 OPTFLAG = -O
-FFLAGS= -fopenmp
+FFLAGS= -fopenmp -cpp
 CMD = ${F2PY} --fcompiler=gfortran -c  --link-lapack_opt --opt="-cpp -heap-arrays ${OPTFLAG}" ${LIB} --f90flags="${FFLAGS}"
-F90=xlf
+F90=gfortran
 F77=${F90}
-F77FLAGS = -fopenmp -O3 -warn nousage -xHost -no-prec-div -noautomatic -heap-arrays 0 
+F77FLAGS = ${FFLAGS}
 else
 #LIB = -lmkl_rt 
 LIB = -lmkl_rt -L/opt/intel-14.0/mkl/lib/intel64
@@ -42,7 +42,7 @@ endif
 
 .SUFFIXES:
 
-#BINARIES = bregman.so f_phonon.so bcs_driver.so f_util.so
+#BINARIES = bregman.so f_phonon.so f_util.so bcs_driver.so
 BINARIES = bregman.so f_phonon.so f_util.so
 
 BCSSOLVER= cssolve/num_types.f90  cssolve/matrix_sets.f90  cssolve/laplace.f90  cssolve/bcs.f90

@@ -17,7 +17,7 @@ from .basic_lattice_model import BasicLatticeModel
 from .interface_vasp import Poscar
 from .cluster import Cluster
 from .structure import SupercellStructure
-from .util.mathtool import MixedIndexForImproper, IntegerDigits, tensor_constraint, RMS
+from .util.mathtool import MixedIndexForImproper, IntegerDigits, tensor_constraint, RMS, mychop
 from .util.tool import pad_right, matrix2text
 from _c_util import fct_trans_c, ld_get_correlation, get_nullspace, init_ldff_basis, ldff_get_corr
 from .coord_utils import ReadPBC2Cart
@@ -94,7 +94,9 @@ class LDModel(BasicLatticeModel):
                 print("debug> translation of", repr(clus))
 
             dimTensor = 3** npt_ex
-            Bmat = spmat((dimTensor, self.nfct_tot))
+            #Bmat = spmat((dimTensor, self.nfct_tot))
+# annoying bug in scipy.sparse matrices !! Bmat not computed properly. Using normal/dense matrices for now.
+            Bmat = spmat((dimTensor, self.nfct_tot)).todense()
             foundClus = False
             for sumpt in sumPts:
                 clusSum = clus.append_site(sumpt)
@@ -107,14 +109,18 @@ class LDModel(BasicLatticeModel):
                 # print("identified",[found, ioF, igF, pi])
                 if found:
                     foundClus = True
+# annoying bug in scipy.sparse matrices !! Bmat not computed properly
                     Bmat[:, self.orb_idx_full[ioF]:self.orb_idx_full[ioF+1]]+=\
-                        fct_trans_c(npt_ex, 3, rot_mats[igF], pi)
+                        # fct_trans_c(npt_ex, 3, rot_mats[igF], pi)
+                        fct_trans_c(npt_ex, 3, rot_mats[igF], pi).todense()
             if not foundClus:
                 print('  ',iorb, " nothing found for ", clus)
                 continue
 
             BmatCollect.append(Bmat)
-            Bmat = Bmat.dot(Cmat.T)
+            # Bmat = Bmat.dot(Cmat.T)
+# annoying bug in scipy.sparse matrices !! Bmat not computed properly
+            Bmat = spmat(Bmat.dot(Cmat.T.todense()))
             # Bmat[abs(Bmat)< 1E-9] = 0
 
             if npt_ex > 999999:
@@ -126,7 +132,7 @@ class LDModel(BasicLatticeModel):
                     print(Bmat)
                 # if not (scipy.sparse.isspmatrix(Bmat) and Bmat.getnnz()<=0):
                 # Cmat = nullspace_rref(Bmat.toarray()).dot(Cmat)
-                Cmat = get_nullspace(Bmat).dot(Cmat)
+                Cmat = mychop(get_nullspace(Bmat).dot(Cmat), 1e-12)
                 print("  %4d + sum(a) %d remaining" % (iorb, Cmat.shape[0]))
 
         self.Cmat = Cmat
