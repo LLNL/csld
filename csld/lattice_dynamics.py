@@ -111,17 +111,16 @@ class LDModel(BasicLatticeModel):
                     foundClus = True
 # annoying bug in scipy.sparse matrices !! Bmat not computed properly
                     Bmat[:, self.orb_idx_full[ioF]:self.orb_idx_full[ioF+1]]+=\
-                        # fct_trans_c(npt_ex, 3, rot_mats[igF], pi)
                         fct_trans_c(npt_ex, 3, rot_mats[igF], pi).todense()
+                        # fct_trans_c(npt_ex, 3, rot_mats[igF], pi)
             if not foundClus:
                 print('  ',iorb, " nothing found for ", clus)
                 continue
 
-            BmatCollect.append(Bmat)
-            # Bmat = Bmat.dot(Cmat.T)
 # annoying bug in scipy.sparse matrices !! Bmat not computed properly
-            Bmat = spmat(Bmat.dot(Cmat.T.todense()))
-            # Bmat[abs(Bmat)< 1E-9] = 0
+            Bmat = spmat(Bmat)
+            BmatCollect.append(Bmat)
+            Bmat = Bmat.dot(Cmat.T)
 
             if npt_ex > 999999:
                 print("bypassing ", clus)
