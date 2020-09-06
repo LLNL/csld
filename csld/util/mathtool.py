@@ -468,10 +468,13 @@ def mychop(arr, tol=1E-10):
     """
     if scipy.sparse.issparse(arr):
         nz=arr.nonzero()
-        nonzero_mask = np.array(np.abs(arr[nz]) < tol)[0]
-        rows = nz[0][nonzero_mask]
-        cols = nz[1][nonzero_mask]
-        arr[rows, cols] = 0
+        try:
+            nonzero_mask = np.array(np.abs(arr[nz]) < tol)[0]
+            rows = nz[0][nonzero_mask]
+            cols = nz[1][nonzero_mask]
+            arr[rows, cols] = 0
+        except:
+            pass
         arr.eliminate_zeros()
         return arr
     if np.iscomplex(arr).any():
