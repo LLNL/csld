@@ -1,3 +1,12 @@
+A Guide to CSLD
+###############
+
+Fei Zhou
+
+Last modified: Oct. 1, 2020
+
+.. contents::
+
 **********************
 Introduction to CSLD
 **********************
@@ -386,4 +395,26 @@ Output files
 
 .. _ShengBTE: http://www.shengbte.org/
 .. _modified version of ShengBTE: https://doi.org/10.1063/1.5040887
+
+
+**********************
+FAQ
+**********************
+This is a list of Frequently Asked Questions about CSLD.  Feel free to
+suggest new entries!
+
+How do I...
+============
+
+... select cutoffs for force constants?
+   For anharmonic FCs, include at the very least the second NN shell for 3rd order and first NN shell for 4th order.
+
+... decide the number of supercells needed?
+   Once you made a choice on your model based on cutoffs, look for the final number of symmetrized FCs left. The number of supercell calculations should be at least N(symm)/3N(atom).
+
+I got error message ...
+========================
+
+... "ERROR: to get corrections properly, please increase [model]dpcor_bond to approximately the cutoff distance of first neighbor shell"
+    This means that you have a semiconductor system that needs dipole interaction corrections (see CSLD phonon paper PRB 2019). Set dpcor_bond under [model] as suggested.
 
