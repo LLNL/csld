@@ -846,6 +846,8 @@ class LDModel(BasicLatticeModel):
           'proper_diameter':str(bondlen),'cluster_filter':'lambda cls: True'}, {}, 2, 2, 0, False)
         #print(ldNN)
         C1mats = ldNN.isotropy_derivative_constraint()[1+2*npt:]
+        if not C1mats:
+            raise ValueError('ERROR: to get corrections properly, please increase [model]dpcor_bond to approximately the cutoff distance of first neighbor shell')
         C1 = spmat(scipy.sparse.vstack(C1mats))[:,1+12*npt:]
         nvar= C1.shape[0]
 
