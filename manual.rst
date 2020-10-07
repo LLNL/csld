@@ -412,6 +412,9 @@ How do I...
 ... decide the number of supercells needed?
    Once you made a choice on your model based on cutoffs, look for the final number of symmetrized FCs left. The number of supercell calculations should be at least N(symm)/3N(atom).
 
+... use CSLD with another DFT code (Quantum ESPRESSO, etc)?
+    Quite minimal: convert the structure to VASP5 format, and supply the computed forces to force.txt as a plain text table. It might be slightly trickier to figure out how to extract the dielectric constant or Born effective charge for semiconductors.
+
 I got error message ...
 ========================
 
