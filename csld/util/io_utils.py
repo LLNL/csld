@@ -53,9 +53,10 @@ def load_matrix(fname, toarray=False):
 
 def import_table(cmd, **kwargs):
     from io import StringIO
-    return np.loadtxt(StringIO(getoutput(cmd)), **kwargs)
+    return np.loadtxt(StringIO(co(cmd)), **kwargs)
 
 def co(instr, split=False):
+    import subprocess
 #     #from subprocess import check_output
     out=subprocess.Popen(instr, stdout=subprocess.PIPE, shell=True, universal_newlines=True).communicate()[0]
     return out.split('\n') if split else out
@@ -65,6 +66,11 @@ def co(instr, split=False):
 #def co(instr):
 ## subprocess.Popen(instr, stdout=subprocess.PIPE, shell=True).communicate()[0]
 #    return check_output(instr.split(), universal_newlines=True, shell=False).strip() #.split('\n')
+
+def command2arr(cmd):
+    import io
+    f = io.StringIO(co(cmd))
+    return np.loadtxt(f)
 
 
 def clean_lines(string_list, remove_empty_lines=True):
