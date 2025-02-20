@@ -14,7 +14,7 @@ import warnings
 
 import numpy as np
 
-from fractions import gcd
+from math import gcd
 from .lattice import Lattice
 from .util.periodic_table import Element, Specie, get_el_sp
 from .sites import PeriodicSite
